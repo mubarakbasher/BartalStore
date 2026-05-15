@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bartal · Logo Concepts (Sudan)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100vh; }
+  body { font-family: 'Poppins', system-ui, sans-serif; color: #1A1A1A; background: #F4EFE3; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="logo-concepts.jsx"></script>
+
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "selected": "B"
+}/*EDITMODE-END*/;
+
+function App() {
+  const [tweaksOn, setTweaksOn] = React.useState(false);
+  const [selected, setSelected] = React.useState(TWEAK_DEFAULTS.selected);
+
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setTweaksOn(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweaksOn(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  const choose = (k) => {
+    setSelected(k);
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { selected: k } }, '*');
+  };
+
+  const concepts = [
+    { code: 'A', name: 'Jirtig Star',
+      rootIdea: 'An eight-point star drawn from Sudanese jirtig wedding regalia and kilim weavings — a maker’s seal stamped onto the brand.',
+      refText: 'REF · JIRTIG ADORNMENT · NUBIAN KILIM',
+      Mark: MarkA },
+    { code: 'B', name: 'Nubian Arch',
+      rootIdea: 'A keystone doorway sheltering a Meroitic pyramid and rising sun — the literal portal (برتال = portal/gateway), reading as a threshold to enter.',
+      refText: 'REF · OLD DONGOLA DOORWAYS · MEROË',
+      Mark: MarkB },
+    { code: 'C', name: 'Confluence',
+      rootIdea: 'The Blue and White Nile meeting at Khartoum — two crescents joined at a gold point. Doubles as a calligraphic ب, the first letter of برتال.',
+      refText: 'REF · AL-MOGRAN · NILE CONFLUENCE',
+      Mark: MarkC },
+    { code: 'D', name: 'Acacia Seal',
+      rootIdea: 'An acacia tree (gum arabic — Sudan’s heritage export) inside a hexagonal merchant seal, grounded on a gold horizon.',
+      refText: 'REF · SUDANESE ACACIA · GUM ARABIC TRADE',
+      Mark: MarkD },
+  ];
+
+  return (
+    <div style={{ background: SAND, minHeight: '100vh', paddingBottom: 80 }}>
+      {/* HERO */}
+      <div style={{
+        position: 'relative',
+        padding: '56px 44px 36px',
+        borderBottom: `1px solid ${LINE}`,
+      }}>
+        <div style={{ maxWidth: 1340, margin: '0 auto' }}>
+          <div style={{
+            fontFamily: "'JetBrains Mono'", fontSize: 11, fontWeight: 700, color: GOLD,
+            letterSpacing: 2, textTransform: 'uppercase', marginBottom: 14,
+          }}>
+            Brand Identity · v2 · Concepts · 26 Apr 2026
+          </div>
+          <div style={{
+            fontFamily: "'Poppins'", fontSize: 38, fontWeight: 700, lineHeight: 1.1,
+            color: INK, letterSpacing: -0.8, maxWidth: 920, marginBottom: 14,
+          }}>
+            Four marks for بَرْتَل — rooted in Sudanese craft heritage, not in commerce tropes.
+          </div>
+          <div style={{
+            fontFamily: "'Poppins'", fontSize: 14.5, color: MUTE,
+            lineHeight: 1.65, maxWidth: 760,
+          }}>
+            <strong style={{ color: INK }}>بَرْتَل</strong> in classical Arabic means <em>to bestow, to give</em> —
+            a heritage word, not a transactional one. Each concept below references a different Sudanese visual
+            tradition: jirtig adornment, Nubian architecture, the Nile confluence, and the acacia of the gum-arabic trade.
+            Click a card to mark it as the chosen direction. Same navy + gold spec across all four.
+          </div>
+          {/* legend */}
+          <div style={{
+            marginTop: 26, display: 'flex', gap: 26, flexWrap: 'wrap',
+            fontFamily: "'JetBrains Mono'", fontSize: 10, color: MUTE, letterSpacing: 1.2,
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 14, height: 14, borderRadius: 3, background: NAVY }}/>
+              NAVY · #1B3A6B
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 14, height: 14, borderRadius: '50%', background: GOLD }}/>
+              GOLD · #D4860B
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontFamily: "'Cairo'", fontWeight: 700, fontSize: 16, color: INK, lineHeight: 1 }}>برتال</span>
+              CAIRO BOLD
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontFamily: "'Poppins'", fontWeight: 600, fontSize: 14, color: INK, lineHeight: 1 }}>Bartal</span>
+              POPPINS SEMIBOLD
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CONCEPTS GRID */}
+      <div style={{ padding: '40px 44px 0', maxWidth: 1340, margin: '0 auto' }}>
+        <div style={{
+          display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 26,
+        }}>
+          {concepts.map((c, i) => (
+            <ConceptCard
+              key={c.code}
+              index={i + 1}
+              code={c.code}
+              name={c.name}
+              rootIdea={c.rootIdea}
+              refText={c.refText}
+              Mark={c.Mark}
+              selected={selected === c.code}
+              onSelect={() => choose(c.code)}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* FOOTER NOTE */}
+      <div style={{
+        maxWidth: 1340, margin: '40px auto 0', padding: '24px 44px',
+      }}>
+        <div style={{
+          background: '#fff', border: `1px solid ${LINE}`, borderRadius: 14,
+          padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap',
+        }}>
+          <div style={{ flex: 1, minWidth: 280 }}>
+            <div style={{
+              fontFamily: "'JetBrains Mono'", fontSize: 10, color: GOLD, letterSpacing: 1.4, marginBottom: 4,
+            }}>NEXT</div>
+            <div style={{
+              fontFamily: "'Poppins'", fontSize: 15, fontWeight: 600, color: INK, marginBottom: 4,
+            }}>Pick a direction → I’ll build the 6 deliverables.</div>
+            <div style={{ fontFamily: "'Poppins'", fontSize: 13, color: MUTE, lineHeight: 1.5 }}>
+              Tap any of the four cards to mark it as your pick. Then say the word and I’ll roll out the
+              full system: primary lockup, navy surface, app icon set, business card, signage, and construction sheet.
+            </div>
+          </div>
+          <div style={{
+            fontFamily: "'JetBrains Mono'", fontSize: 11, fontWeight: 700, color: NAVY,
+            background: SAND, padding: '10px 16px', borderRadius: 8, letterSpacing: 1.2,
+          }}>
+            CURRENT PICK · {selected}
+          </div>
+        </div>
+      </div>
+
+      {tweaksOn && (
+        <div style={{
+          position: 'fixed', bottom: 20, right: 20, zIndex: 200,
+          background: '#fff', borderRadius: 14, padding: 18,
+          width: 240, boxShadow: '0 12px 40px rgba(0,0,0,0.2)',
+          border: `1px solid ${LINE}`, fontFamily: "'Poppins'",
+        }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: NAVY, marginBottom: 12 }}>Tweaks</div>
+          <div style={{ fontSize: 10, color: MUTE, marginBottom: 6, letterSpacing: 1, fontWeight: 600 }}>SELECTED CONCEPT</div>
+          <div style={{ display: 'flex', gap: 4, background: SAND, padding: 3, borderRadius: 8 }}>
+            {['A','B','C','D'].map(k => {
+              const on = selected === k;
+              return (
+                <div key={k} onClick={() => choose(k)} style={{
+                  flex: 1, padding: '8px 6px', borderRadius: 6, textAlign: 'center',
+                  background: on ? '#fff' : 'transparent',
+                  color: on ? INK : MUTE,
+                  fontSize: 12, fontWeight: 700, cursor: 'pointer',
+                  boxShadow: on ? '0 1px 3px rgba(11,25,48,0.1)' : 'none',
+                }}>{k}</div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

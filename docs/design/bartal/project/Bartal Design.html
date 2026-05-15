@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bartal · Design Exploration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #F1EDE2; min-height: 100vh; }
+  body { font-family: 'Poppins', system-ui, sans-serif; color: #1A1A1A; }
+  button { font-family: inherit; cursor: pointer; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  .bartal-canvas { min-height: 100vh; padding: 40px 32px 80px; }
+  .sticky-top {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(241,237,226,0.94); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(27,58,107,0.1);
+    padding: 14px 32px; display: flex; align-items: center; gap: 20px;
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="tokens.jsx"></script>
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="android-frame.jsx"></script>
+<script type="text/babel" src="mobile-v1.jsx"></script>
+<script type="text/babel" src="mobile-v2.jsx"></script>
+<script type="text/babel" src="mobile-v3.jsx"></script>
+<script type="text/babel" src="secondary-screens.jsx"></script>
+<script type="text/babel" src="web-admin.jsx"></script>
+<script type="text/babel" src="web-pages.jsx"></script>
+<script type="text/babel" src="web-auth.jsx"></script>
+<script type="text/babel" src="admin-pages.jsx"></script>
+<script type="text/babel" src="admin-extras.jsx"></script>
+<script type="text/babel" src="auth-screens.jsx"></script>
+<script type="text/babel" src="auth-gaps.jsx"></script>
+<script type="text/babel" src="system-kit.jsx"></script>
+<script type="text/babel" src="receipt-flow.jsx"></script>
+<script type="text/babel" src="profile-flow.jsx"></script>
+<script type="text/babel" src="checkout-flow.jsx"></script>
+<script type="text/babel" src="web-checkout-steps.jsx"></script>
+<script type="text/babel" src="mobile-extras.jsx"></script>
+<script type="text/babel" src="web-extras.jsx"></script>
+<script type="text/babel" src="admin-extras2.jsx"></script>
+<script type="text/babel" src="order-thanks-and-reviews.jsx"></script>
+<script type="text/babel" src="invoice-and-templates.jsx"></script>
+<script type="text/babel" src="admin-reviews.jsx"></script>
+<script type="text/babel" src="final-additions.jsx"></script>
+<script type="text/babel" src="final-web-and-styletile.jsx"></script>
+
+<script type="text/babel">
+const TWEAK_DEFAULS = /*EDITMODE-BEGIN*/{
+  "lang": "ar",
+  "dark": false,
+  "variation": "v1"
+}/*EDITMODE-END*/;
+
+function App() {
+  // Global AR/EN + dark mode persisted in localStorage
+  const [lang, setLang] = React.useState(() => localStorage.getItem('bartal-lang') || TWEAK_DEFAULS.lang);
+  const [dark, setDark] = React.useState(() => localStorage.getItem('bartal-dark') === '1' ? true : TWEAK_DEFAULS.dark);
+  const [view, setView] = React.useState(() => localStorage.getItem('bartal-view') || 'mobile'); // mobile | web | admin
+  const [tweaksOn, setTweaksOn] = React.useState(false);
+
+  // screen state per variation (home <-> detail <-> cart <-> checkout <-> confirm <-> orders)
+  const [screenV1, setScreenV1] = React.useState('home');
+  const [screenV2, setScreenV2] = React.useState('home');
+  const [screenV3, setScreenV3] = React.useState('home');
+
+  React.useEffect(() => { localStorage.setItem('bartal-lang', lang); }, [lang]);
+  React.useEffect(() => { localStorage.setItem('bartal-dark', dark ? '1' : '0'); }, [dark]);
+  React.useEffect(() => { localStorage.setItem('bartal-view', view); }, [view]);
+
+  // tweaks
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setTweaksOn(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweaksOn(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  const pushEdit = (edits) => {
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
+  };
+
+  const makeNav = (setter) => (dest) => {
+    if (['home', 'shop', 'detail'].includes(dest)) setter(dest === 'shop' ? 'home' : dest);
+    else setter(dest);
+  };
+
+  const pageBg = dark ? '#0B1930' : '#F1EDE2';
+
+  return (
+    <div style={{ background: pageBg, minHeight: '100vh', transition: 'background 0.3s' }}>
+      {/* Top tab bar — switch between surfaces */}
+      <div style={{
+        position: 'sticky', top: 0, zIndex: 100,
+        background: dark ? 'rgba(11,25,48,0.9)' : 'rgba(241,237,226,0.9)',
+        backdropFilter: 'blur(14px)',
+        borderBottom: `1px solid ${dark ? 'rgba(255,255,255,0.08)' : 'rgba(27,58,107,0.1)'}`,
+        padding: '12px 28px', display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap',
+      }}>
+        <BartalLogo color={dark ? '#F3EFE6' : BARTAL.navy} accent={BARTAL.amber} size={22} lang="en"/>
+        <div style={{ display: 'flex', gap: 4, background: dark ? 'rgba(255,255,255,0.06)' : 'rgba(27,58,107,0.06)',
+                      padding: 3, borderRadius: 100 }}>
+          {[
+            { k: 'mobile', lbl: 'Mobile · 3 variations' },
+            { k: 'web',    lbl: 'Web (Next.js)' },
+            { k: 'admin',  lbl: 'Admin Dashboard' },
+            { k: 'system', lbl: 'Design System' },
+          ].map(s => (
+            <div key={s.k} onClick={() => setView(s.k)} style={{
+              padding: '7px 14px', borderRadius: 100, cursor: 'pointer',
+              background: view === s.k ? (dark ? BARTAL.navyInk : BARTAL.navy) : 'transparent',
+              color: view === s.k ? '#fff' : (dark ? BARTAL.d_textMute : BARTAL.textMute),
+              fontSize: 12, fontWeight: 600, fontFamily: "'Poppins'",
+              transition: 'all 0.2s',
+            }}>{s.lbl}</div>
+          ))}
+        </div>
+        <div style={{ flex: 1 }}/>
+        {/* language toggle */}
+        <div style={{ display: 'flex', gap: 4, background: dark ? 'rgba(255,255,255,0.06)' : 'rgba(27,58,107,0.06)',
+                      padding: 3, borderRadius: 100, fontSize: 11, fontWeight: 700, fontFamily: "'Poppins'" }}>
+          {['en','ar'].map(l => (
+            <div key={l} onClick={() => { setLang(l); pushEdit({ lang: l }); }} style={{
+              padding: '6px 14px', borderRadius: 100, cursor: 'pointer',
+              background: lang === l ? BARTAL.amber : 'transparent',
+              color: lang === l ? '#fff' : (dark ? BARTAL.d_textMute : BARTAL.textMute),
+              fontFamily: l === 'ar' ? "'Cairo'" : "'Poppins'",
+            }}>{l === 'en' ? 'EN' : 'ع'}</div>
+          ))}
+        </div>
+        {/* dark toggle */}
+        <div onClick={() => { setDark(!dark); pushEdit({ dark: !dark }); }} style={{
+          width: 42, height: 24, borderRadius: 12, padding: 2,
+          background: dark ? BARTAL.amber : 'rgba(27,58,107,0.2)',
+          position: 'relative', cursor: 'pointer', transition: 'all 0.2s',
+        }}>
+          <div style={{
+            width: 20, height: 20, borderRadius: '50%', background: '#fff',
+            transform: dark ? 'translateX(18px)' : 'translateX(0)',
+            transition: 'transform 0.2s',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.25)',
+          }}/>
+        </div>
+      </div>
+
+      {/* CONTENT */}
+      {view === 'mobile' && (
+        <MobileCanvas
+          {...{ lang, dark, screenV1, screenV2, screenV3, setScreenV1, setScreenV2, setScreenV3 }}
+        />
+      )}
+      {view === 'web' && (
+        <WebCanvas lang={lang} dark={dark}/>
+      )}
+      {view === 'admin' && (
+        <AdminCanvas lang={lang} dark={dark}/>
+      )}
+      {view === 'system' && (
+        <StyleTile dark={dark}/>
+      )}
+
+      {/* Tweaks panel */}
+      {tweaksOn && (
+        <TweaksPanel {...{ lang, setLang, dark, setDark, view, setView, pushEdit }}/>
+      )}
+    </div>
+  );
+}
+
+// ── MOBILE: side-by-side 3 variations × iOS + Android ──
+function MobileCanvas({ lang, dark, screenV1, screenV2, screenV3, setScreenV1, setScreenV2, setScreenV3 }) {
+  const isAr = lang === 'ar';
+  const labelColor = dark ? BARTAL.d_text : BARTAL.navyInk;
+  const mutedColor = dark ? BARTAL.d_textMute : BARTAL.textMute;
+
+  const variants = [
+    { k: 'v1', title: 'Marketplace Classic',
+      tag_ar: 'متجر كلاسيكي — شبكة كثيفة، تبويب سفلي، بطاقات مستطيلة',
+      tag_en: 'Dense grid, bottom tab bar, conventional affordances',
+      Comp: MobileV1, screen: screenV1, setScreen: setScreenV1 },
+    { k: 'v2', title: 'Editorial Bazaar',
+      tag_ar: 'تحريري — بطل كامل، نمط تحريري، شريط تنقل عائم',
+      tag_en: 'Full-bleed hero, editorial type, floating pill nav',
+      Comp: MobileV2, screen: screenV2, setScreen: setScreenV2 },
+    { k: 'v3', title: 'Souq Kiosk',
+      tag_ar: 'سوق — إطار محرابي، كهرماني غالب، أرقام شرقية',
+      tag_en: 'Mihrab arches, amber-dominant, Eastern Arabic numerals',
+      Comp: MobileV3, screen: screenV3, setScreen: setScreenV3 },
+  ];
+
+  const screens = ['splash', 'onboarding1', 'onboarding2', 'onboarding3', 'welcome', 'login', 'signup', 'otp', 'forgot', 'reset', 'home', 'categoriesBrowse', 'skeleton', 'skeletonPdp', 'detail', 'pdpReviews', 'cart', 'cartPromo', 'cartEmpty', 'checkoutAddress', 'checkoutPayment', 'checkoutBank', 'checkoutReview', 'confirm', 'orders', 'ordersEmpty', 'orderDetail', 'upload', 'submitted', 'tracking', 'searchEmpty', 'searchResults', 'filtersSheet', 'wishlist', 'notifications', 'receiptRejected', 'editProfile', 'changePassword', 'helpFaq', 'profile', 'addresses', 'addressesEmpty', 'addAddress', 'settings', 'offline', 'error', 'writeReview'];
+
+  return (
+    <div style={{ padding: '30px 24px 80px' }}>
+      {/* Intro / system notes */}
+      <div style={{ maxWidth: 960, margin: '0 auto 32px', color: dark ? BARTAL.d_text : BARTAL.navyInk }}>
+        <div style={{ ...typeStyle('en', 'micro'), color: BARTAL.amber, marginBottom: 8 }}>
+          Bartal · mobile exploration · AR + EN · light + dark
+        </div>
+        <div style={{ fontFamily: "'Poppins'", fontSize: 28, fontWeight: 700, lineHeight: 1.2, marginBottom: 10 }}>
+          Three directions for the Sudan marketplace — same brand, different voice.
+        </div>
+        <div style={{ fontFamily: "'Poppins'", fontSize: 14, color: mutedColor, lineHeight: 1.6, maxWidth: 680 }}>
+          All variations share the spec's navy (#1B3A6B) + amber (#D4860B), Cairo for Arabic,
+          Poppins for English, and subtle 8-point star motifs nodding to Sudanese geometric
+          tradition — tap any card to open product detail and proceed through cart → checkout → bank
+          transfer receipt upload. Toggle AR/EN and dark mode at the top.
+        </div>
+      </div>
+
+      {/* Variation columns */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 36, maxWidth: 1600, margin: '0 auto' }}>
+        {variants.map((v) => (
+          <div key={v.k} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            {/* Header */}
+            <div style={{ textAlign: 'center', marginBottom: 18, maxWidth: 400 }}>
+              <div style={{ ...typeStyle('en', 'micro'), color: BARTAL.amber, marginBottom: 4 }}>
+                Variation {v.k.slice(1)}
+              </div>
+              <div style={{ fontFamily: "'Poppins'", fontSize: 20, fontWeight: 700, color: labelColor, marginBottom: 4 }}>
+                {v.title}
+              </div>
+              <div style={{ fontFamily: "'Poppins'", fontSize: 12, color: mutedColor, lineHeight: 1.5 }}>
+                {v[`tag_${lang}`]}
+              </div>
+            </div>
+
+            {/* Screen switcher */}
+            <div style={{ display: 'flex', gap: 4, marginBottom: 18, flexWrap: 'wrap', justifyContent: 'center' }}>
+              {screens.map(s => {
+                const labels = {
+                  splash: 'Splash',
+                  onboarding1: 'Intro 1', onboarding2: 'Intro 2', onboarding3: 'Intro 3',
+                  welcome: 'Welcome', login: 'Sign in', signup: 'Sign up', otp: 'OTP',
+                  forgot: 'Forgot', reset: 'Reset',
+                  home: 'Home', detail: 'PDP', cart: 'Cart',
+                  checkoutAddress: '1 · Address', checkoutPayment: '2 · Payment',
+                  checkoutBank: '2b · Bank', checkoutReview: '3 · Review',
+                  confirm: 'Placed', orders: 'Orders', orderDetail: 'Order',
+                  upload: 'Upload', submitted: 'Submitted', tracking: 'Tracking',
+                  profile: 'Profile', addresses: 'Addresses', addAddress: 'Add address', settings: 'Settings',
+                  skeleton: 'Skeleton', skeletonPdp: 'Skeleton PDP',
+                  cartEmpty: 'Cart · empty', ordersEmpty: 'Orders · empty',
+                  searchEmpty: 'Search · empty', addressesEmpty: 'Addrs · empty',
+                  searchResults: 'Search results', filtersSheet: 'Filters',
+                  wishlist: 'Wishlist', notifications: 'Notifications',
+                  receiptRejected: 'Receipt rejected',
+                  editProfile: 'Edit profile', changePassword: 'Change password',
+                  helpFaq: 'Help / FAQ',
+                  offline: 'Offline', error: 'Error',
+                  writeReview: 'Write review',
+                  categoriesBrowse: 'Categories',
+                  cartPromo: 'Cart · promo',
+                  pdpReviews: 'PDP reviews',
+                };
+                return (
+                  <div key={s} onClick={() => v.setScreen(s)} style={{
+                    padding: '5px 10px', borderRadius: 100,
+                    background: v.screen === s ? BARTAL.navy : (dark ? 'rgba(255,255,255,0.06)' : 'rgba(27,58,107,0.08)'),
+                    color: v.screen === s ? '#fff' : mutedColor,
+                    fontSize: 10, fontWeight: 600, fontFamily: "'Poppins'",
+                    cursor: 'pointer', whiteSpace: 'nowrap',
+                  }}>{labels[s] || s}</div>
+                );
+              })}
+            </div>
+
+            {/* iOS + Android side by side (scaled) */}
+            <div data-screen-label={`Mobile ${v.k} ${v.screen}`} style={{
+              display: 'flex', gap: 20, alignItems: 'flex-start',
+              transform: 'scale(0.62)', transformOrigin: 'top center',
+              marginBottom: -300,
+            }}>
+              <DeviceWrap kind="ios" dark={dark}>
+                <MobileScreen v={v} lang={lang} dark={dark}/>
+              </DeviceWrap>
+              <DeviceWrap kind="android" dark={dark}>
+                <MobileScreen v={v} lang={lang} dark={dark}/>
+              </DeviceWrap>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MobileScreen({ v, lang, dark }) {
+  const { Comp, screen, setScreen } = v;
+  const nav = (dest) => {
+    if (dest === 'detail') setScreen('detail');
+    else if (dest === 'home' || dest === 'shop') setScreen('home');
+    else if (dest === 'checkout') setScreen('checkoutAddress');
+    else setScreen(dest);
+  };
+  const back = () => {
+    if (screen === 'detail') setScreen('home');
+    else if (screen === 'cart') setScreen('detail');
+    else if (screen === 'checkout' || screen === 'checkoutAddress') setScreen('cart');
+    else if (screen === 'checkoutPayment') setScreen('checkoutAddress');
+    else if (screen === 'checkoutBank') setScreen('checkoutPayment');
+    else if (screen === 'checkoutReview') setScreen('checkoutPayment');
+    else if (screen === 'confirm') setScreen('checkoutReview');
+    else if (screen === 'orders') setScreen('home');
+    else if (screen === 'orderDetail') setScreen('orders');
+    else if (screen === 'upload') setScreen('orderDetail');
+    else if (screen === 'submitted') setScreen('upload');
+    else if (screen === 'tracking') setScreen('orders');
+    else if (screen === 'profile') setScreen('home');
+    else if (screen === 'addresses' || screen === 'settings') setScreen('profile');
+    else if (screen === 'addAddress') setScreen('addresses');
+    else if (screen === 'login' || screen === 'signup') setScreen('welcome');
+    else if (screen === 'otp') setScreen('signup');
+    else if (screen === 'splash') setScreen('home');
+    else if (screen === 'onboarding1') setScreen('splash');
+    else if (screen === 'onboarding2') setScreen('onboarding1');
+    else if (screen === 'onboarding3') setScreen('onboarding2');
+    else if (screen === 'forgot') setScreen('login');
+    else if (screen === 'reset')  setScreen('forgot');
+    else setScreen('home');
+  };
+
+  // Delegate to variation-specific home/detail, shared secondary screens for rest
+  if (screen === 'home' || screen === 'detail') {
+    return <Comp lang={lang} dark={dark} screen={screen} onNav={nav} onBack={back}/>;
+  }
+  if (screen === 'cart')     return <CartScreen     {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'checkout' || screen === 'checkoutAddress') return <CheckoutAddressScreen {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'checkoutPayment') return <CheckoutPaymentScreen {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'checkoutBank')    return <CheckoutBankScreen    {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'checkoutReview')  return <CheckoutReviewScreen  {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'confirm')  return <ConfirmScreen  {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'orders')   return <OrdersScreen   {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'welcome')  return <WelcomeScreen  {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'login')    return <LoginScreen    {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'signup')   return <SignupScreen   {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'otp')      return <OtpScreen      {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'splash')        return <SplashScreen         {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'onboarding1')   return <OnboardingScreen     {...{ lang, dark, onNav: (s) => nav(s === 'onboarding' ? 'onboarding2' : s), onBack: back, slideIndex: 0 }}/>;
+  if (screen === 'onboarding2')   return <OnboardingScreen     {...{ lang, dark, onNav: (s) => nav(s === 'onboarding' ? 'onboarding3' : s), onBack: back, slideIndex: 1 }}/>;
+  if (screen === 'onboarding3')   return <OnboardingScreen     {...{ lang, dark, onNav: nav, onBack: back, slideIndex: 2 }}/>;
+  if (screen === 'forgot')        return <ForgotPasswordScreen {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'reset')         return <ResetPasswordScreen  {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'cartEmpty')      return <MobileEmptyState     {...{ lang, dark, kind: 'cart',      onNav: nav, onBack: back }}/>;
+  if (screen === 'ordersEmpty')    return <MobileEmptyState     {...{ lang, dark, kind: 'orders',    onNav: nav, onBack: back }}/>;
+  if (screen === 'searchEmpty')    return <MobileEmptyState     {...{ lang, dark, kind: 'search',    onNav: nav, onBack: back }}/>;
+  if (screen === 'addressesEmpty') return <MobileEmptyState     {...{ lang, dark, kind: 'addresses', onNav: nav, onBack: back }}/>;
+  if (screen === 'error')          return <MobileErrorScreen    {...{ lang, dark, kind: 'error',    onBack: back }}/>;
+  if (screen === 'offline')        return <MobileErrorScreen    {...{ lang, dark, kind: 'offline',  onBack: back }}/>;
+  if (screen === 'skeleton')       return <MobileSkeletonScreen {...{ lang, dark, kind: 'home' }}/>;
+  if (screen === 'skeletonPdp')    return <MobileSkeletonScreen {...{ lang, dark, kind: 'pdp' }}/>;
+  if (screen === 'orderDetail') return <OrderDetailScreen      {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'upload')      return <UploadReceiptScreen    {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'submitted')   return <ReceiptSubmittedScreen {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'tracking')    return <TrackingScreen         {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'profile')     return <ProfileScreen          {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'addresses')   return <AddressesScreen        {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'addAddress')  return <AddAddressScreen       {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'settings')    return <SettingsScreen         {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'searchResults')  return <SearchResultsScreen   {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'filtersSheet')   return <FiltersSheet          {...{ lang, dark, onClose: back }}/>;
+  if (screen === 'wishlist')       return <WishlistScreen        {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'notifications')  return <NotificationsScreen   {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'receiptRejected')return <ReceiptRejectedScreen {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'editProfile')    return <EditProfileScreen     {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'changePassword') return <ChangePasswordScreen  {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'helpFaq')        return <HelpFaqScreen         {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'writeReview')    return <MobileWriteReview     {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'categoriesBrowse') return <MobileCategoriesScreen {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'cartPromo')        return <MobileCartPromoScreen  {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  if (screen === 'pdpReviews')       return <MobilePdpReviewsScreen {...{ lang, dark, onNav: nav, onBack: back }}/>;
+  return null;
+}
+
+function DeviceWrap({ kind, dark, children }) {
+  if (kind === 'ios') {
+    return (
+      <IOSDevice dark={dark} width={390} height={844}>
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+          {children}
+        </div>
+      </IOSDevice>
+    );
+  }
+  return (
+    <AndroidDevice dark={dark} width={390} height={844}>
+      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 24, top: 40, overflow: 'hidden' }}>
+        {children}
+      </div>
+    </AndroidDevice>
+  );
+}
+
+// ── WEB CANVAS ──
+const WEB_PAGES = [
+  { k: 'home',     en: 'Home',            ar: 'الرئيسية',     path: (l) => `/${l}` },
+  { k: 'category', en: 'Category',        ar: 'الفئة',         path: (l) => `/${l}/c/fragrance` },
+  { k: 'pdp',      en: 'Product',         ar: 'المنتج',        path: (l) => `/${l}/p/ajmal-aurora` },
+  { k: 'cart',     en: 'Cart',            ar: 'السلة',         path: (l) => `/${l}/cart` },
+  { k: 'checkout-address', en: 'Checkout · 1 Address', ar: 'الدفع · ١ العنوان', path: (l) => `/${l}/checkout/address` },
+  { k: 'checkout', en: 'Checkout · 2 Payment', ar: 'الدفع · ٢ طريقة الدفع', path: (l) => `/${l}/checkout/payment` },
+  { k: 'checkout-bank',    en: 'Checkout · 2b Bank', ar: 'الدفع · ٢ب البنك', path: (l) => `/${l}/checkout/bank` },
+  { k: 'checkout-review',  en: 'Checkout · 3 Review', ar: 'الدفع · ٣ المراجعة', path: (l) => `/${l}/checkout/review` },
+  { k: 'order-confirm',    en: 'Checkout · Thank you', ar: 'تأكيد الطلب',     path: (l) => `/${l}/checkout/thank-you/BRT-2026-00842` },
+  { k: 'write-review',     en: 'Write a review',  ar: 'كتابة تقييم',         path: (l) => `/${l}/account/orders/BRT-2026-00842/review` },
+  { k: 'invoice-print',    en: 'Invoice (print)',  ar: 'فاتورة (طباعة)',      path: (l) => `/${l}/account/orders/BRT-2026-00842/invoice/print` },
+  { k: 'account',  en: 'Account',         ar: 'حسابي',         path: (l) => `/${l}/account` },
+  { k: 'account-profile',   en: 'Account · Info',     ar: 'حسابي · المعلومات', path: (l) => `/${l}/account/profile` },
+  { k: 'account-addresses', en: 'Account · Addresses',ar: 'حسابي · العناوين',  path: (l) => `/${l}/account/addresses` },
+  { k: 'account-security',  en: 'Account · Security', ar: 'حسابي · الأمان',    path: (l) => `/${l}/account/security` },
+  { k: 'login',    en: 'Sign in',         ar: 'تسجيل الدخول',  path: (l) => `/${l}/login` },
+  { k: 'signup',   en: 'Sign up',         ar: 'إنشاء حساب',    path: (l) => `/${l}/signup` },
+  { k: 'otp',      en: 'OTP',             ar: 'رمز التحقق',    path: (l) => `/${l}/verify` },
+  { k: 'forgot',   en: 'Forgot password', ar: 'نسيت كلمة المرور', path: (l) => `/${l}/forgot` },
+  { k: 'reset',    en: 'Reset password',  ar: 'إعادة تعيين كلمة المرور', path: (l) => `/${l}/reset` },
+  { k: 'about',    en: 'About',           ar: 'من نحن',        path: (l) => `/${l}/about` },
+  { k: 'privacy',  en: 'Privacy',         ar: 'الخصوصية',     path: (l) => `/${l}/privacy` },
+  { k: 'contact',  en: 'Contact',         ar: 'تواصل',        path: (l) => `/${l}/contact` },
+  { k: 'search',         en: 'Search results', ar: 'نتائج البحث',     path: (l) => `/${l}/search?q=oud` },
+  { k: 'wishlist',       en: 'Wishlist',       ar: 'المفضلة',          path: (l) => `/${l}/wishlist` },
+  { k: 'orders',         en: 'Order history',  ar: 'سجل الطلبات',     path: (l) => `/${l}/account/orders` },
+  { k: 'order-detail',   en: 'Order detail',   ar: 'تفاصيل الطلب',    path: (l) => `/${l}/account/orders/BTL-2845` },
+  { k: 'receipt-upload', en: 'Receipt upload', ar: 'رفع الإيصال',     path: (l) => `/${l}/account/orders/BTL-2845/receipt` },
+  { k: 'tos',            en: 'Terms of Service', ar: 'الشروط والأحكام', path: (l) => `/${l}/terms` },
+  { k: 'faq',            en: 'FAQ',            ar: 'الأسئلة الشائعة', path: (l) => `/${l}/faq` },
+  { k: '404',      en: '404 Not found',   ar: 'ليست موجودة', path: (l) => `/${l}/this-page-does-not-exist` },
+  { k: '500',      en: '500 Error',       ar: 'خطأ الخادم',      path: (l) => `/${l}/error` },
+  { k: 'offline',  en: 'Offline',         ar: 'غير متصل',          path: (l) => `/${l}` },
+  { k: 'journal',  en: 'The Bartal Edit', ar: 'مجلة برتال',     path: (l) => `/${l}/journal` },
+  { k: 'brand',    en: 'Brand · Ajmal',    ar: 'أجمل',                 path: (l) => `/${l}/brand/ajmal` },
+];
+
+function WebCanvas({ lang, dark }) {
+  const [page, setPage] = React.useState(() => localStorage.getItem('bartal-web-page') || 'home');
+  React.useEffect(() => { localStorage.setItem('bartal-web-page', page); }, [page]);
+  const isAr = lang === 'ar';
+
+  const meta = {
+    home:     { ar: 'الصفحة الرئيسية',       en: 'Home page' },
+    category: { ar: 'صفحة الفئة — العطور',   en: 'Category page — Fragrance' },
+    pdp:      { ar: 'صفحة المنتج',            en: 'Product detail page' },
+    cart:     { ar: 'سلة التسوق',             en: 'Shopping cart' },
+    'checkout-address': { ar: 'الدفع — خطوة ١: العنوان',  en: 'Checkout — step 1: Address' },
+    checkout:           { ar: 'الدفع — خطوة ٢: الدفع',    en: 'Checkout — step 2: Payment method' },
+    'checkout-bank':    { ar: 'الدفع — خطوة ٢ب: البنك',  en: 'Checkout — step 2b: Bank transfer' },
+    'checkout-review':  { ar: 'الدفع — خطوة ٣: المراجعة', en: 'Checkout — step 3: Review & place' },
+    account:  { ar: 'لوحة الحساب',            en: 'Account overview' },
+    'account-profile':   { ar: 'المعلومات الشخصية',  en: 'Personal information' },
+    'account-addresses': { ar: 'العناوين المحفوظة',  en: 'Saved addresses' },
+    'account-security':  { ar: 'الأمان والخصوصية',   en: 'Security & privacy' },
+    login:    { ar: 'صفحة تسجيل الدخول',     en: 'Sign in page' },
+    signup:   { ar: 'صفحة إنشاء الحساب',      en: 'Sign up page' },
+    otp:      { ar: 'تحقق واتساب / SMS',      en: 'WhatsApp / SMS verification' },
+    forgot:   { ar: 'نسيت كلمة المرور',         en: 'Forgot password' },
+    reset:    { ar: 'إعادة تعيين كلمة المرور',  en: 'Reset password' },
+    about:    { ar: 'من نحن',                      en: 'About Bartal' },
+    privacy:  { ar: 'سياسة الخصوصية',           en: 'Privacy policy' },
+    contact:  { ar: 'تواصل معنا',                 en: 'Contact us' },
+    search:        { ar: 'نتائج البحث',            en: 'Search results' },
+    wishlist:      { ar: 'قائمة المفضلة',          en: 'Wishlist' },
+    orders:        { ar: 'سجل الطلبات',            en: 'Order history' },
+    'order-detail':{ ar: 'تفاصيل الطلب',           en: 'Order detail' },
+    'receipt-upload':{ ar: 'رفع إيصال التحويل',   en: 'Bank transfer receipt upload' },
+    'order-confirm': { ar: 'صفحة شكر بعد إتمام الطلب — تعليمات التحويل', en: 'Thank-you page after checkout — bank transfer instructions' },
+    'write-review':  { ar: 'كتابة تقييم لمنتج تم استلامه',                en: 'Write a review for a delivered product' },
+    'invoice-print': { ar: 'فاتورة + قسيمة تعبئة جاهزة للطباعة (A4)',     en: 'Print-ready invoice + packing slip (A4)' },
+    tos:           { ar: 'الشروط والأحكام',         en: 'Terms of Service' },
+    faq:           { ar: 'الأسئلة الشائعة',         en: 'FAQ / Help center' },
+    '404':    { ar: '404 · الصفحة غير موجودة',    en: '404 · Page not found' },
+    '500':    { ar: '500 · خطأ في الخادم',            en: '500 · Server error' },
+    offline:  { ar: 'فاقد للاتصال',                 en: 'Offline state' },
+    journal:  { ar: 'مجلة برتال — حكايات ، أدلة ، ومراجعات',  en: 'The Bartal Edit — stories, guides, and reviews' },
+    brand:    { ar: 'صفحة الماركة — أجمل',           en: 'Brand showcase — Ajmal perfumery' },
+  };
+
+  const current = WEB_PAGES.find(p => p.k === page) || WEB_PAGES[0];
+
+  return (
+    <div style={{ padding: '30px 24px 80px' }}>
+      <div style={{ maxWidth: 1240, margin: '0 auto 22px', color: dark ? BARTAL.d_text : BARTAL.navyInk }}>
+        <div style={{ ...typeStyle('en', 'micro'), color: BARTAL.amber, marginBottom: 8 }}>Bartal · Web (Next.js 14 · SSR · next-intl)</div>
+        <div style={{ fontFamily: "'Poppins'", fontSize: 24, fontWeight: 700, lineHeight: 1.2, marginBottom: 6 }}>
+          {isAr ? meta[page].ar : meta[page].en}
+        </div>
+        <div style={{ fontFamily: "'Poppins'", fontSize: 14, color: dark ? BARTAL.d_textMute : BARTAL.textMute, maxWidth: 720, lineHeight: 1.6 }}>
+          {isAr
+            ? 'تخطيط استجابي واحد تحت مقطع [locale]/. بدّل ع / EN للتبديل بين RTL و LTR (Cairo ↔ Poppins).'
+            : 'Single responsive layout under [locale]/ segment. Toggle ع / EN above to flip direction and swap font (Cairo ↔ Poppins).'}
+        </div>
+      </div>
+
+      {/* Page switcher */}
+      <div style={{
+        maxWidth: 1240, margin: '0 auto 14px',
+        display: 'flex', flexWrap: 'wrap', gap: 8,
+      }}>
+        {WEB_PAGES.map(p => {
+          const on = p.k === page;
+          return (
+            <div key={p.k} onClick={() => setPage(p.k)} style={{
+              padding: '7px 14px', borderRadius: 100,
+              fontSize: 12, fontWeight: 600,
+              background: on ? BARTAL.amber : (dark ? BARTAL.d_surface : '#fff'),
+              color: on ? '#fff' : (dark ? BARTAL.d_text : BARTAL.text),
+              border: `1px solid ${on ? BARTAL.amber : (dark ? BARTAL.d_line : BARTAL.line)}`,
+              cursor: 'pointer', userSelect: 'none',
+              fontFamily: "'Poppins'",
+            }}>
+              {isAr ? p.ar : p.en}
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{
+        maxWidth: 1240, margin: '0 auto',
+        background: dark ? '#132744' : '#fff',
+        borderRadius: 16, border: `1px solid ${dark ? BARTAL.d_line : BARTAL.line}`,
+        overflow: 'hidden',
+        boxShadow: dark ? '0 30px 80px rgba(0,0,0,0.5)' : '0 30px 80px rgba(11,25,48,0.12)',
+      }}>
+        {/* Browser chrome */}
+        <div style={{
+          background: dark ? '#1B3358' : '#F5F3EE',
+          padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 10,
+          borderBottom: `1px solid ${dark ? BARTAL.d_line : BARTAL.line}`,
+        }}>
+          <div style={{ display: 'flex', gap: 6 }}>
+            <div style={{ width: 11, height: 11, borderRadius: 6, background: '#FF5F57' }}/>
+            <div style={{ width: 11, height: 11, borderRadius: 6, background: '#FEBC2E' }}/>
+            <div style={{ width: 11, height: 11, borderRadius: 6, background: '#28C840' }}/>
+          </div>
+          <div style={{
+            flex: 1, maxWidth: 520, margin: '0 auto',
+            padding: '5px 12px', background: dark ? '#0B1930' : '#fff',
+            borderRadius: 6, fontFamily: "'JetBrains Mono'", fontSize: 11,
+            color: dark ? BARTAL.d_textMute : BARTAL.textMute,
+            direction: 'ltr', textAlign: 'center',
+          }}>
+            bartal.sd{current.path(lang)}
+          </div>
+        </div>
+        <div style={{ height: 820 }} data-screen-label={`Web ${current.en}`}>
+          {page === 'home'     && <WebOverview lang={lang} dark={dark}/>}
+          {page === 'category' && <WebCategory lang={lang} dark={dark}/>}
+          {page === 'pdp'      && <WebPDP      lang={lang} dark={dark}/>}
+          {page === 'cart'     && <WebCart     lang={lang} dark={dark}/>}
+          {page === 'checkout-address' && <WebCheckout lang={lang} dark={dark} step="address"/>}
+          {page === 'checkout'         && <WebCheckout lang={lang} dark={dark} step="payment"/>}
+          {page === 'checkout-bank'    && <WebCheckout lang={lang} dark={dark} step="bank"/>}
+          {page === 'checkout-review'  && <WebCheckout lang={lang} dark={dark} step="review"/>}
+          {page === 'account'  && <WebAccount  lang={lang} dark={dark}/>}
+          {page === 'account-profile'   && <WebAccountProfile   lang={lang} dark={dark}/>}
+          {page === 'account-addresses' && <WebAccountAddresses lang={lang} dark={dark}/>}
+          {page === 'account-security'  && <WebAccountSecurity  lang={lang} dark={dark}/>}
+          {page === 'login'    && <WebLogin    lang={lang} dark={dark}/>}
+          {page === 'signup'   && <WebSignup   lang={lang} dark={dark}/>}
+          {page === 'otp'      && <WebOtp      lang={lang} dark={dark}/>}
+          {page === 'forgot'   && <WebForgot   lang={lang} dark={dark}/>}
+          {page === 'reset'    && <WebReset    lang={lang} dark={dark}/>}
+          {page === 'about'    && <WebAbout    lang={lang} dark={dark}/>}
+          {page === 'privacy'  && <WebPrivacy  lang={lang} dark={dark}/>}
+          {page === 'contact'  && <WebContact  lang={lang} dark={dark}/>}
+          {page === 'search'         && <WebSearchResults  lang={lang} dark={dark}/>}
+          {page === 'wishlist'       && <WebWishlist       lang={lang} dark={dark}/>}
+          {page === 'orders'         && <WebOrderHistory   lang={lang} dark={dark}/>}
+          {page === 'order-detail'   && <WebOrderDetail    lang={lang} dark={dark}/>}
+          {page === 'receipt-upload' && <WebReceiptUpload  lang={lang} dark={dark}/>}
+          {page === 'order-confirm'  && <WebOrderConfirm   lang={lang} dark={dark}/>}
+          {page === 'write-review'   && <WebWriteReview    lang={lang} dark={dark}/>}
+          {page === 'invoice-print'  && <WebInvoicePrint   lang={lang} dark={dark}/>}
+          {page === 'tos'            && <WebToS            lang={lang} dark={dark}/>}
+          {page === 'faq'            && <WebFaq            lang={lang} dark={dark}/>}
+          {page === '404'      && <WebSystemState lang={lang} dark={dark} kind="404"/>}
+          {page === '500'      && <WebSystemState lang={lang} dark={dark} kind="500"/>}
+          {page === 'offline'  && <WebSystemState lang={lang} dark={dark} kind="offline"/>}
+          {page === 'journal'  && <WebJournal     lang={lang} dark={dark}/>}
+          {page === 'brand'    && <WebBrandPage   lang={lang} dark={dark}/>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── ADMIN CANVAS ──
+function AdminCanvas({ lang, dark }) {
+  const [adminPage, setAdminPage] = React.useState(() => localStorage.getItem('bartal-admin-page') || 'dashboard');
+  React.useEffect(() => { localStorage.setItem('bartal-admin-page', adminPage); }, [adminPage]);
+
+  const PAGES = {
+    login:     { title: 'Staff sign in',      subtitle: 'Pre-auth screen',                raw: <AdminLogin dark={dark}/> },
+    dashboard: { title: 'Dashboard',          subtitle: 'Today · 19 Apr 2026',            render: <AdminDashboard dark={dark}/> },
+    orders:    { title: 'Orders',             subtitle: '112 orders · 19 April 2026',      render: <AdminOrders dark={dark}/> },
+    receipts:  { title: 'Receipt verification', subtitle: '3 pending · 12 today',           render: <AdminReceiptViewer lang={lang} dark={dark}/> },
+    products:  { title: 'Products',           subtitle: '324 products · 14 low stock',     render: <AdminProducts dark={dark}/> },
+    productForm: { title: 'Edit product',     subtitle: 'Ajmal Aurora · AUR',              render: <AdminProductForm dark={dark}/> },
+    categories:{ title: 'Categories',         subtitle: '4 top-level · 15 subcategories',   render: <AdminCategories dark={dark}/> },
+    customers: { title: 'Customers',          subtitle: '2,847 total · +142 this month',   render: <AdminCustomers dark={dark}/> },
+    zones:     { title: 'Delivery zones',     subtitle: 'Khartoum · Omdurman · Bahri',     render: <AdminZones dark={dark}/> },
+    analytics: { title: 'Analytics',          subtitle: 'Last 30 days',                      render: <AdminAnalytics dark={dark}/> },
+    settings:  { title: 'Store settings',     subtitle: 'Bank accounts · checkout · team', render: <AdminSettings dark={dark}/> },
+    orderDetail:    { title: 'Order #BTL-2845',  subtitle: 'Mohammed Osman · Khartoum · 19 Apr 2026', render: <AdminOrderDetail dark={dark}/> },
+    customerDetail: { title: 'Customer · Mohammed Osman', subtitle: 'mo@example.sd · 12 orders lifetime', render: <AdminCustomerDetail dark={dark}/> },
+    refunds:        { title: 'Refunds & returns',subtitle: '4 pending · 2 approved this week',         render: <AdminRefunds dark={dark}/> },
+    promos:         { title: 'Promo codes',      subtitle: '6 active · 23 redemptions today',           render: <AdminPromos dark={dark}/> },
+    banners:        { title: 'Banners CMS',      subtitle: 'Hero slides · featured collections',        render: <AdminBanners dark={dark}/> },
+    staff:          { title: 'Staff & audit log',subtitle: '5 members · 134 events today',              render: <AdminStaff dark={dark}/> },
+    reviews:        { title: 'Reviews moderation', subtitle: '4 pending · 2 auto-flagged',              render: <AdminReviews dark={dark}/> },
+    templates:      { title: 'Message templates',  subtitle: 'Email · WhatsApp · SMS — 12 templates',  render: <AdminTemplates dark={dark}/> },
+    shipping:       { title: 'Shipping labels',    subtitle: '4 ready · 1 printed today',              render: <AdminShippingLabels dark={dark}/> },
+    inventory:      { title: 'Inventory log',      subtitle: '14 movements today · last 7 days',       render: <AdminInventoryLog dark={dark}/> },
+    abandoned:      { title: 'Abandoned carts',    subtitle: '7 today · 4.2M SDG recoverable',         render: <AdminAbandonedCarts dark={dark}/> },
+  };
+  const current = PAGES[adminPage] || PAGES.dashboard;
+
+  return (
+    <div style={{ padding: '30px 24px 80px' }}>
+      <div style={{ maxWidth: 1240, margin: '0 auto 28px', color: dark ? BARTAL.d_text : BARTAL.navyInk }}>
+        <div style={{ ...typeStyle('en', 'micro'), color: BARTAL.amber, marginBottom: 8 }}>Bartal · Admin Dashboard (React + Vite)</div>
+        <div style={{ fontFamily: "'Poppins'", fontSize: 24, fontWeight: 700, lineHeight: 1.2, marginBottom: 6 }}>
+          Full admin console — 8 pages, click the sidebar.
+        </div>
+        <div style={{ fontFamily: "'Poppins'", fontSize: 14, color: dark ? BARTAL.d_textMute : BARTAL.textMute, maxWidth: 720, lineHeight: 1.6 }}>
+          Operations team tool. English-only (internal). Dashboard, Orders, Receipts, Products, Customers, Zones, Analytics, Settings
+          — every page wired to realistic Sudan-market data.
+        </div>
+      </div>
+      <div style={{
+        maxWidth: 1240, margin: '0 auto',
+        background: dark ? '#132744' : '#fff',
+        borderRadius: 16, border: `1px solid ${dark ? BARTAL.d_line : BARTAL.line}`,
+        overflow: 'hidden',
+        boxShadow: dark ? '0 30px 80px rgba(0,0,0,0.5)' : '0 30px 80px rgba(11,25,48,0.12)',
+        height: 720,
+      }} data-screen-label={`Admin ${adminPage}`}>
+        {current.raw ? current.raw : (
+          <AdminShell page={adminPage} setPage={setAdminPage} dark={dark}
+                      title={current.title} subtitle={current.subtitle}>
+            {current.render}
+          </AdminShell>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── TWEAKS PANEL ──
+function TweaksPanel({ lang, setLang, dark, setDark, view, setView, pushEdit }) {
+  return (
+    <div style={{
+      position: 'fixed', bottom: 20, right: 20, zIndex: 200,
+      background: '#fff', borderRadius: 14, padding: 16,
+      width: 260, boxShadow: '0 12px 40px rgba(0,0,0,0.2)',
+      border: `1px solid ${BARTAL.line}`, fontFamily: "'Poppins'",
+    }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: BARTAL.navy, marginBottom: 10 }}>Tweaks</div>
+
+      <div style={{ marginBottom: 10 }}>
+        <div style={{ fontSize: 11, color: BARTAL.textMute, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.5 }}>Language</div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {['ar','en'].map(l => (
+            <div key={l} onClick={() => { setLang(l); pushEdit({ lang: l }); }} style={{
+              flex: 1, padding: '8px', borderRadius: 8, textAlign: 'center',
+              background: lang === l ? BARTAL.amber : BARTAL.sand,
+              color: lang === l ? '#fff' : BARTAL.text,
+              fontSize: 12, fontWeight: 600, cursor: 'pointer',
+            }}>{l === 'ar' ? 'العربية' : 'English'}</div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ marginBottom: 10 }}>
+        <div style={{ fontSize: 11, color: BARTAL.textMute, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.5 }}>Theme</div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {[{ k: false, l: 'Light' }, { k: true, l: 'Dark' }].map(o => (
+            <div key={o.l} onClick={() => { setDark(o.k); pushEdit({ dark: o.k }); }} style={{
+              flex: 1, padding: '8px', borderRadius: 8, textAlign: 'center',
+              background: dark === o.k ? BARTAL.navy : BARTAL.sand,
+              color: dark === o.k ? '#fff' : BARTAL.text,
+              fontSize: 12, fontWeight: 600, cursor: 'pointer',
+            }}>{o.l}</div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div style={{ fontSize: 11, color: BARTAL.textMute, marginBottom: 5, textTransform: 'uppercase', letterSpacing: 0.5 }}>Surface</div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {['mobile','web','admin','system'].map(v => (
+            <div key={v} onClick={() => setView(v)} style={{
+              flex: 1, padding: '8px', borderRadius: 8, textAlign: 'center',
+              background: view === v ? BARTAL.navy : BARTAL.sand,
+              color: view === v ? '#fff' : BARTAL.text,
+              fontSize: 10, fontWeight: 600, cursor: 'pointer', textTransform: 'capitalize',
+            }}>{v}</div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

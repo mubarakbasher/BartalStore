@@ -1,12 +1,36 @@
-# @bartal/web — Customer website *(Phase 5)*
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Not yet scaffolded. This folder is a placeholder so the monorepo layout is locked in.
+## Getting Started
 
-**Planned stack** (per PRD §8.4): Next.js 14 (App Router), TypeScript strict, Tailwind (with logical-property utilities for RTL), next-intl, next/font/google for Cairo + Poppins, @tanstack/react-query, zustand for cart state.
+First, run the development server:
 
-**Phase entry criteria:**
-1. `apps/api` is implemented and serving the endpoints the website needs (auth, products, categories, cart, orders).
-2. The Claude.ai design artifact URL has been shared by the project owner — used as the visual reference for the 23 pages listed in PRD §6 + §7.1.
-3. Logo + brand assets available.
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-When ready: `pnpm create next-app@latest apps/web --typescript --tailwind --app --import-alias '@/*' --src-dir`, then add this folder to `pnpm-workspace.yaml`.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

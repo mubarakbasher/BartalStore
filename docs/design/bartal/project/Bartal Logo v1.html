@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bartal · Logo System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100vh; }
+  body { font-family: 'Poppins', system-ui, sans-serif; color: #1A1A1A; background: #F4EFE3; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="logo-system.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "dark": true,
+  "primaryColor": "#1F4E5F",
+  "accentColor": "#D4860B",
+  "wordmarkFont": "poppins"
+}/*EDITMODE-END*/;
+
+function App() {
+  const [tweaksOn, setTweaksOn] = React.useState(false);
+  const [tw, setTw] = React.useState(TWEAK_DEFAULTS);
+
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setTweaksOn(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweaksOn(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  const setTweak = (k, v) => {
+    setTw(prev => ({ ...prev, [k]: v }));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [k]: v } }, '*');
+  };
+
+  const dark = tw.dark;
+  const fgPrimary = tw.primaryColor;
+  const accent = tw.accentColor;
+  const fontMap = {
+    poppins: "'Poppins', system-ui",
+    playfair: "'Playfair Display', serif",
+    cairo: "'Cairo', system-ui",
+  };
+  const latinFamily = fontMap[tw.wordmarkFont] || fontMap.poppins;
+
+  // override BartalLockup to respect tweaks (font + colors)
+  // — just inject CSS variables and let primitives pick them up via props
+  const pageBg = dark ? BTL.navyInk : BTL.sand;
+  const ink = dark ? '#F3EFE6' : BTL.navyInk;
+
+  return (
+    <div style={{
+      background: pageBg, minHeight: '100vh',
+      transition: 'background 0.25s',
+      paddingBottom: 100,
+    }}>
+      {/* HERO */}
+      <div style={{
+        position: 'relative',
+        padding: '64px 48px 48px',
+        borderBottom: `1px solid ${dark ? 'rgba(255,255,255,0.08)' : BTL.line}`,
+        overflow: 'hidden',
+      }}>
+        <StarPattern color={dark ? '#fff' : BTL.navy} opacity={dark ? 0.04 : 0.04} size={88}/>
+        <div style={{ position: 'relative', maxWidth: 1280, margin: '0 auto' }}>
+          <div style={{
+            fontFamily: "'JetBrains Mono'", fontSize: 11, fontWeight: 700, color: accent,
+            letterSpacing: 2, textTransform: 'uppercase', marginBottom: 14,
+          }}>
+            Brand Identity · v1 · 26 Apr 2026
+          </div>
+          <div style={{
+            fontFamily: "'Poppins'", fontSize: 44, fontWeight: 700, lineHeight: 1.05,
+            color: ink, letterSpacing: -1, maxWidth: 820, marginBottom: 16,
+          }}>
+            A bilingual mark for Bartal — a portal for Sudanese commerce.
+          </div>
+          <div style={{
+            fontFamily: "'Poppins'", fontSize: 15, color: dark ? '#9FB1CE' : BTL.mute,
+            lineHeight: 1.65, maxWidth: 720,
+          }}>
+            <strong style={{ color: ink }}>برتال</strong> — "portal" — drawn as an 8-point star,
+            a quiet nod to Sudanese geometric tradition. Navy carries the structure;
+            a single gold dot acts as the diacritic accent across both scripts.
+            Cairo Bold for Arabic, Poppins SemiBold for Latin. Six deliverables below.
+          </div>
+
+          {/* anchor lockup */}
+          <div style={{
+            marginTop: 44, padding: '46px 56px',
+            background: dark ? 'rgba(255,255,255,0.04)' : '#fff',
+            borderRadius: 16,
+            border: `1px solid ${dark ? 'rgba(255,255,255,0.08)' : BTL.line}`,
+            display: 'inline-block',
+          }}>
+            <BartalLockupCustom
+              size={120}
+              fg={dark ? '#fff' : fgPrimary}
+              accent={accent}
+              latinFamily={latinFamily}
+              layout="horizontal"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* DELIVERABLES GRID */}
+      <div style={{ padding: '48px 48px 0', maxWidth: 1280, margin: '0 auto' }}>
+        <div style={{
+          fontFamily: "'JetBrains Mono'", fontSize: 11, fontWeight: 700, color: accent,
+          letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8,
+        }}>
+          Six deliverables
+        </div>
+        <div style={{
+          fontFamily: "'Poppins'", fontSize: 22, fontWeight: 600, color: ink, marginBottom: 28,
+        }}>
+          Primary, navy surface, app icon, business card, signage, construction.
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: 24,
+        }}>
+          <PrimaryLockupT  fg={fgPrimary} accent={accent} latinFamily={latinFamily}/>
+          <NavyLockupT     fg={fgPrimary} accent={accent} latinFamily={latinFamily}/>
+          <AppIconT        fg={fgPrimary} accent={accent}/>
+          <BusinessCardT   fg={fgPrimary} accent={accent} latinFamily={latinFamily}/>
+          <SignageT        fg={fgPrimary} accent={accent} latinFamily={latinFamily}/>
+          <ConstructionT   fg={fgPrimary} accent={accent} latinFamily={latinFamily}/>
+        </div>
+
+        {/* color + type spec */}
+        <SpecBar dark={dark} fg={fgPrimary} accent={accent} latinFamily={latinFamily}/>
+      </div>
+
+      {tweaksOn && (
+        <LogoTweaks tw={tw} setTweak={setTweak}/>
+      )}
+    </div>
+  );
+}
+
+// ── Custom lockup that respects tweakable color + font ───
+function BartalLockupCustom({ size = 64, fg, accent, latinFamily, layout = 'horizontal' }) {
+  const arSize = size * 0.78;
+  const enSize = size * 0.62;
+
+  const Latin = (
+    <div style={{
+      fontFamily: latinFamily,
+      fontWeight: 600,
+      fontSize: enSize,
+      letterSpacing: latinFamily.includes('Playfair') ? 0 : -0.5,
+      color: fg,
+      lineHeight: 1,
+      display: 'inline-flex',
+      alignItems: 'baseline',
+    }}>
+      Barta<span style={{ position: 'relative', display: 'inline-block' }}>
+        l
+        <span style={{
+          position: 'absolute',
+          top: -enSize * 0.06,
+          right: -enSize * 0.16,
+          width: enSize * 0.18,
+          height: enSize * 0.18,
+          borderRadius: '50%',
+          background: accent,
+        }}/>
+      </span>
+    </div>
+  );
+
+  const Arabic = (
+    <div style={{
+      fontFamily: "'Cairo', system-ui",
+      fontWeight: 700,
+      fontSize: arSize,
+      color: fg,
+      lineHeight: 1,
+      direction: 'rtl',
+      position: 'relative',
+      display: 'inline-block',
+    }}>
+      برتال
+      <span style={{
+        position: 'absolute',
+        top: -arSize * 0.05,
+        right: arSize * 0.55,
+        width: arSize * 0.14,
+        height: arSize * 0.14,
+        borderRadius: '50%',
+        background: accent,
+      }}/>
+    </div>
+  );
+
+  if (layout === 'stacked') {
+    return (
+      <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: size * 0.18 }}>
+        <BartalMark size={size} fg={fg} accent={accent}/>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: size * 0.06 }}>
+          {Arabic}
+          <div style={{ width: size * 1.4, height: 1, background: fg, opacity: 0.25 }}/>
+          {Latin}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ display: 'inline-flex', alignItems: 'center', gap: size * 0.32 }}>
+      <BartalMark size={size} fg={fg} accent={accent}/>
+      <div style={{ display: 'inline-flex', alignItems: 'center', gap: size * 0.28 }}>
+        {Arabic}
+        <div style={{ width: 1, height: arSize * 0.7, background: fg, opacity: 0.28 }}/>
+        {Latin}
+      </div>
+    </div>
+  );
+}
+
+// Tweakable wrappers — same as logo-system.jsx Frames but with overrides
+function PrimaryLockupT({ fg, accent, latinFamily }) {
+  return (
+    <Frame index={1} title="Primary lockup" caption="navy on cream · horizontal" bg={BTL.sand}>
+      <StarPattern color={fg} opacity={0.05} size={72}/>
+      <div style={{ position: 'relative' }}>
+        <BartalLockupCustom size={84} fg={fg} accent={accent} latinFamily={latinFamily}/>
+        <div style={{
+          marginTop: 22, textAlign: 'center',
+          fontFamily: "'Poppins'", fontSize: 11, fontWeight: 500,
+          color: BTL.mute, letterSpacing: 1.5, textTransform: 'uppercase',
+        }}>
+          بوابتك للتسوق · Your gateway to shopping
+        </div>
+      </div>
+    </Frame>
+  );
+}
+
+function NavyLockupT({ fg, accent, latinFamily }) {
+  return (
+    <Frame index={2} title="On navy background" caption="white + gold · primary surface" bg={fg}>
+      <StarPattern color="#fff" opacity={0.06} size={72}/>
+      <div style={{ position: 'relative' }}>
+        <BartalLockupCustom size={84} fg="#fff" accent={accent} latinFamily={latinFamily}/>
+        <div style={{
+          marginTop: 22, textAlign: 'center',
+          fontFamily: "'Poppins'", fontSize: 11, fontWeight: 500,
+          color: 'rgba(255,255,255,0.55)', letterSpacing: 1.5, textTransform: 'uppercase',
+        }}>
+          بوابتك للتسوق · Your gateway to shopping
+        </div>
+      </div>
+    </Frame>
+  );
+}
+
+function AppIconT({ fg, accent }) {
+  const Icon = ({ size, radius, label }) => (
+    <div style={{ textAlign: 'center' }}>
+      <div style={{
+        width: size, height: size, borderRadius: radius,
+        background: `linear-gradient(135deg, ${fg} 0%, ${BTL.navyDeep} 100%)`,
+        position: 'relative', overflow: 'hidden',
+        boxShadow: '0 8px 22px rgba(11,25,48,0.25), inset 0 1px 0 rgba(255,255,255,0.08)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        margin: '0 auto',
+      }}>
+        <div style={{ position: 'absolute', inset: 0, opacity: 0.12 }}>
+          <StarPattern color="#fff" opacity={1} size={48}/>
+        </div>
+        <BartalMark size={size * 0.62} fg="#fff" accent={accent}/>
+      </div>
+      <div style={{ marginTop: 12, fontFamily: "'JetBrains Mono'", fontSize: 10, color: BTL.mute }}>{label}</div>
+    </div>
+  );
+  return (
+    <Frame index={3} title="App icon" caption="iOS · Android · favicon" bg={BTL.cream}>
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 26 }}>
+        <Icon size={150} radius={34} label="iOS · 1024"/>
+        <Icon size={110} radius="50%" label="Android · adaptive"/>
+        <Icon size={74} radius={16} label="App Store · 512"/>
+        <Icon size={42} radius={9} label="Favicon · 48"/>
+      </div>
+    </Frame>
+  );
+}
+
+function BusinessCardT({ fg, accent, latinFamily }) {
+  const cardW = 320, cardH = 188;
+  return (
+    <Frame index={4} title="Business card" caption="85 × 55 mm · front + back" bg={BTL.cream}>
+      <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
+        <div style={{
+          width: cardW, height: cardH, borderRadius: 6,
+          background: fg, position: 'relative', overflow: 'hidden',
+          boxShadow: '0 18px 36px rgba(11,25,48,0.28), 0 2px 0 rgba(11,25,48,0.6)',
+          transform: 'rotate(-3deg)',
+        }}>
+          <StarPattern color="#fff" opacity={0.07} size={56}/>
+          <div style={{
+            position: 'absolute', inset: 0,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <BartalLockupCustom size={42} layout="stacked" fg="#fff" accent={accent} latinFamily={latinFamily}/>
+          </div>
+          <div style={{
+            position: 'absolute', bottom: 0, right: 0,
+            width: 0, height: 0,
+            borderStyle: 'solid', borderWidth: '0 0 24px 24px',
+            borderColor: `transparent transparent ${accent} transparent`,
+          }}/>
+        </div>
+        <div style={{
+          width: cardW, height: cardH, borderRadius: 6,
+          background: BTL.paper, position: 'relative', overflow: 'hidden',
+          boxShadow: '0 18px 36px rgba(11,25,48,0.18), 0 2px 0 rgba(11,25,48,0.06)',
+          transform: 'rotate(2deg)',
+          padding: '20px 22px',
+          display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+          border: `1px solid ${BTL.line}`,
+        }}>
+          <BartalLockupCustom size={26} fg={fg} accent={accent} latinFamily={latinFamily}/>
+          <div>
+            <div style={{
+              fontFamily: latinFamily, fontWeight: 600, fontSize: 13, color: BTL.navyInk,
+            }}>Mohammed Osman</div>
+            <div style={{
+              fontFamily: "'Cairo'", fontWeight: 600, fontSize: 12, color: fg, marginTop: 1,
+            }}>محمد عثمان · المدير العام</div>
+            <div style={{
+              fontFamily: "'JetBrains Mono'", fontSize: 10, color: BTL.mute,
+              marginTop: 10, lineHeight: 1.7,
+            }}>
+              +249 91 234 5678<br/>
+              hello@bartal.sd · bartal.sd
+            </div>
+          </div>
+          <div style={{
+            position: 'absolute', bottom: 18, right: 22,
+            width: 6, height: 6, borderRadius: '50%', background: accent,
+          }}/>
+        </div>
+      </div>
+    </Frame>
+  );
+}
+
+function SignageT({ fg, accent, latinFamily }) {
+  return (
+    <Frame index={5} title="Storefront sign" caption="illuminated panel · night view" bg="#0A1322">
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: `radial-gradient(ellipse at 50% 100%, ${BTL.navyInk} 0%, #050B16 80%)`,
+      }}/>
+      <div style={{
+        position: 'absolute', left: 0, right: 0, bottom: 0, height: '38%',
+        background: 'linear-gradient(180deg, #0F1B30 0%, #0A1322 100%)',
+        borderTop: '1px solid rgba(255,255,255,0.05)',
+      }}/>
+      <div style={{
+        position: 'relative', zIndex: 2,
+        width: '78%', maxWidth: 460,
+        padding: '32px 36px',
+        background: fg,
+        borderRadius: 4,
+        boxShadow: `0 0 60px ${accent}30, 0 0 120px rgba(27,58,107,0.5), inset 0 0 0 1px rgba(255,255,255,0.08)`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <StarPattern color="#fff" opacity={0.08} size={48}/>
+        <div style={{
+          position: 'absolute', inset: -2, borderRadius: 6,
+          boxShadow: `0 0 0 2px ${accent}33`, pointerEvents: 'none',
+        }}/>
+        <BartalLockupCustom size={50} fg="#fff" accent={accent} latinFamily={latinFamily}/>
+        {[
+          { l: 12, t: -8 }, { r: 12, t: -8 }, { l: 12, b: -8 }, { r: 12, b: -8 },
+        ].map((p, i) => (
+          <div key={i} style={{
+            position: 'absolute',
+            left: p.l, right: p.r, top: p.t, bottom: p.b,
+            width: 6, height: 6, borderRadius: '50%', background: '#3A4A66',
+          }}/>
+        ))}
+      </div>
+      <div style={{
+        position: 'absolute', bottom: 18, left: 0, right: 0, textAlign: 'center',
+        fontFamily: "'JetBrains Mono'", fontSize: 10, letterSpacing: 1.4,
+        color: 'rgba(255,255,255,0.4)',
+      }}>
+        BARTAL HQ · KHARTOUM · شارع النيل
+      </div>
+    </Frame>
+  );
+}
+
+function ConstructionT({ fg, accent, latinFamily }) {
+  return (
+    <Frame index={6} title="Construction & mono" caption="clearspace · grid · single-tone" bg="#fff">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 32, padding: '0 18px' }}>
+        <div style={{ position: 'relative', width: 180, height: 180 }}>
+          <svg width="180" height="180" viewBox="0 0 100 100" style={{ position: 'absolute', inset: 0 }}>
+            <g stroke={accent} strokeWidth="0.3" fill="none" opacity="0.55" strokeDasharray="1 1">
+              <rect x="2" y="2" width="96" height="96" strokeDasharray="2 2"/>
+              <line x1="50" y1="0" x2="50" y2="100"/>
+              <line x1="0" y1="50" x2="100" y2="50"/>
+              <line x1="0" y1="0" x2="100" y2="100"/>
+              <line x1="100" y1="0" x2="0" y2="100"/>
+              <circle cx="50" cy="50" r="46"/>
+              <circle cx="50" cy="50" r="32"/>
+              <circle cx="50" cy="50" r="20"/>
+            </g>
+          </svg>
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <BartalMark size={160} fg={fg} accent={accent}/>
+          </div>
+          <div style={{
+            position: 'absolute', top: -16, left: 0, right: 0, textAlign: 'center',
+            fontFamily: "'JetBrains Mono'", fontSize: 9, color: BTL.mute,
+          }}>↔ 8X CLEARSPACE</div>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
+          <MonoRow bg={BTL.paper} fg={BTL.ink} accent={BTL.ink} label="1c · BLACK" latinFamily={latinFamily}/>
+          <MonoRow bg="#000"      fg="#fff"   accent="#fff"    label="1c · WHITE" labelColor="rgba(255,255,255,0.5)" latinFamily={latinFamily}/>
+          <MonoRow bg={accent}    fg={fg}     accent={fg}      label="OVERPRINT · GOLD" labelColor={BTL.navyDeep} latinFamily={latinFamily}/>
+          <div style={{
+            padding: '12px 14px', background: BTL.paper, borderRadius: 6,
+            border: `1px dashed ${BTL.line}`,
+          }}>
+            <div style={{ fontFamily: "'JetBrains Mono'", fontSize: 9, color: BTL.mute, letterSpacing: 1, marginBottom: 8 }}>MIN SIZES</div>
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 14 }}>
+              <BartalLockupCustom size={32} fg={fg} accent={accent} latinFamily={latinFamily}/>
+              <BartalLockupCustom size={20} fg={fg} accent={accent} latinFamily={latinFamily}/>
+              <BartalMark size={16} fg={fg} accent={accent}/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Frame>
+  );
+}
+
+function MonoRow({ bg, fg, accent, label, labelColor = BTL.mute, latinFamily }) {
+  return (
+    <div style={{
+      padding: '12px 14px', background: bg, borderRadius: 6,
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      border: bg === BTL.paper ? `1px solid ${BTL.line}` : 'none',
+    }}>
+      <BartalLockupCustom size={26} fg={fg} accent={accent} latinFamily={latinFamily}/>
+      <div style={{ fontFamily: "'JetBrains Mono'", fontSize: 9, color: labelColor }}>{label}</div>
+    </div>
+  );
+}
+
+// ── SPEC BAR (color + type at a glance) ───────────────────
+function SpecBar({ dark, fg, accent, latinFamily }) {
+  const ink = dark ? '#F3EFE6' : BTL.navyInk;
+  const mute = dark ? '#9FB1CE' : BTL.mute;
+  return (
+    <div style={{ marginTop: 56 }}>
+      <div style={{
+        fontFamily: "'JetBrains Mono'", fontSize: 11, fontWeight: 700, color: accent,
+        letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8,
+      }}>
+        Tokens
+      </div>
+      <div style={{
+        fontFamily: "'Poppins'", fontSize: 22, fontWeight: 600, color: ink, marginBottom: 22,
+      }}>
+        Color, type, the ratios that hold it together.
+      </div>
+
+      <div style={{
+        display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 24,
+      }}>
+        {/* Color tokens */}
+        <div style={{
+          background: dark ? 'rgba(255,255,255,0.04)' : '#fff',
+          border: `1px solid ${dark ? 'rgba(255,255,255,0.08)' : BTL.line}`,
+          borderRadius: 16, padding: 24,
+        }}>
+          <div style={{ fontFamily: "'JetBrains Mono'", fontSize: 10, color: mute, letterSpacing: 1.4, marginBottom: 14 }}>COLOR · 2 PRIMARY · 2 SUPPORT</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+            <Swatch hex={fg} name="Navy" role="Primary" textColor="#fff" mute={mute}/>
+            <Swatch hex={accent} name="Gold" role="Accent · dot only" textColor="#fff" mute={mute}/>
+            <Swatch hex={BTL.sand} name="Sand" role="Background" textColor={BTL.navyInk} mute={mute}/>
+            <Swatch hex={BTL.paper} name="Paper" role="Surface" textColor={BTL.navyInk} mute={mute}/>
+          </div>
+        </div>
+
+        {/* Type tokens */}
+        <div style={{
+          background: dark ? 'rgba(255,255,255,0.04)' : '#fff',
+          border: `1px solid ${dark ? 'rgba(255,255,255,0.08)' : BTL.line}`,
+          borderRadius: 16, padding: 24,
+        }}>
+          <div style={{ fontFamily: "'JetBrains Mono'", fontSize: 10, color: mute, letterSpacing: 1.4, marginBottom: 14 }}>TYPE · BILINGUAL PAIR</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div>
+              <div style={{ fontFamily: "'Cairo'", fontWeight: 700, fontSize: 36, color: ink, lineHeight: 1, direction: 'rtl' }}>برتال</div>
+              <div style={{ fontFamily: "'JetBrains Mono'", fontSize: 10, color: mute, marginTop: 6, letterSpacing: 0.8 }}>
+                CAIRO BOLD · 700 · ARABIC WORDMARK
+              </div>
+            </div>
+            <div style={{ height: 1, background: dark ? 'rgba(255,255,255,0.08)' : BTL.line }}/>
+            <div>
+              <div style={{ fontFamily: latinFamily, fontWeight: 600, fontSize: 36, color: ink, lineHeight: 1, letterSpacing: -0.5 }}>Bartal</div>
+              <div style={{ fontFamily: "'JetBrains Mono'", fontSize: 10, color: mute, marginTop: 6, letterSpacing: 0.8 }}>
+                {latinFamily.includes('Playfair') ? 'PLAYFAIR DISPLAY' : 'POPPINS'} · SEMIBOLD · 600 · LATIN WORDMARK
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Swatch({ hex, name, role, textColor, mute }) {
+  return (
+    <div>
+      <div style={{
+        background: hex, height: 90, borderRadius: 8,
+        border: hex === BTL.paper || hex === BTL.sand ? `1px solid ${BTL.line}` : 'none',
+        padding: 12, color: textColor, position: 'relative',
+        display: 'flex', alignItems: 'flex-end',
+        fontFamily: "'JetBrains Mono'", fontSize: 10, letterSpacing: 1,
+      }}>
+        {hex.toUpperCase()}
+      </div>
+      <div style={{
+        marginTop: 8, fontFamily: "'Poppins'", fontWeight: 600, fontSize: 12,
+        color: mute === '#9FB1CE' ? '#F3EFE6' : BTL.navyInk,
+      }}>{name}</div>
+      <div style={{ fontFamily: "'JetBrains Mono'", fontSize: 9, color: mute, marginTop: 1, letterSpacing: 0.4 }}>{role}</div>
+    </div>
+  );
+}
+
+// ── TWEAKS PANEL ──
+function LogoTweaks({ tw, setTweak }) {
+  return (
+    <div style={{
+      position: 'fixed', bottom: 20, right: 20, zIndex: 200,
+      background: '#fff', borderRadius: 14, padding: 18,
+      width: 280, boxShadow: '0 12px 40px rgba(0,0,0,0.2)',
+      border: `1px solid ${BTL.line}`, fontFamily: "'Poppins'",
+    }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: BTL.navy, marginBottom: 14, letterSpacing: 0.2 }}>Tweaks</div>
+
+      {/* theme */}
+      <Section label="THEME">
+        <Seg
+          options={[{ k: false, l: 'Light' }, { k: true, l: 'Dark' }]}
+          value={tw.dark}
+          onChange={v => setTweak('dark', v)}
+        />
+      </Section>
+
+      {/* primary color */}
+      <Section label="PRIMARY (NAVY)">
+        <Seg
+          options={[
+            { k: '#1B3A6B', l: 'Navy' },
+            { k: '#0F2A4A', l: 'Deep' },
+            { k: '#1F4E5F', l: 'Teal' },
+            { k: '#2B1B4D', l: 'Plum' },
+          ]}
+          value={tw.primaryColor}
+          onChange={v => setTweak('primaryColor', v)}
+          colorSwatch
+        />
+      </Section>
+
+      {/* accent */}
+      <Section label="ACCENT (DOT)">
+        <Seg
+          options={[
+            { k: '#D4860B', l: 'Gold' },
+            { k: '#C0392B', l: 'Henna' },
+            { k: '#0E8A6F', l: 'Verdant' },
+            { k: '#E0E0E0', l: 'Silver' },
+          ]}
+          value={tw.accentColor}
+          onChange={v => setTweak('accentColor', v)}
+          colorSwatch
+        />
+      </Section>
+
+      {/* font */}
+      <Section label="LATIN WORDMARK FONT">
+        <Seg
+          options={[
+            { k: 'poppins', l: 'Poppins' },
+            { k: 'playfair', l: 'Playfair' },
+          ]}
+          value={tw.wordmarkFont}
+          onChange={v => setTweak('wordmarkFont', v)}
+        />
+      </Section>
+
+      <div style={{
+        marginTop: 14, paddingTop: 12, borderTop: `1px solid ${BTL.line}`,
+        fontFamily: "'JetBrains Mono'", fontSize: 9, color: BTL.mute, letterSpacing: 0.6,
+      }}>
+        Brief defaults: navy #1B3A6B · gold #D4860B · Poppins.
+      </div>
+    </div>
+  );
+}
+
+function Section({ label, children }) {
+  return (
+    <div style={{ marginBottom: 12 }}>
+      <div style={{ fontSize: 10, color: BTL.mute, marginBottom: 6, letterSpacing: 1, fontWeight: 600 }}>{label}</div>
+      {children}
+    </div>
+  );
+}
+
+function Seg({ options, value, onChange, colorSwatch = false }) {
+  return (
+    <div style={{ display: 'flex', gap: 4, background: BTL.sand, padding: 3, borderRadius: 8 }}>
+      {options.map(o => {
+        const on = value === o.k;
+        return (
+          <div key={String(o.k)} onClick={() => onChange(o.k)} style={{
+            flex: 1, padding: '7px 6px', borderRadius: 6, textAlign: 'center',
+            background: on ? '#fff' : 'transparent',
+            color: on ? BTL.navyInk : BTL.mute,
+            fontSize: 11, fontWeight: 600, cursor: 'pointer',
+            boxShadow: on ? '0 1px 3px rgba(11,25,48,0.1)' : 'none',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+          }}>
+            {colorSwatch && (
+              <span style={{
+                width: 9, height: 9, borderRadius: '50%', background: o.k,
+                border: o.k === '#E0E0E0' ? `1px solid ${BTL.line}` : 'none',
+              }}/>
+            )}
+            {o.l}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

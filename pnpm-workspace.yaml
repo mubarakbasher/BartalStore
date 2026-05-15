@@ -1,5 +1,6 @@
 packages:
   - "apps/api"
+  - "apps/web"
   - "packages/*"
 allowBuilds:
   "@nestjs/core": true
@@ -7,3 +8,4 @@ allowBuilds:
   "@prisma/engines": true
   bcrypt: true
   prisma: true
+  unrs-resolver: true

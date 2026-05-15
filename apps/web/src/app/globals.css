@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bartal-navy: #1B3A6B;
+  --bartal-navy-ink: #0B1930;
+  --bartal-amber: #D4860B;
+  --bartal-amber-soft: #F2B544;
+  --bartal-amber-tint: #FDF4E2;
+  --bartal-sand: #F7F3EC;
+  --bartal-paper: #FBFAF7;
+  --bartal-surface: #FFFFFF;
+  --bartal-line: #E8E2D5;
+  --bartal-text: #1A1A1A;
+  --bartal-text-mute: #6B6356;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bartal-paper);
+  color: var(--bartal-text);
+  min-height: 100vh;
+}
+
+html[lang="ar"] body {
+  font-family: var(--font-cairo), Cairo, system-ui, sans-serif;
+}
+
+html[lang="en"] body {
+  font-family: var(--font-poppins), Poppins, system-ui, sans-serif;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Hide scrollbars on landing canvases, keep them on scrolling lists */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { scrollbar-width: none; }
+
+/* Decorative motif overlay — usable on hero / receipt screens */
+.motif-bg {
+  position: relative;
+  isolation: isolate;
+}
+.motif-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'><g stroke='%23F2B544' stroke-width='0.8' fill='none' opacity='0.18'><path d='M32 6 L38 19 L51 13 L45 26 L58 32 L45 38 L51 51 L38 45 L32 58 L26 45 L13 51 L19 38 L6 32 L19 26 L13 13 L26 19 Z'/><path d='M32 19 L45 32 L32 45 L19 32 Z'/></g></svg>");
+  background-repeat: repeat;
+  pointer-events: none;
+  z-index: -1;
+}

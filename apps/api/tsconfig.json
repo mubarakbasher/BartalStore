@@ -21,7 +21,7 @@
     "sourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "incremental": true,
+    "incremental": false,
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": "./"
