@@ -1,0 +1,26 @@
+{
+  "name": "@bartal/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared types, enums, i18n keys, zod schemas, and Sudan-specific constants for Bartal",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "clean": "rimraf dist",
+    "lint": "tsc --noEmit",
+    "test": "echo \"@bartal/shared: no tests yet\" && exit 0"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "rimraf": "^6.0.1",
+    "typescript": "^5.6.3"
+  }
+}

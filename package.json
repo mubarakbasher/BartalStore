@@ -1,0 +1,37 @@
+{
+  "name": "bartal",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bartal — bilingual (AR/EN) single-vendor e-commerce platform for Sudan",
+  "packageManager": "pnpm@11.1.1",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev:api": "pnpm --filter @bartal/api start:dev",
+    "build": "pnpm -r --filter ./packages/* --filter ./apps/api build",
+    "build:shared": "pnpm --filter @bartal/shared build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "db:up": "docker compose up -d postgres redis",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f postgres redis",
+    "db:migrate": "pnpm --filter @bartal/api prisma:migrate",
+    "db:seed": "pnpm --filter @bartal/api prisma:seed",
+    "db:reset": "pnpm --filter @bartal/api prisma:reset",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md,yaml,yml}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "@prisma/client",
+      "@prisma/engines",
+      "bcrypt",
+      "prisma"
+    ]
+  }
+}
