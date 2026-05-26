@@ -1,0 +1,37 @@
+/* Slice 3b-2 — shipping labels browser print.
+   When printing, hide everything except the .ship-print-area container; each
+   .ship-label is forced to its own 4×6" page. The admin shell stays interactive
+   in the browser, the printer only sees labels. */
+
+@media print {
+  @page {
+    size: 4in 6in;
+    margin: 0;
+  }
+
+  /* Hide everything by default… */
+  body * {
+    visibility: hidden;
+  }
+  /* …then re-show the labels area + descendants. */
+  .ship-print-area,
+  .ship-print-area * {
+    visibility: visible;
+  }
+  .ship-print-area {
+    position: absolute;
+    inset: 0;
+    background: white;
+  }
+  .ship-label {
+    page-break-after: always;
+    break-after: page;
+    margin: 0;
+    width: 4in;
+    height: 6in;
+  }
+  .ship-label:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+}

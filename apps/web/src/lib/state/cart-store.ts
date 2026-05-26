@@ -1,7 +1,7 @@
 'use client';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Product } from '../api/types';
+import type { CartItemView, Product } from '../api/types';
 
 export interface CartLine {
   product_id: string;
@@ -17,12 +17,28 @@ export interface CartLine {
 
 interface CartState {
   items: CartLine[];
+  isSyncing: boolean;
   add: (product: Product, quantity?: number) => void;
   setQuantity: (productId: string, quantity: number) => void;
   remove: (productId: string) => void;
   clear: () => void;
+  hydrateFromServer: (items: CartItemView[]) => void;
+  setSyncing: (value: boolean) => void;
   totalQuantity: () => number;
   subtotal: () => number;
+}
+
+function lineFromServer(item: CartItemView): CartLine {
+  return {
+    product_id: item.product_id,
+    slug: item.slug,
+    name_ar: item.name_ar,
+    name_en: item.name_en,
+    unit_price: Number(item.unit_price),
+    image_url: item.image_url,
+    quantity: item.quantity,
+    stock: item.stock,
+  };
 }
 
 function lineFromProduct(product: Product, quantity: number): CartLine {
@@ -42,6 +58,9 @@ export const useCart = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
+      isSyncing: false,
+      hydrateFromServer: (items) => set({ items: items.map(lineFromServer) }),
+      setSyncing: (value) => set({ isSyncing: value }),
       add: (product, quantity = 1) =>
         set((state) => {
           const existing = state.items.find((it) => it.product_id === product.id);

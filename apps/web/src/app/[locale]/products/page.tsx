@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/lib/i18n/config';
@@ -8,6 +9,7 @@ import type { PaginationMeta } from '@bartal/shared';
 import { ProductCard } from '@/components/ProductCard';
 import { CategoryFilter } from '@/components/CategoryFilter';
 import { SortChips } from '@/components/SortChips';
+import { bilingualAlternates } from '@/lib/seo/site';
 
 interface ProductsPageProps {
   params: { locale: string };
@@ -19,6 +21,22 @@ interface ProductsPageProps {
 }
 
 export const dynamic = 'force-dynamic';
+
+export function generateMetadata({ params, searchParams }: ProductsPageProps): Metadata {
+  if (!isLocale(params.locale)) return {};
+  const locale = params.locale as Locale;
+  const base = locale === 'ar' ? 'جميع المنتجات' : 'All products';
+  const title = searchParams.category ? `${base} · ${searchParams.category}` : base;
+  const description =
+    locale === 'ar'
+      ? 'تسوّق آلاف المنتجات بأسعار مميزة وتوصيل سريع في الخرطوم.'
+      : 'Shop thousands of products at great prices with fast delivery across Khartoum.';
+  return {
+    title,
+    description,
+    alternates: bilingualAlternates(searchParams.category ? `/products?category=${searchParams.category}` : '/products'),
+  };
+}
 
 async function fetchPage(locale: Locale, params: ProductsPageProps['searchParams']) {
   const page = Number(params.page ?? '1') || 1;

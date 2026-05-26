@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/lib/i18n/config';
@@ -9,12 +10,40 @@ import { PriceTag } from '@/components/PriceTag';
 import { StatusBadge } from '@/components/StatusBadge';
 import { AddToCartControls } from '@/components/AddToCartControls';
 import { TruckIcon, WhatsappIcon } from '@/components/Icons';
+import { bilingualAlternates } from '@/lib/seo/site';
 
 interface PageProps {
   params: { locale: string; id: string };
 }
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  if (!isLocale(params.locale)) return {};
+  const locale = params.locale as Locale;
+  try {
+    const product = await apiGet<Product>(`products/${params.id}`, {}, locale);
+    const name = locale === 'ar' ? product.name_ar : product.name_en;
+    const description = (locale === 'ar' ? product.description_ar : product.description_en) ?? '';
+    const trimmed = description.length > 160 ? `${description.slice(0, 157)}…` : description;
+    const primary = product.images.find((i) => i.is_primary) ?? product.images[0];
+    return {
+      title: name,
+      description: trimmed || (locale === 'ar' ? 'منتج من برتال' : 'A Bartal product'),
+      alternates: bilingualAlternates(`/products/${product.slug || product.id}`),
+      openGraph: {
+        title: name,
+        description: trimmed,
+        type: 'website',
+        images: primary
+          ? [{ url: primary.url, alt: (locale === 'ar' ? primary.alt_ar : primary.alt_en) ?? name }]
+          : [{ url: '/opengraph-image' }],
+      },
+    };
+  } catch {
+    return {};
+  }
+}
 
 export default async function ProductDetailPage({ params }: PageProps) {
   if (!isLocale(params.locale)) notFound();

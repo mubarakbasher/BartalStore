@@ -62,6 +62,7 @@ async function seedDeliveryZones() {
 
 async function seedAppSettings() {
   const entries: Array<[string, string]> = [
+    // Existing (General + Banking tabs)
     ['store.name_ar', env.STORE_NAME_AR],
     ['store.name_en', env.STORE_NAME_EN],
     ['store.bank_name_ar', env.STORE_BANK_NAME_AR],
@@ -69,6 +70,59 @@ async function seedAppSettings() {
     ['store.bank_account_name', env.STORE_BANK_ACCOUNT_NAME],
     ['store.bank_account_number', env.STORE_BANK_ACCOUNT_NUMBER],
     ['support.whatsapp_number', env.WHATSAPP_SUPPORT_NUMBER],
+
+    // Checkout (tab 3 — Slice 3b-3)
+    ['checkout.guest_enabled', 'true'],
+    ['checkout.require_otp', 'true'],
+    ['checkout.require_email', 'false'],
+    ['checkout.save_cards', 'false'],
+    ['checkout.abandoned_cart_enabled', 'true'],
+    ['payment.bank_transfer.enabled', 'true'],
+    ['payment.cash_on_delivery.enabled', 'true'],
+    ['payment.mbok.enabled', 'false'],
+    ['payment.card.enabled', 'false'],
+    ['payment.methods_order', 'bank_transfer,cash_on_delivery,mbok,card'],
+
+    // Tax (tab 4 — Slice 3b-3)
+    ['tax.vat_rate', '0'],
+    ['tax.display_mode', 'excluding'],
+    ['tax.registration_number', ''],
+    ['tax.reporting_period', 'monthly'],
+    ['tax.charge_on_shipping', 'false'],
+    ['tax.show_on_invoices', 'true'],
+
+    // Locales (tab 5 — Slice 3b-3)
+    ['locale.primary', 'ar'],
+    ['locale.secondary', 'en'],
+
+    // Legal pages (tab 7 — Slice 3b-3)
+    ['legal.terms.status', 'PUBLISHED'],
+    ['legal.terms.body_ar', 'الشروط والأحكام — نسخة تجريبية. حدّث هذا النص من لوحة الإعدادات.'],
+    ['legal.terms.body_en', 'Terms and Conditions — placeholder. Update this text via the Settings panel.'],
+    ['legal.privacy.status', 'PUBLISHED'],
+    ['legal.privacy.body_ar', 'سياسة الخصوصية — نسخة تجريبية.'],
+    ['legal.privacy.body_en', 'Privacy Policy — placeholder.'],
+    ['legal.refund.status', 'PUBLISHED'],
+    ['legal.refund.body_ar', 'سياسة الاسترداد — نسخة تجريبية.'],
+    ['legal.refund.body_en', 'Refund Policy — placeholder.'],
+    ['legal.shipping.status', 'PUBLISHED'],
+    ['legal.shipping.body_ar', 'سياسة الشحن — نسخة تجريبية.'],
+    ['legal.shipping.body_en', 'Shipping Policy — placeholder.'],
+    ['legal.about.status', 'DRAFT'],
+    ['legal.about.body_ar', ''],
+    ['legal.about.body_en', ''],
+    ['legal.contact.status', 'DRAFT'],
+    ['legal.contact.body_ar', ''],
+    ['legal.contact.body_en', ''],
+
+    // Integrations (tab 8 — Slice 3b-3)
+    ['integration.whatsapp.enabled', 'true'],
+    ['integration.sms.enabled', 'true'],
+    ['integration.email.enabled', 'false'],
+    ['integration.ga4.enabled', 'false'],
+    ['integration.meta_pixel.enabled', 'false'],
+    ['integration.slack.enabled', 'false'],
+    ['integration.public_api.enabled', 'false'],
   ];
   for (const [key, value] of entries) {
     await prisma.appSetting.upsert({ where: { key }, update: { value }, create: { key, value } });

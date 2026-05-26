@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionary';
@@ -6,12 +7,23 @@ import type { CategoryNode, Product } from '@/lib/api/types';
 import { Hero } from '@/components/Hero';
 import { FeaturedGrid } from '@/components/FeaturedGrid';
 import { CategoryTiles } from '@/components/CategoryTiles';
+import { bilingualAlternates, siteDescription, siteTitle } from '@/lib/seo/site';
 
 interface PageProps {
   params: { locale: string };
 }
 
 export const dynamic = 'force-dynamic';
+
+export function generateMetadata({ params }: PageProps): Metadata {
+  if (!isLocale(params.locale)) return {};
+  const locale = params.locale as Locale;
+  return {
+    title: siteTitle(locale),
+    description: siteDescription(locale),
+    alternates: bilingualAlternates('/'),
+  };
+}
 
 async function fetchHome(locale: Locale) {
   try {

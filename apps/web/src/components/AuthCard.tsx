@@ -4,21 +4,27 @@ import type { Locale } from '@/lib/i18n/config';
 import { AppButton } from './AppButton';
 import { BartalLogo } from './BartalLogo';
 
-interface FieldDef {
+export interface AuthCardFieldDef {
   name: string;
   label: string;
   type: 'text' | 'tel' | 'password' | 'email';
   placeholder?: string;
+  autoComplete?: string;
+  required?: boolean;
+}
+
+export interface AuthCardSubmitArgs {
+  values: Record<string, string>;
 }
 
 interface AuthCardProps {
   locale: Locale;
   title: string;
   subtitle?: string;
-  fields: FieldDef[];
+  fields: AuthCardFieldDef[];
   submitLabel: string;
   footer?: ReactNode;
-  comingSoonNotice?: string;
+  onSubmit: (args: AuthCardSubmitArgs) => Promise<void>;
 }
 
 export function AuthCard({
@@ -28,10 +34,11 @@ export function AuthCard({
   fields,
   submitLabel,
   footer,
-  comingSoonNotice,
+  onSubmit,
 }: AuthCardProps) {
-  const [showNotice, setShowNotice] = useState(false);
   const [values, setValues] = useState<Record<string, string>>({});
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(false);
 
   return (
     <div className="max-w-md mx-auto px-6 py-12">
@@ -40,12 +47,30 @@ export function AuthCard({
       </div>
       <div className="bg-white border border-line rounded-bartal-lg p-7 shadow-card">
         <h1 className="text-h1 font-bold text-ink mb-1">{title}</h1>
-        {subtitle && <p className="text-small text-ink-mute mb-6 leading-relaxed normal-case tracking-normal">{subtitle}</p>}
+        {subtitle && (
+          <p className="text-small text-ink-mute mb-6 leading-relaxed normal-case tracking-normal">
+            {subtitle}
+          </p>
+        )}
 
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            setShowNotice(true);
+            setError(null);
+            setIsPending(true);
+            try {
+              await onSubmit({ values });
+            } catch (err) {
+              const message =
+                err instanceof Error
+                  ? err.message
+                  : locale === 'ar'
+                    ? 'حدث خطأ. يرجى المحاولة مرة أخرى.'
+                    : 'Something went wrong. Please try again.';
+              setError(message);
+            } finally {
+              setIsPending(false);
+            }
           }}
           className="space-y-4"
         >
@@ -53,13 +78,16 @@ export function AuthCard({
             <div key={f.name}>
               <label htmlFor={f.name} className="block text-small font-semibold text-ink mb-1.5">
                 {f.label}
+                {f.required && <span className="text-amber ms-1">*</span>}
               </label>
               <input
                 id={f.name}
                 name={f.name}
                 type={f.type}
                 placeholder={f.placeholder}
-                dir={f.type === 'tel' ? 'ltr' : undefined}
+                autoComplete={f.autoComplete}
+                required={f.required}
+                dir={f.type === 'tel' || f.type === 'email' ? 'ltr' : undefined}
                 value={values[f.name] ?? ''}
                 onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
                 className="w-full h-11 px-3 bg-sand border border-line rounded-bartal text-body text-ink placeholder:text-ink-mute focus:outline-none focus:border-amber focus:bg-white transition-colors"
@@ -67,14 +95,17 @@ export function AuthCard({
             </div>
           ))}
 
-          {showNotice && comingSoonNotice && (
-            <div className="bg-amber-tint border border-amber/40 text-amber px-3 py-2.5 rounded-bartal text-small leading-relaxed normal-case tracking-normal">
-              {comingSoonNotice}
+          {error && (
+            <div
+              role="alert"
+              className="bg-danger/10 border border-danger/30 text-danger px-3 py-2.5 rounded-bartal text-small leading-relaxed normal-case tracking-normal"
+            >
+              {error}
             </div>
           )}
 
-          <AppButton type="submit" fullWidth variant="primary">
-            {submitLabel}
+          <AppButton type="submit" fullWidth variant="primary" disabled={isPending}>
+            {isPending ? (locale === 'ar' ? 'جارٍ المعالجة…' : 'Working…') : submitLabel}
           </AppButton>
         </form>
 

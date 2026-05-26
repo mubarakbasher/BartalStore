@@ -19,6 +19,18 @@ export default function CheckoutPage({ params }: PageProps) {
     <div className="max-w-[1100px] mx-auto px-6 py-8">
       <h1 className="text-h1 font-bold text-ink mb-2">{dict.web.checkout.title}</h1>
 
+      <div className="bg-amber-tint border border-amber/30 rounded-bartal p-3.5 mb-5 flex items-center justify-between gap-4 flex-wrap">
+        <span className="text-small text-ink font-semibold">
+          {dict.web.checkout.newFlowBanner}
+        </span>
+        <Link
+          href={`/${locale}/checkout/address`}
+          className="inline-flex items-center justify-center h-9 px-4 bg-amber text-white rounded-bartal text-small font-bold hover:bg-[#B57208]"
+        >
+          {dict.web.checkout.newFlowCta}
+        </Link>
+      </div>
+
       {/* Step progress */}
       <ol className="flex items-center gap-2 mb-6">
         {steps.map((s, i) => (

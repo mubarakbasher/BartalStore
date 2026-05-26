@@ -67,3 +67,82 @@ export interface ProductsPage {
   data: Product[];
   meta: PaginationMeta;
 }
+
+// ─── Auth ─────────────────────────────────────────────────────────────
+
+export type OtpPurpose = 'REGISTER' | 'LOGIN' | 'RESET';
+
+export interface AuthUser {
+  id: string;
+  name: string;
+  phone: string;
+  email: string | null;
+  role: 'CUSTOMER' | 'ADMIN';
+  language: 'ar' | 'en';
+  is_verified: boolean;
+}
+
+export interface TokenPair {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export type AuthSuccess = { user: AuthUser } & TokenPair;
+
+export interface RegisterDto {
+  phone: string;
+  name: string;
+  password: string;
+  email?: string;
+}
+
+export interface LoginDto {
+  phone: string;
+  password: string;
+}
+
+export interface VerifyOtpDto {
+  phone: string;
+  code: string;
+  purpose: OtpPurpose;
+}
+
+export interface ResendOtpDto {
+  phone: string;
+  purpose: OtpPurpose;
+}
+
+export interface ForgotPasswordDto {
+  phone: string;
+}
+
+export interface ResetPasswordDto {
+  phone: string;
+  code: string;
+  newPassword: string;
+}
+
+export interface RegisterResult {
+  userId: string;
+  expiresAt: string;
+}
+
+// ─── Cart (server view) ───────────────────────────────────────────────
+
+export interface CartItemView {
+  product_id: string;
+  slug: string;
+  name_ar: string;
+  name_en: string;
+  unit_price: number;
+  image_url: string | null;
+  quantity: number;
+  stock: number;
+  line_total: number;
+}
+
+export interface CartView {
+  items: CartItemView[];
+  subtotal: number;
+  total_quantity: number;
+}

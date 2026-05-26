@@ -101,3 +101,37 @@ export const GridIcon = ({ size, color, className }: IconProps) => (
     <rect x="14" y="14" width="7" height="7" rx="1" />
   </svg>
 );
+
+export const BankIcon = ({ size, color, className }: IconProps) => (
+  <svg {...base(size, color)} className={className}>
+    <path d="M3 10h18" />
+    <path d="M5 10v8" />
+    <path d="M9 10v8" />
+    <path d="M15 10v8" />
+    <path d="M19 10v8" />
+    <path d="M3 21h18" />
+    <path d="M12 3 3 8h18Z" />
+  </svg>
+);
+
+export const CopyIcon = ({ size, color, className }: IconProps) => (
+  <svg {...base(size, color)} className={className}>
+    <rect x="9" y="9" width="11" height="11" rx="2" />
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+  </svg>
+);
+
+export const CameraIcon = ({ size, color, className }: IconProps) => (
+  <svg {...base(size, color)} className={className}>
+    <path d="M4 7h3l2-2h6l2 2h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z" />
+    <circle cx="12" cy="13" r="3.5" />
+  </svg>
+);
+
+export const DownloadIcon = ({ size, color, className }: IconProps) => (
+  <svg {...base(size, color)} className={className}>
+    <path d="M12 4v12" />
+    <path d="m7 11 5 5 5-5" />
+    <path d="M5 20h14" />
+  </svg>
+);

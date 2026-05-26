@@ -70,8 +70,12 @@ export function Footer({ locale, dict }: FooterProps) {
         <div className="mt-10 pt-6 border-t border-line flex flex-col sm:flex-row justify-between gap-3 text-micro text-ink-mute">
           <div>{t.copyright}</div>
           <div className="flex gap-4">
-            <span>{locale === 'ar' ? 'سياسة الخصوصية' : 'Privacy Policy'}</span>
-            <span>{locale === 'ar' ? 'الشروط والأحكام' : 'Terms of Service'}</span>
+            <Link href={`/${locale}/privacy`} className="hover:text-amber transition-colors">
+              {locale === 'ar' ? 'سياسة الخصوصية' : 'Privacy Policy'}
+            </Link>
+            <Link href={`/${locale}/terms`} className="hover:text-amber transition-colors">
+              {locale === 'ar' ? 'الشروط والأحكام' : 'Terms of Service'}
+            </Link>
           </div>
         </div>
       </div>

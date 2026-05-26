@@ -6,7 +6,6 @@ import {
   IsOptional,
   IsString,
   Max,
-  MaxLength,
   Min,
   MinLength,
 } from 'class-validator';
@@ -25,9 +24,4 @@ export class SearchProductsQueryDto {
   @ApiProperty() @IsString() @MinLength(1) q!: string;
   @ApiPropertyOptional() @IsOptional() @Type(() => Number) @IsInt() @Min(1) page?: number;
   @ApiPropertyOptional() @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(100) limit?: number;
-}
-
-export class CreateReviewDto {
-  @ApiProperty({ minimum: 1, maximum: 5 }) @Type(() => Number) @IsInt() @Min(1) @Max(5) rating!: number;
-  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(2000) comment?: string;
 }

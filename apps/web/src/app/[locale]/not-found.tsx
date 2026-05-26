@@ -1,19 +1,13 @@
-import Link from 'next/link';
+'use client';
+import { usePathname } from 'next/navigation';
+import { defaultLocale, isLocale, type Locale } from '@/lib/i18n/config';
+import { getDictionary } from '@/lib/i18n/dictionary';
+import { WebSystemState } from '@/components/static/WebSystemState';
 
 export default function NotFound() {
-  return (
-    <div className="max-w-md mx-auto px-6 py-20 text-center">
-      <div className="text-display font-bold text-amber mb-3">404</div>
-      <div className="text-h2 text-ink font-bold mb-2">Page not found</div>
-      <p className="text-body text-ink-mute mb-6 leading-relaxed">
-        The page you&apos;re looking for doesn&apos;t exist.
-      </p>
-      <Link
-        href="/"
-        className="inline-flex items-center justify-center h-11 px-5 bg-amber text-white rounded-bartal font-semibold hover:bg-[#B57208]"
-      >
-        Back to home
-      </Link>
-    </div>
-  );
+  const pathname = usePathname() ?? '';
+  const seg = pathname.split('/').filter(Boolean)[0] ?? '';
+  const locale: Locale = isLocale(seg) ? seg : defaultLocale;
+  const dict = getDictionary(locale);
+  return <WebSystemState kind="404" locale={locale} dict={dict} />;
 }

@@ -1,10 +1,7 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { Controller, Get, Param, Query } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from '../../common/decorators/public.decorator';
-import { CurrentUser, type AuthedUser } from '../../common/decorators/current-user.decorator';
 import {
-  CreateReviewDto,
   ListProductsQueryDto,
   SearchProductsQueryDto,
 } from './dto/products.dto';
@@ -23,17 +20,4 @@ export class ProductsController {
 
   @Public() @Get(':id') @ApiOperation({ summary: 'Product detail' })
   detail(@Param('id') id: string) { return this.products.detail(id); }
-
-  @Public() @Get(':id/reviews') @ApiOperation({ summary: 'List product reviews' })
-  reviews(@Param('id') id: string) { return this.products.listReviews(id); }
-
-  @UseGuards(JwtAuthGuard) @ApiBearerAuth()
-  @Post(':id/reviews') @ApiOperation({ summary: 'Add a review (verified purchase only)' })
-  addReview(
-    @CurrentUser() u: AuthedUser,
-    @Param('id') productId: string,
-    @Body() dto: CreateReviewDto,
-  ) {
-    return this.products.createReview(u.id, productId, dto);
-  }
 }

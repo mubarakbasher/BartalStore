@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import type {
-  CreateReviewDto,
   ListProductsQueryDto,
   SearchProductsQueryDto,
 } from './dto/products.dto';
@@ -108,23 +107,6 @@ export class ProductsService {
       data: items,
       meta: { page, limit, total, totalPages: Math.max(Math.ceil(total / limit), 1), query: q },
     };
-  }
-
-  async listReviews(productId: string) {
-    return this.prisma.review.findMany({
-      where: { product_id: productId },
-      include: { user: { select: { id: true, name: true } } },
-      orderBy: { created_at: 'desc' },
-    });
-  }
-
-  async createReview(_userId: string, _productId: string, _dto: CreateReviewDto) {
-    // Auth-gated; needs the orders module to confirm verified purchase. Out of scope.
-    throw new NotFoundException({
-      code: 'NOT_IMPLEMENTED',
-      message_en: 'Review creation lands with the auth + orders pass.',
-      message_ar: 'إضافة التقييم تتطلب مرحلة المصادقة والطلبات.',
-    });
   }
 
   private orderByForSort(

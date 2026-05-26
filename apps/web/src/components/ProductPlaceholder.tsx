@@ -1,5 +1,7 @@
 import { PLACEHOLDER_PALETTES, type PlaceholderHue } from '@/design/tokens';
 
+export type { PlaceholderHue };
+
 interface ProductPlaceholderProps {
   label?: string;
   hue?: PlaceholderHue;

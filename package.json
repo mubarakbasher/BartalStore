@@ -32,7 +32,9 @@
       "@prisma/client",
       "@prisma/engines",
       "bcrypt",
-      "prisma"
+      "prisma",
+      "protobufjs",
+      "sharp"
     ]
   }
 }

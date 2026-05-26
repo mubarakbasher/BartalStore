@@ -1,11 +1,15 @@
 packages:
   - "apps/api"
   - "apps/web"
+  - "apps/admin"
   - "packages/*"
 allowBuilds:
   "@nestjs/core": true
   "@prisma/client": true
   "@prisma/engines": true
   bcrypt: true
+  esbuild: true
   prisma: true
+  protobufjs: true
+  sharp: true
   unrs-resolver: true

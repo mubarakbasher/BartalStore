@@ -61,3 +61,7 @@ docker/data/
 # Misc
 *.pem
 .cache/
+
+# QA artifacts (Playwright screenshots + MCP snapshot/console logs)
+.screenshots/
+.playwright-mcp/

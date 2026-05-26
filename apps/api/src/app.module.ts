@@ -15,6 +15,7 @@ import { ProductsModule } from './modules/products/products.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { CartModule } from './modules/cart/cart.module';
 import { OrdersModule } from './modules/orders/orders.module';
+import { ReviewsModule } from './modules/reviews/reviews.module';
 import { DeliveryModule } from './modules/delivery/delivery.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { StorageModule } from './modules/storage/storage.module';
@@ -40,6 +41,7 @@ import { HealthModule } from './modules/health/health.module';
     CategoriesModule,
     CartModule,
     OrdersModule,
+    ReviewsModule,
     DeliveryModule,
     AdminModule,
     HealthModule,

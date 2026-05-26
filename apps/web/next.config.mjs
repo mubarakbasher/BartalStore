@@ -2,6 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60 * 60 * 24,
     remotePatterns: [
       { protocol: 'https', hostname: 'assets.bartal.sd' },
       { protocol: 'https', hostname: '*.r2.dev' },

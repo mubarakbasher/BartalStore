@@ -39,12 +39,18 @@ model User {
   created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
 
-  addresses      Address[]
-  orders         Order[]
-  reviews        Review[]
-  otp_codes      OtpCode[]
-  refresh_tokens RefreshToken[]
-  cart_session   CartSession?
+  addresses           Address[]
+  orders              Order[]
+  reviews             Review[]
+  moderated_reviews   Review[]            @relation("ReviewModerator")
+  otp_codes           OtpCode[]
+  refresh_tokens      RefreshToken[]
+  cart_session        CartSession?
+  audit_logs          AuditLog[]
+  inventory_movements InventoryMovement[]
+  refunds_requested   RefundRequest[]     @relation("RefundRequester")
+  refunds_decided     RefundRequest[]     @relation("RefundDecider")
+  promos_created      Promo[]             @relation("PromoCreator")
 
   @@index([phone])
   @@map("users")
@@ -171,11 +177,12 @@ model Product {
   created_at          DateTime @default(now())
   updated_at          DateTime @updatedAt
 
-  category    Category         @relation(fields: [category_id], references: [id])
-  images      ProductImage[]
-  variants    ProductVariant[]
-  reviews     Review[]
-  order_items OrderItem[]
+  category            Category            @relation(fields: [category_id], references: [id])
+  images              ProductImage[]
+  variants            ProductVariant[]
+  reviews             Review[]
+  order_items         OrderItem[]
+  inventory_movements InventoryMovement[]
 
   @@index([category_id, is_active])
   @@index([is_featured])
@@ -211,20 +218,34 @@ model ProductVariant {
   @@map("product_variants")
 }
 
+enum ReviewModerationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model Review {
-  id                   String   @id @default(cuid())
+  id                   String                 @id @default(cuid())
   product_id           String
   user_id              String
   rating               Int
-  comment              String?  @db.Text
-  is_verified_purchase Boolean  @default(false)
-  created_at           DateTime @default(now())
+  comment              String?                @db.Text
+  is_verified_purchase Boolean                @default(false)
+  moderation_status    ReviewModerationStatus @default(PENDING)
+  flagged_reason       String?                @db.VarChar(255)
+  rejection_reason     String?                @db.VarChar(255)
+  moderated_by         String?
+  moderated_at         DateTime?
+  created_at           DateTime               @default(now())
 
-  product Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [user_id], references: [id])
+  product   Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [user_id], references: [id])
+  moderator User?   @relation("ReviewModerator", fields: [moderated_by], references: [id])
 
   @@unique([product_id, user_id])
   @@index([product_id, rating])
+  @@index([moderation_status, created_at])
+  @@index([moderation_status, flagged_reason])
   @@map("reviews")
 }
 
@@ -277,13 +298,17 @@ model Order {
   delivered_at        DateTime?
   cancelled_at        DateTime?
   cancellation_reason String?
+  tracking_number     String?
+  label_printed_at    DateTime?
+  refunded_at         DateTime?
   created_at          DateTime      @default(now())
   updated_at          DateTime      @updatedAt
 
-  user           User                 @relation(fields: [user_id], references: [id])
-  address        Address              @relation(fields: [address_id], references: [id])
-  items          OrderItem[]
-  status_history OrderStatusHistory[]
+  user            User                 @relation(fields: [user_id], references: [id])
+  address         Address              @relation(fields: [address_id], references: [id])
+  items           OrderItem[]
+  status_history  OrderStatusHistory[]
+  refund_requests RefundRequest[]
 
   @@index([user_id, created_at])
   @@index([status, created_at])
@@ -354,4 +379,141 @@ model CartSession {
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("cart_sessions")
+}
+
+// ============================================================================
+// Audit log
+// ============================================================================
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  actor_id    String
+  entity_type String
+  entity_id   String
+  action      String
+  before      Json?
+  after       Json?
+  created_at  DateTime @default(now())
+
+  actor User @relation(fields: [actor_id], references: [id])
+
+  @@index([actor_id, created_at])
+  @@index([entity_type, entity_id, created_at])
+  @@map("audit_logs")
+}
+
+// ============================================================================
+// Inventory log (Phase 6 Slice 3b-1)
+// ============================================================================
+
+enum InventoryMovementType {
+  SALE
+  RETURN
+  RESTOCK
+  ADJUST
+}
+
+model InventoryMovement {
+  id          String                @id @default(cuid())
+  product_id  String
+  sku         String?
+  type        InventoryMovementType
+  quantity    Int
+  stock_after Int
+  reference   String?
+  actor_id    String?
+  created_at  DateTime              @default(now())
+
+  product Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  actor   User?   @relation(fields: [actor_id], references: [id])
+
+  @@index([product_id, created_at])
+  @@index([type, created_at])
+  @@map("inventory_movements")
+}
+
+// ============================================================================
+// Refund requests (Phase 6 Slice 3b-2)
+// ============================================================================
+
+enum RefundStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model RefundRequest {
+  id               String       @id @default(cuid())
+  refund_number    String       @unique
+  order_id         String
+  amount           Decimal      @db.Decimal(12, 2)
+  reason           String       @db.Text
+  status           RefundStatus @default(PENDING)
+  rejection_reason String?      @db.VarChar(255)
+  requested_by_id  String
+  decided_by_id    String?
+  decided_at       DateTime?
+  created_at       DateTime     @default(now())
+
+  order        Order @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  requested_by User  @relation("RefundRequester", fields: [requested_by_id], references: [id])
+  decided_by   User? @relation("RefundDecider", fields: [decided_by_id], references: [id])
+
+  @@index([status, created_at])
+  @@index([order_id])
+  @@map("refund_requests")
+}
+
+// ============================================================================
+// Promos + Banners (Phase 6 Slice 3b-3)
+// ============================================================================
+
+enum PromoType {
+  PERCENTAGE
+  FIXED_AMOUNT
+  FREE_SHIPPING
+}
+
+model Promo {
+  id              String    @id @default(cuid())
+  code            String    @unique
+  description_ar  String
+  description_en  String
+  type            PromoType
+  value           Decimal   @db.Decimal(12, 2)
+  min_cart_amount Decimal?  @db.Decimal(12, 2)
+  max_uses        Int?
+  current_uses    Int       @default(0)
+  starts_at       DateTime?
+  expires_at      DateTime?
+  is_active       Boolean   @default(true)
+  created_by_id   String
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+
+  created_by User @relation("PromoCreator", fields: [created_by_id], references: [id])
+
+  @@index([is_active, expires_at])
+  @@map("promos")
+}
+
+enum BannerStatus {
+  DRAFT
+  LIVE
+}
+
+model Banner {
+  id          String       @id @default(cuid())
+  title_ar    String
+  title_en    String
+  image_url   String
+  cta_url     String?
+  position    Int          @default(0)
+  status      BannerStatus @default(DRAFT)
+  click_count Int          @default(0)
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+
+  @@index([status, position])
+  @@map("banners")
 }

@@ -99,27 +99,64 @@ The Flutter app sits inside the repo for convenience but is **not** a pnpm works
 
 ---
 
-## 5. Design System (from PRD §13)
+## 5. Design System — `docs/design/bartal/` is the ONLY source of truth
 
-| Token | Hex |
+**The design system is fixed.** Every visual decision — colors, fonts, spacing, radii, icons, motif, logo, components, layouts — comes from the Claude design bundle at **`docs/design/bartal/`**. Do not invent tokens. Do not introduce new colors, gradients, fonts, shadows, or layout primitives that aren't in the bundle. Do not deviate "for clarity" or "for a quick fix." If you cannot find an answer in the bundle, stop and ask.
+
+### Where things live in the bundle
+
+| Question | Open this file |
 |---|---|
-| Primary | `#1B3A6B` |
-| Accent | `#D4860B` |
-| Background | `#FAF8F5` |
-| Surface | `#FFFFFF` |
-| Text Primary | `#1A1A1A` |
-| Text Secondary | `#6B6560` |
-| Success | `#2E7D32` |
-| Error | `#C62828` |
-| Warning | `#F57F17` |
-| Info | `#1565C0` |
-| Border | `#EDE8E3` |
+| Color palette + dark mode pair | `docs/design/bartal/project/tokens.jsx` (`BARTAL` object) |
+| Sudanese geometric motif (SVG) | `docs/design/bartal/project/tokens.jsx` (`MotifTile`, `MotifBg`) |
+| Logo (wordmark + mark) | `docs/design/bartal/project/tokens.jsx` (`BartalLogo`, `LogoMark`) + `Bartal Logo.html`, `Bartal Logo v1.html`, `logo-concepts.jsx`, `logo-system.jsx` |
+| Type scale + Cairo/Poppins/JetBrains Mono | `tokens.jsx` (`typeStyle`) |
+| Striped placeholder swatches | `tokens.jsx` (`ProductPlaceholder`) |
+| `PriceTag` (SDG, AR-Indic numerals) | `tokens.jsx` (`PriceTag`, `fmtSDG`) |
+| i18n string seed | `tokens.jsx` (`STR`, `t`) — extend in `packages/shared` |
+| Component library (buttons, cards, badges, inputs, modals…) | `system-kit.jsx` |
+| Web page layouts | `web-pages.jsx`, `web-extras.jsx`, `web-checkout-steps.jsx`, `web-auth.jsx`, `web-admin.jsx` (homepage `WebOverview`), `final-web-and-styletile.jsx` (journal + brand pages + style tile), `order-thanks-and-reviews.jsx`, `invoice-and-templates.jsx` |
+| Mobile screens (Marketplace Classic / Editorial Bazaar / Souq Kiosk) | `mobile-v1.jsx`, `mobile-v2.jsx`, `mobile-v3.jsx`, `mobile-extras.jsx`, `secondary-screens.jsx`, `auth-screens.jsx`, `auth-gaps.jsx`, `checkout-flow.jsx`, `receipt-flow.jsx`, `profile-flow.jsx`, `final-additions.jsx` |
+| Mobile device frames | `ios-frame.jsx`, `android-frame.jsx` |
+| Admin dashboard | `admin-pages.jsx`, `admin-extras.jsx`, `admin-extras2.jsx`, `admin-reviews.jsx` |
+| Design entry point (wires all .jsx files) | `Bartal Design.html` |
+| Chat history showing what the user accepted | `docs/design/bartal/chats/chat1.md` … `chat5.md` (read `chat5.md` first — it's the final state audit) |
 
-Spacing: 4px grid — `4 · 8 · 12 · 16 · 24 · 32 · 48 · 64`.
+### Implementation rules
 
-Type scale: Display 32/700, H1 24/700, H2 20/600, H3 18/600, Body 16/400, Body Sm 14/400, Caption 12/400.
+1. **Tokens come from one place.** `apps/web/src/design/tokens.ts` is the canonical TS export, mirroring `BARTAL` in `tokens.jsx`. Tailwind preset (`apps/web/tailwind.config.ts`) consumes it. When porting to mobile (Flutter) or admin (React+Vite), each surface re-translates *the same* tokens — never a new palette.
+2. **Components mirror `system-kit.jsx`.** Names, variants, sizes, states must match. If `system-kit.jsx` shows three button sizes, your `AppButton` exposes three sizes — no more, no less.
+3. **The motif is a backdrop.** Use `MotifBg` style backgrounds on hero / receipt-upload / order-confirmation / order-thanks / brand pages. Never as a full-bleed pattern on listing pages.
+4. **Logo:** the 8-point star with amber center is the only mark. Use `BartalLogo` (wordmark) in headers, `LogoMark` (icon only) in compact slots. Never recolor outside the navy/amber pair from `BARTAL`.
+5. **Numerals:** Arabic locale renders AR-Indic numerals (`٠-٩`) via `fmtSDG` from `@bartal/shared`. English uses Western. Never mix.
+6. **Three mobile variations exist in the design, only ONE ships.** Default to `mobile-v1.jsx` (Marketplace Classic — dense grid + bottom tabs) for production unless the user explicitly picks another. Document the chosen variation in `tasks.md` Phase 4.
+7. **RTL rules from CLAUDE.md §4 still apply** — `ms-*`/`me-*` not `ml-*`/`mr-*`. The design files use inline-styles with `direction: rtl` for the AR canvas; you translate that to Tailwind logical utilities.
+8. **When the design and PRD disagree on numbers (color hex, font weight, page count), the design wins.** When they disagree on rules (e.g. landmark required, bank-transfer-only payment), the PRD wins. If unsure, ask.
 
-Component library (build once, share across surfaces where possible): `AppButton`, `AppInput`, `AppCard`, `StatusBadge`, `PriceTag`, `LoadingSkeleton`, `OfflineBanner`, `EmptyState`, `ErrorState`.
+### Page budget (read this before scoping a session)
+
+Counting from `chat5.md` final audit + the additions in chat4 and chat5:
+
+| Surface | Pages | Status |
+|---|---:|---|
+| **Web** (`apps/web`) | **~34** | 14 done (home, products list, PDP, category redirect, cart, checkout preview, login, register, forgot-password, account/orders/wishlist gated, search, 404) · ~20 remaining |
+| **Mobile** (`apps/mobile`, single variation) | **~45** | 0 done · Phase 4 |
+| **Admin** (`apps/admin`) | **~24** | 0 done · Phase 6 |
+| **Design system reference page** | **1** | 0 done — port `final-web-and-styletile.jsx` style tile when web is otherwise complete |
+| **TOTAL** | **~104** | 14 done · ~90 remaining |
+
+(The mobile design explores 3 variations × iOS+Android, but only one variation ships in production — that's ~45 unique screens, not 45 × 6.)
+
+### "Don't deviate" checklist (apply before every component/page)
+
+- [ ] Did I import from `apps/web/src/design/tokens.ts`, not hardcode hex?
+- [ ] Are the fonts Cairo (AR) / Poppins (EN) / JetBrains Mono (numerals/SKUs) — and nothing else?
+- [ ] Are spacing values on the 4px grid?
+- [ ] Are corner radii one of `rounded-bartal` (12) or `rounded-bartal-lg` (16) or `rounded-full` (pill)?
+- [ ] If I'm building a component, is its visual identical to the matching block in `system-kit.jsx` or the relevant page file?
+- [ ] If I'm building a page, did I open every JSX file listed for that page above and compare layout, spacing, copy, and component variants?
+- [ ] Did I check `chat5.md` to confirm the user's final-state choices?
+- [ ] Did I avoid adding any "nice-to-have" element that isn't in the design? (No "while I'm here, I added a hero badge.")
 
 ---
 

@@ -7,7 +7,7 @@ import {
   IsInt,
   IsOptional,
   IsString,
-  IsUrl,
+  Matches,
   Max,
   MaxLength,
   Min,
@@ -35,7 +35,20 @@ export class CreateOrderDto {
 }
 
 export class UploadReceiptDto {
-  @ApiProperty() @IsUrl() receipt_url!: string;
+  // TODO(schema): the column is named `receipt_url` but now stores an R2 key
+  // (e.g. `receipts/2026/05/...webp`) produced by `POST /storage/receipts`.
+  // Rename to `receipt_key` in a future migration; for now we accept R2 keys,
+  // stub keys (test fixtures), and full URLs (back-compat) via the regex.
+  @ApiProperty({
+    description: 'R2 receipt key (or full URL for legacy callers)',
+    example: 'receipts/2026/05/clxxx.../uuid.webp',
+  })
+  @IsString()
+  @MaxLength(512)
+  @Matches(/^(receipts\/|stub\/receipts\/|stub:\/\/|https?:\/\/)/, {
+    message: 'INVALID_RECEIPT_URL',
+  })
+  receipt_url!: string;
 }
 
 export class CancelOrderDto {

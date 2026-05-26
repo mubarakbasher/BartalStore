@@ -4,18 +4,50 @@ import { cairo, poppins, jetbrainsMono } from './fonts';
 import './globals.css';
 import { Providers } from './providers';
 import { isLocale, defaultLocale, localeDir, type Locale } from '@/lib/i18n/config';
-
-export const metadata: Metadata = {
-  title: 'Bartal · بَرتال',
-  description: 'Bartal — Your gateway to shopping in Sudan. Fast delivery across Khartoum.',
-};
+import {
+  SITE_NAME,
+  SITE_URL,
+  bilingualAlternates,
+  ogLocale,
+  siteDescription,
+  siteTitle,
+} from '@/lib/seo/site';
 
 function detectLocale(): Locale {
-  // Middleware (src/middleware.ts) injects x-bartal-pathname for every request.
   const h = headers();
   const pathname = h.get('x-bartal-pathname') ?? '';
   const segment = pathname.split('/').filter(Boolean)[0];
   return segment && isLocale(segment) ? segment : defaultLocale;
+}
+
+export function generateMetadata(): Metadata {
+  const locale = detectLocale();
+  const title = siteTitle(locale);
+  const description = siteDescription(locale);
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: { default: title, template: `%s — ${locale === 'ar' ? 'برتال' : 'Bartal'}` },
+    description,
+    applicationName: SITE_NAME,
+    alternates: bilingualAlternates('/'),
+    openGraph: {
+      type: 'website',
+      siteName: SITE_NAME,
+      locale: ogLocale(locale),
+      url: bilingualAlternates('/').canonical,
+      title,
+      description,
+      images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ['/opengraph-image'],
+    },
+    robots: { index: true, follow: true },
+    icons: { icon: '/favicon.ico' },
+  };
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    height: 100%;
+    background-color: theme('colors.paper');
+    color: theme('colors.ink.DEFAULT');
+    font-family: theme('fontFamily.poppins');
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  html[lang='ar'] body {
+    font-family: theme('fontFamily.cairo');
+  }
+  html.dark body {
+    background-color: theme('colors.d-bg');
+    color: theme('colors.d-text');
+  }
+  *:focus-visible {
+    outline: 2px solid theme('colors.amber.DEFAULT');
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}

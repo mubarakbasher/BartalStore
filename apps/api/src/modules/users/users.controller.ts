@@ -8,6 +8,7 @@ import {
   UpdateAddressDto,
   UpdateProfileDto,
 } from './dto/users.dto';
+import { UpdateFcmTokenDto } from './dto/update-fcm-token.dto';
 import { UsersService } from './users.service';
 
 @ApiTags('users')
@@ -23,6 +24,11 @@ export class UsersController {
   @Put('me') @ApiOperation({ summary: 'Update profile' })
   updateMe(@CurrentUser() u: AuthedUser, @Body() dto: UpdateProfileDto) {
     return this.users.updateProfile(u.id, dto);
+  }
+
+  @Put('me/fcm-token') @ApiOperation({ summary: 'Register / clear FCM push token' })
+  updateFcmToken(@CurrentUser() u: AuthedUser, @Body() dto: UpdateFcmTokenDto) {
+    return this.users.updateFcmToken(u.id, dto.fcm_token);
   }
 
   @Post('me/change-password') @ApiOperation({ summary: 'Change password' })
