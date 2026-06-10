@@ -13,7 +13,7 @@ interface AppButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantClass: Record<Variant, string> = {
-  primary: 'bg-amber text-white hover:bg-[#B57208] active:bg-[#9A6206] disabled:bg-line disabled:text-ink-mute',
+  primary: 'bg-amber text-white hover:bg-amber-hover active:bg-amber-active disabled:bg-line disabled:text-ink-mute',
   secondary:
     'bg-navy text-white hover:bg-navy-deep active:bg-navy-ink disabled:bg-line disabled:text-ink-mute',
   ghost:

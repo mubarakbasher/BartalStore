@@ -5,6 +5,7 @@ import type { Product } from '@/lib/api/types';
 import type { PaginationMeta } from '@bartal/shared';
 import { ProductCard } from '@/components/ProductCard';
 import { SearchIcon } from '@/components/Icons';
+import { BARTAL } from '@/design/tokens';
 
 interface PageProps {
   params: { locale: string };
@@ -50,7 +51,7 @@ export default async function SearchPage({ params, searchParams }: PageProps) {
         action={`/${locale}/search`}
         className="bg-white border border-line rounded-bartal-lg p-2 flex items-center gap-2 max-w-xl mb-8"
       >
-        <SearchIcon size={18} color="#6B6356" />
+        <SearchIcon size={18} color={BARTAL.textMute} />
         <input
           type="search"
           name="q"
@@ -60,7 +61,7 @@ export default async function SearchPage({ params, searchParams }: PageProps) {
         />
         <button
           type="submit"
-          className="h-10 px-4 bg-amber text-white rounded-bartal font-semibold text-small hover:bg-[#B57208]"
+          className="h-10 px-4 bg-amber text-white rounded-bartal font-semibold text-small hover:bg-amber-hover"
         >
           {locale === 'ar' ? 'بحث' : 'Search'}
         </button>

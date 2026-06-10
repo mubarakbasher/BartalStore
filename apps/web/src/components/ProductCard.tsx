@@ -4,6 +4,7 @@ import type { Locale } from '@/lib/i18n/config';
 import type { Product } from '@/lib/api/types';
 import { ProductPlaceholder, hueForProduct } from './ProductPlaceholder';
 import { PriceTag } from './PriceTag';
+import { BARTAL } from '@/design/tokens';
 
 interface ProductCardProps {
   product: Product;
@@ -24,6 +25,7 @@ export function ProductCard({ product, locale }: ProductCardProps) {
     >
       <div className="relative aspect-square">
         {primaryImage ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={primaryImage.url}
             alt={(locale === 'ar' ? primaryImage.alt_ar : primaryImage.alt_en) ?? name}
@@ -63,7 +65,7 @@ export function ProductCard({ product, locale }: ProductCardProps) {
             amount={Number(product.price)}
             locale={locale}
             size={14}
-            color="#D4860B"
+            color={BARTAL.amber}
             compare={product.compare_price ? Number(product.compare_price) : null}
           />
           {lowStock && (

@@ -120,7 +120,7 @@ export function ReceiptDropzone({ dict }: ReceiptDropzoneProps) {
                 e.stopPropagation();
                 openPicker();
               }}
-              className="mt-3.5 inline-flex items-center justify-center bg-amber text-white font-bold rounded-bartal px-5 py-2.5 text-small hover:bg-[#B57208]"
+              className="mt-3.5 inline-flex items-center justify-center bg-amber text-white font-bold rounded-bartal px-5 py-2.5 text-small hover:bg-amber-hover"
             >
               {r.chooseFile}
             </button>

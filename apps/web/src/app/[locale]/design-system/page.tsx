@@ -241,7 +241,7 @@ export default function DesignSystemPage({ params }: PageProps) {
             </button>
             <button
               type="button"
-              className="bg-amber text-white rounded-bartal px-5 py-2.5 text-small font-bold hover:bg-[#B57208]"
+              className="bg-amber text-white rounded-bartal px-5 py-2.5 text-small font-bold hover:bg-amber-hover"
             >
               Accent
             </button>

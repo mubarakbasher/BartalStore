@@ -124,7 +124,7 @@ export function WebSystemState({ kind, locale, dict, onRetry }: WebSystemStatePr
         {kind === '404' || !onRetry ? (
           <Link
             href={primaryHref}
-            className="inline-flex items-center justify-center h-12 px-7 bg-amber text-white rounded-bartal font-bold hover:bg-[#B57208] transition-colors text-small"
+            className="inline-flex items-center justify-center h-12 px-7 bg-amber text-white rounded-bartal font-bold hover:bg-amber-hover transition-colors text-small"
           >
             {primaryLabel}
           </Link>
@@ -132,7 +132,7 @@ export function WebSystemState({ kind, locale, dict, onRetry }: WebSystemStatePr
           <button
             type="button"
             onClick={onRetry}
-            className="inline-flex items-center justify-center h-12 px-7 bg-amber text-white rounded-bartal font-bold hover:bg-[#B57208] transition-colors text-small"
+            className="inline-flex items-center justify-center h-12 px-7 bg-amber text-white rounded-bartal font-bold hover:bg-amber-hover transition-colors text-small"
           >
             {primaryLabel}
           </button>

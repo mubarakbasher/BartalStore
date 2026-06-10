@@ -46,7 +46,7 @@ export function Hero({ locale, dict }: HeroProps) {
           </p>
           <Link
             href={`/${locale}/products`}
-            className="inline-flex items-center gap-2 bg-amber hover:bg-[#B57208] active:bg-[#9A6206] text-white px-5 h-11 rounded-bartal font-semibold transition-colors"
+            className="inline-flex items-center gap-2 bg-amber hover:bg-amber-hover active:bg-amber-active text-white px-5 h-11 rounded-bartal font-semibold transition-colors"
           >
             <span>{t.cta}</span>
             <Arrow size={14} />

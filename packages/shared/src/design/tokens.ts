@@ -11,6 +11,11 @@ export const BARTAL = {
   amber: '#D4860B',
   amberSoft: '#F2B544',
   amberTint: '#FDF4E2',
+  // Derived interaction states (not in the static design canvas, which has
+  // no hover/active specs; darkened steps of `amber` standardized here so
+  // surfaces never hardcode them).
+  amberHover: '#B57208',
+  amberActive: '#9A6206',
   sand: '#F7F3EC',
   paper: '#FBFAF7',
   surface: '#FFFFFF',

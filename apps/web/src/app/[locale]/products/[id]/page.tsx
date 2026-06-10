@@ -11,6 +11,7 @@ import { StatusBadge } from '@/components/StatusBadge';
 import { AddToCartControls } from '@/components/AddToCartControls';
 import { TruckIcon, WhatsappIcon } from '@/components/Icons';
 import { bilingualAlternates } from '@/lib/seo/site';
+import { BARTAL } from '@/design/tokens';
 
 interface PageProps {
   params: { locale: string; id: string };
@@ -92,6 +93,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <div>
           <div className="aspect-square bg-sand rounded-bartal-lg overflow-hidden border border-line">
             {primaryImage ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={primaryImage.url}
                 alt={(locale === 'ar' ? primaryImage.alt_ar : primaryImage.alt_en) ?? name}
@@ -108,6 +110,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   key={img.id}
                   className="aspect-square bg-sand rounded-bartal overflow-hidden border border-line"
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={img.url} alt="" className="w-full h-full object-cover" />
                 </div>
               ))}
@@ -136,7 +139,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 amount={Number(product.price)}
                 locale={locale}
                 size={26}
-                color="#D4860B"
+                color={BARTAL.amber}
                 compare={product.compare_price ? Number(product.compare_price) : null}
               />
             </div>

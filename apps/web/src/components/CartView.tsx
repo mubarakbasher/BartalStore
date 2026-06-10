@@ -9,7 +9,7 @@ import { ProductPlaceholder, hueForProduct } from './ProductPlaceholder';
 import { PriceTag } from './PriceTag';
 import { EmptyState } from './EmptyState';
 import { MinusIcon, PlusIcon } from './Icons';
-import { fmtSDG } from '@/design/tokens';
+import { BARTAL, fmtSDG } from '@/design/tokens';
 
 interface CartViewProps {
   locale: Locale;
@@ -41,7 +41,7 @@ export function CartView({ locale, dict }: CartViewProps) {
             action={
               <Link
                 href={`/${locale}/products`}
-                className="inline-flex items-center justify-center h-11 px-5 bg-amber text-white rounded-bartal font-semibold hover:bg-[#B57208]"
+                className="inline-flex items-center justify-center h-11 px-5 bg-amber text-white rounded-bartal font-semibold hover:bg-amber-hover"
               >
                 {dict.web.cart.continueShopping}
               </Link>
@@ -74,6 +74,7 @@ export function CartView({ locale, dict }: CartViewProps) {
                   className="shrink-0 w-20 h-20 bg-sand rounded-bartal overflow-hidden border border-line"
                 >
                   {line.image_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img src={line.image_url} alt={name} className="w-full h-full object-cover" />
                   ) : (
                     <ProductPlaceholder label={line.name_en} hue={hueForProduct(line.slug)} />
@@ -91,7 +92,7 @@ export function CartView({ locale, dict }: CartViewProps) {
                       amount={line.unit_price}
                       locale={locale}
                       size={13}
-                      color="#D4860B"
+                      color={BARTAL.amber}
                     />
                   </div>
                   <div className="mt-3 flex items-center gap-3">
@@ -123,12 +124,12 @@ export function CartView({ locale, dict }: CartViewProps) {
                     </button>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="text-end">
                   <PriceTag
                     amount={line.unit_price * line.quantity}
                     locale={locale}
                     size={15}
-                    color="#0B1930"
+                    color={BARTAL.navyInk}
                   />
                 </div>
               </div>
@@ -204,7 +205,7 @@ export function CartView({ locale, dict }: CartViewProps) {
 
           <Link
             href={`/${locale}/checkout/address`}
-            className="mt-5 inline-flex w-full items-center justify-center h-12 bg-amber text-white rounded-bartal font-bold hover:bg-[#B57208]"
+            className="mt-5 inline-flex w-full items-center justify-center h-12 bg-amber text-white rounded-bartal font-bold hover:bg-amber-hover"
           >
             {dict.web.cart.checkout}
           </Link>

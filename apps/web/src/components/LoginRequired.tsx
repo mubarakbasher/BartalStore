@@ -27,7 +27,7 @@ export function LoginRequired({ locale, dict, pageTitle }: LoginRequiredProps) {
         <div className="flex gap-3 justify-center">
           <Link
             href={`/${locale}/login`}
-            className="inline-flex items-center justify-center h-11 px-5 bg-amber text-white rounded-bartal font-semibold hover:bg-[#B57208]"
+            className="inline-flex items-center justify-center h-11 px-5 bg-amber text-white rounded-bartal font-semibold hover:bg-amber-hover"
           >
             {dict.web.auth.loginTitle}
           </Link>
