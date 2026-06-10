@@ -92,7 +92,7 @@ export class AdminService {
     startOfToday.setHours(0, 0, 0, 0);
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
-    const [revenueAgg, statusGroups, lowStock, pendingPayments, topGroups] =
+    const [revenueAgg, ordersToday, statusGroups, lowStock, pendingPayments, topGroups, recentOrders] =
       await Promise.all([
         this.prisma.order.aggregate({
           _sum: { total: true },
@@ -101,6 +101,7 @@ export class AdminService {
             status: { notIn: [OrderStatus.CANCELLED, OrderStatus.REFUNDED] },
           },
         }),
+        this.prisma.order.count({ where: { created_at: { gte: startOfToday } } }),
         this.prisma.order.groupBy({
           by: ['status'],
           _count: { status: true },
@@ -122,12 +123,16 @@ export class AdminService {
           orderBy: { _sum: { quantity: 'desc' } },
           take: 5,
         }),
+        this.prisma.order.findMany({
+          orderBy: { created_at: 'desc' },
+          take: 6,
+          include: { user: { select: { name: true } } },
+        }),
       ]);
 
-    const orders_by_status: Record<string, number> = {};
-    for (const group of statusGroups as Array<{ status: string; _count: { status: number } }>) {
-      orders_by_status[group.status] = group._count.status;
-    }
+    const orders_by_status = (
+      statusGroups as Array<{ status: string; _count: { status: number } }>
+    ).map((group) => ({ status: group.status, count: group._count.status }));
 
     const topIds = topGroups.map((g) => g.product_id);
     const products =
@@ -141,24 +146,35 @@ export class AdminService {
     const top_products = topGroups.map((g) => {
       const p = productById.get(g.product_id);
       return {
-        id: g.product_id,
+        product_id: g.product_id,
         name_ar: p?.name_ar ?? null,
         name_en: p?.name_en ?? null,
+        slug: p?.slug ?? null,
         image_url: (p as Product & { images?: ProductImage[] })?.images?.[0]?.url ?? null,
         units_sold: g._sum.quantity ?? 0,
         revenue: g._sum.total_price ? Number(g._sum.total_price) : 0,
       };
     });
 
-    const revenue_trend = await this.dailyRevenueRange(thirtyDaysAgo, new Date());
+    const daily_revenue = await this.dailyRevenueRange(thirtyDaysAgo, new Date());
 
     return {
       revenue_today: revenueAgg._sum.total ? Number(revenueAgg._sum.total) : 0,
+      orders_today: ordersToday,
       orders_by_status,
       low_stock_count: lowStock,
-      pending_payments_count: pendingPayments,
+      pending_payments: pendingPayments,
       top_products,
-      revenue_trend,
+      daily_revenue,
+      recent_orders: recentOrders.map((o) => ({
+        id: o.id,
+        order_number: o.order_number,
+        total: Number(o.total),
+        status: o.status,
+        payment_method: o.payment_method,
+        created_at: o.created_at,
+        customer_name: o.user.name,
+      })),
     };
   }
 

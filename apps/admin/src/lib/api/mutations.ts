@@ -20,8 +20,10 @@ export function useUpdateOrderStatus(orderId: string) {
   return useMutation({
     mutationFn: (body: UpdateOrderStatusBody) =>
       apiPut<AdminOrderDetail, UpdateOrderStatusBody>(`admin/orders/${orderId}/status`, body),
-    onSuccess: (data) => {
-      qc.setQueryData(['admin', 'orders', orderId], data);
+    onSuccess: () => {
+      // Refetch the detail via GET /admin/orders/:id (the full AdminOrderDetail
+      // shape with user + history). The PUT response is the customer OrderView
+      // — caching it directly would drop user/history and crash the detail page.
       qc.invalidateQueries({ queryKey: ['admin', 'orders'] });
       qc.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
     },
@@ -29,7 +31,8 @@ export function useUpdateOrderStatus(orderId: string) {
 }
 
 export interface UpdateOrderPaymentBody {
-  status: PaymentStatus | 'PAID' | 'REJECTED';
+  // PaymentStatus = UNPAID | PAID | REFUNDED. Confirm = PAID; reject = UNPAID + reason.
+  status: PaymentStatus;
   reason?: string;
 }
 
@@ -38,8 +41,10 @@ export function useUpdateOrderPayment(orderId: string) {
   return useMutation({
     mutationFn: (body: UpdateOrderPaymentBody) =>
       apiPut<AdminOrderDetail, UpdateOrderPaymentBody>(`admin/orders/${orderId}/payment`, body),
-    onSuccess: (data) => {
-      qc.setQueryData(['admin', 'orders', orderId], data);
+    onSuccess: () => {
+      // Refetch the detail via GET /admin/orders/:id (the full AdminOrderDetail
+      // shape with user + history). The PUT response is the customer OrderView
+      // — caching it directly would drop user/history and crash the detail page.
       qc.invalidateQueries({ queryKey: ['admin', 'orders'] });
       qc.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
     },

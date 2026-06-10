@@ -1,12 +1,17 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
+  Req,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import type { Request, Response } from 'express';
+import { Public } from '../../common/decorators/public.decorator';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -85,5 +90,30 @@ export class StorageController {
   @ApiOperation({ summary: 'Return a 1-hour signed read URL for a receipt key (admin only)' })
   signedUrl(@Body() dto: SignedUrlBodyDto) {
     return this.storage.signedReceiptReadUrl(dto.key);
+  }
+
+  /**
+   * Dev-only static serve for stub-mode uploads. Active ONLY when R2 is stubbed
+   * (no credentials) so receipts/product images are viewable locally without R2.
+   * Returns 404 in production (real images come from R2/CDN). Public so `<img>`
+   * tags from the admin/web origins can load it directly.
+   */
+  @Public()
+  @Get('dev/*')
+  @ApiOperation({ summary: 'Dev-only: serve a stub-stored image (stub mode only)' })
+  async devFile(@Req() req: Request, @Res() res: Response): Promise<void> {
+    if (!this.storage.isStubMode) {
+      res.status(404).end();
+      return;
+    }
+    const key = (req.params as Record<string, string>)[0] ?? '';
+    const buf = await this.storage.readDevFile(key);
+    if (!buf) {
+      res.status(404).end();
+      return;
+    }
+    res.setHeader('Content-Type', 'image/webp');
+    res.setHeader('Cache-Control', 'private, max-age=3600');
+    res.end(buf);
   }
 }

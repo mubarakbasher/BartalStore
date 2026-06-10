@@ -68,7 +68,11 @@ describe('StorageService (stub mode)', () => {
         { provide: PrismaService, useValue: prisma },
         {
           provide: ConfigService,
-          useValue: { get: jest.fn(() => STUB_R2) },
+          useValue: {
+            get: jest.fn((key: string) =>
+              key === 'port' ? 3001 : key === 'r2' ? STUB_R2 : STUB_R2,
+            ),
+          },
         },
       ],
     }).compile();
@@ -85,7 +89,7 @@ describe('StorageService (stub mode)', () => {
       const buf = await pngBuffer(10, 10);
       const result = await service.uploadProductImage(makeMulterFile(buf));
       expect(result.key).toMatch(/^stub\/products\/[0-9a-f-]+\.webp$/);
-      expect(result.url).toBe(`stub://public/${result.key}`);
+      expect(result.url).toBe(`http://localhost:3001/api/storage/dev/${result.key}`);
     });
 
     it('rejects an empty/missing file with IMAGE_REQUIRED', async () => {
@@ -174,7 +178,7 @@ describe('StorageService (stub mode)', () => {
       const result = await service.signedReceiptReadUrl(
         'receipts/2026/05/o1/abc.webp',
       );
-      expect(result.url).toMatch(/^stub:\/\/signed\/receipts\/2026\/05\/o1\/abc\.webp\?ttl=3600$/);
+      expect(result.url).toBe('http://localhost:3001/api/storage/dev/receipts/2026/05/o1/abc.webp');
       expect(result.expires_in).toBe(3600);
     });
 

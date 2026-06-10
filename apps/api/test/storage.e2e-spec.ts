@@ -213,7 +213,7 @@ describe('Storage (e2e, stub mode)', () => {
       .send({ key: 'receipts/2026/05/o1/abc.webp' })
       .expect(201);
     expect(sign.body.data).toMatchObject({
-      url: expect.stringMatching(/^stub:\/\/signed\/receipts\//),
+      url: expect.stringMatching(/\/api\/storage\/dev\/receipts\//),
       expires_in: 3600,
     });
 

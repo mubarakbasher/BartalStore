@@ -24,6 +24,9 @@ export function DashboardPage() {
   useTopbarTitle(dict.nav.dashboard);
   const { data, isLoading, error } = useDashboard();
 
+  if (error) {
+    return <AdmEmptyState title={dict.common.error} body={String(error)} />;
+  }
   if (isLoading || !data) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -35,9 +38,6 @@ export function DashboardPage() {
         ))}
       </div>
     );
-  }
-  if (error) {
-    return <AdmEmptyState title={dict.common.error} body={String(error)} />;
   }
 
   return (

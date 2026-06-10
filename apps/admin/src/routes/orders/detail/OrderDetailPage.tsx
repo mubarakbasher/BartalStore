@@ -106,7 +106,9 @@ export function OrderDetailPage() {
       return;
     }
     try {
-      await updatePayment.mutateAsync({ status: 'REJECTED', reason });
+      // Backend treats any non-PAID PaymentStatus + a reason as "reject the
+      // receipt" (there is no REJECTED PaymentStatus). Send UNPAID + reason.
+      await updatePayment.mutateAsync({ status: 'UNPAID', reason });
       pushToast('success', locale === 'ar' ? 'تم رفض الدفع' : 'Payment rejected');
       setRejectOpen(false);
       setRejectReason('');

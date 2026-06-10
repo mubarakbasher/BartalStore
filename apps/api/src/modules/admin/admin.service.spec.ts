@@ -240,26 +240,53 @@ describe('AdminService', () => {
   // ─── dashboard + analytics ───────────────────────────────────────
 
   describe('dashboard', () => {
-    it('aggregates revenue + status + low stock + top products', async () => {
+    it('aggregates revenue + status + low stock + top products + recent orders', async () => {
       prisma.order.aggregate.mockResolvedValue({ _sum: { total: new Prisma.Decimal(5000) } });
+      // first count call = orders_today, second = pending receipt-uploaded payments
+      prisma.order.count.mockResolvedValueOnce(6).mockResolvedValueOnce(4);
       prisma.order.groupBy.mockResolvedValue([
         { status: 'PENDING', _count: { status: 2 } },
         { status: 'SHIPPED', _count: { status: 1 } },
       ]);
       prisma.product.count.mockResolvedValue(3);
-      prisma.order.count.mockResolvedValue(4);
       prisma.orderItem.groupBy.mockResolvedValue([
         { product_id: 'p1', _sum: { quantity: 7, total_price: new Prisma.Decimal(10500) } },
       ]);
       prisma.product.findMany.mockResolvedValue([makeProduct({ id: 'p1' })]);
+      prisma.order.findMany.mockResolvedValue([
+        {
+          id: 'o1',
+          order_number: 'BRT-2026-00001',
+          total: new Prisma.Decimal(5000),
+          status: 'PENDING',
+          payment_method: 'BANK_TRANSFER',
+          created_at: new Date('2026-01-01'),
+          user: { name: 'Test Customer' },
+        },
+      ]);
 
       const result = await service.dashboard();
       expect(result.revenue_today).toBe(5000);
-      expect(result.orders_by_status).toEqual({ PENDING: 2, SHIPPED: 1 });
+      expect(result.orders_today).toBe(6);
+      expect(result.orders_by_status).toEqual([
+        { status: 'PENDING', count: 2 },
+        { status: 'SHIPPED', count: 1 },
+      ]);
       expect(result.low_stock_count).toBe(3);
-      expect(result.pending_payments_count).toBe(4);
+      expect(result.pending_payments).toBe(4);
       expect(result.top_products).toHaveLength(1);
-      expect(result.top_products[0]).toMatchObject({ id: 'p1', units_sold: 7, revenue: 10500 });
+      expect(result.top_products[0]).toMatchObject({
+        product_id: 'p1',
+        slug: 'product',
+        units_sold: 7,
+        revenue: 10500,
+      });
+      expect(result.recent_orders).toHaveLength(1);
+      expect(result.recent_orders[0]).toMatchObject({
+        order_number: 'BRT-2026-00001',
+        customer_name: 'Test Customer',
+        total: 5000,
+      });
     });
   });
 
