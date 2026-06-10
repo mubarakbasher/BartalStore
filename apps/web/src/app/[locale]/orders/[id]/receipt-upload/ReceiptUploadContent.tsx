@@ -1,30 +1,49 @@
 'use client';
-import { useRef, useState, type ChangeEvent, type DragEvent } from 'react';
+import { useRef, useState, useTransition, type ChangeEvent, type DragEvent } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionary';
 import { tt } from '@/lib/i18n/dictionary';
-import { useOrders } from '@/lib/state/orders-store';
+import type { Order } from '@bartal/shared';
+import { uploadReceiptAction } from '@/lib/orders/actions';
 import { CameraIcon, CheckIcon } from '@/components/Icons';
 import { BARTAL, fmtSDG } from '@/design/tokens';
 
 interface Props {
   locale: Locale;
   dict: Dictionary;
-  orderId: string;
+  order: Order | null;
 }
 
 const MAX_BYTES = 10 * 1024 * 1024;
 
-export function ReceiptUploadContent({ locale, dict, orderId }: Props) {
-  const order = useOrders((s) => s.orders.find((o) => o.id === orderId || o.number === orderId));
+export function ReceiptUploadContent({ locale, dict, order }: Props) {
   const t = dict.web.orders.receiptUpload;
+  const router = useRouter();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [pending, startTransition] = useTransition();
+
+  const submit = () => {
+    if (!file || !order) return;
+    setError(null);
+    startTransition(async () => {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await uploadReceiptAction(order.id, fd, locale);
+      if (res.ok) {
+        setSubmitted(true);
+        router.refresh();
+      } else {
+        setError(locale === 'ar' ? res.error.message_ar : res.error.message_en);
+      }
+    });
+  };
 
   if (!order) {
     return (
@@ -188,8 +207,8 @@ export function ReceiptUploadContent({ locale, dict, orderId }: Props) {
       <div className="flex flex-wrap gap-3">
         <button
           type="button"
-          disabled={!file}
-          onClick={() => setSubmitted(true)}
+          disabled={!file || pending}
+          onClick={submit}
           className="bg-amber text-white rounded-bartal px-6 py-3 text-small font-bold hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {t.uploadButton}

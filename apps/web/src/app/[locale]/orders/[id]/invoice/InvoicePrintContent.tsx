@@ -3,7 +3,7 @@ import Link from 'next/link';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionary';
 import { tt } from '@/lib/i18n/dictionary';
-import { useOrders } from '@/lib/state/orders-store';
+import type { Order } from '@bartal/shared';
 import { BartalLogo } from '@/components/BartalLogo';
 import { PriceTag } from '@/components/PriceTag';
 import { DownloadIcon } from '@/components/Icons';
@@ -12,7 +12,7 @@ import { BARTAL } from '@/design/tokens';
 interface Props {
   locale: Locale;
   dict: Dictionary;
-  orderId: string;
+  order: Order | null;
 }
 
 function formatDate(iso: string, locale: Locale): string {
@@ -29,9 +29,8 @@ function addDays(iso: string, days: number): string {
   return d.toISOString();
 }
 
-export function InvoicePrintContent({ locale, dict, orderId }: Props) {
+export function InvoicePrintContent({ locale, dict, order }: Props) {
   const isAr = locale === 'ar';
-  const order = useOrders((s) => s.orders.find((o) => o.id === orderId || o.number === orderId));
   const t = dict.web.orders.invoice;
 
   if (!order) {

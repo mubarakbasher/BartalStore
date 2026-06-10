@@ -1,24 +1,37 @@
 'use client';
+import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionary';
 import { tt } from '@/lib/i18n/dictionary';
-import { useWishlist } from '@/lib/state/wishlist-store';
 import { useCart } from '@/lib/state/cart-store';
+import { removeFromWishlistAction } from '@/lib/wishlist/actions';
 import { WishlistCard } from '@/components/wishlist/WishlistCard';
 import type { WishlistItem } from '@bartal/shared';
 
 interface Props {
   locale: Locale;
   dict: Dictionary;
+  initialItems: WishlistItem[];
 }
 
-export function WishlistContent({ locale, dict }: Props) {
+export function WishlistContent({ locale, dict, initialItems }: Props) {
   const isAr = locale === 'ar';
-  const items = useWishlist((s) => s.items);
-  const remove = useWishlist((s) => s.remove);
+  const [items, setItems] = useState<WishlistItem[]>(initialItems);
+  const [, startTransition] = useTransition();
   const addToCart = useCart((s) => s.add);
   const t = dict.web.wishlist;
+
+  const remove = (productId: string) => {
+    setItems((prev) => prev.filter((it) => it.productId !== productId)); // optimistic
+    startTransition(async () => {
+      const res = await removeFromWishlistAction(productId, locale);
+      if (!res.ok) {
+        // revert on failure
+        setItems(initialItems);
+      }
+    });
+  };
 
   const handleAdd = (item: WishlistItem) => {
     addToCart(

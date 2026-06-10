@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionary';
 import { tt } from '@/lib/i18n/dictionary';
+import type { Order } from '@bartal/shared';
 import { useCart } from '@/lib/state/cart-store';
 import { useCheckout } from '@/lib/state/checkout-store';
 import { useOrderTotal } from '@/lib/state/use-order-total';
@@ -24,32 +25,52 @@ interface ThankYouContentProps {
   locale: Locale;
   dict: Dictionary;
   orderId: string;
+  order: Order | null;
 }
 
-export function ThankYouContent({ locale, dict, orderId }: ThankYouContentProps) {
+export function ThankYouContent({ locale, dict, orderId, order }: ThankYouContentProps) {
   const isAr = locale === 'ar';
-  const items = useCart((s) => s.items);
+  const cartItems = useCart((s) => s.items);
   const addresses = useCheckout((s) => s.addresses);
   const selectedAddressId = useCheckout((s) => s.selectedAddressId);
   const selectedBankId = useCheckout((s) => s.selectedBankId);
-  const { subtotal, deliveryFee, total } = useOrderTotal(locale);
+  const computedTotals = useOrderTotal(locale);
   const [pageHydrated, setPageHydrated] = useState(false);
   useEffect(() => setPageHydrated(true), []);
 
-  const address =
-    addresses.find((a) => a.id === selectedAddressId) ?? addresses[0];
+  // Prefer the real, server-fetched order; fall back to client stores only if
+  // the order couldn't be loaded (e.g. a stale link).
+  const items = order
+    ? order.items.map((it) => ({
+        product_id: it.productId,
+        slug: it.slug,
+        name_ar: it.name_ar,
+        name_en: it.name_en,
+        unit_price: it.unitPrice,
+        image_url: it.imageUrl,
+        quantity: it.quantity,
+      }))
+    : cartItems;
+  const subtotal = order ? order.subtotal : computedTotals.subtotal;
+  const deliveryFee = order ? order.deliveryFee : computedTotals.deliveryFee;
+  const total = order ? order.total : computedTotals.total;
+  const reference = order ? order.number : orderId;
+
+  const address = order
+    ? order.shippingAddress
+    : addresses.find((a) => a.id === selectedAddressId) ?? addresses[0];
   const bank = findBankById(selectedBankId) ?? BANKS[0];
-  const firstName = address.name.split(' ')[0] ?? address.name;
+  const firstName = address ? address.name.split(' ')[0] ?? address.name : '';
 
   const t = dict.web.checkout.thankYou;
   const unit = isAr ? 'ج.س' : 'SDG';
-  const lineCount = pageHydrated ? items.length : 0;
+  const lineCount = order ? items.length : pageHydrated ? items.length : 0;
 
   return (
     <div className="max-w-[1100px] mx-auto px-6 py-8">
       <ThankYouHero
         customerFirstName={firstName}
-        orderId={orderId}
+        orderId={reference}
         locale={locale}
         dict={dict}
       />
@@ -60,7 +81,7 @@ export function ThankYouContent({ locale, dict, orderId }: ThankYouContentProps)
           <BankInstructionsCard
             bank={bank}
             total={total}
-            reference={orderId}
+            reference={reference}
             locale={locale}
             dict={dict}
           />
@@ -164,22 +185,26 @@ export function ThankYouContent({ locale, dict, orderId }: ThankYouContentProps)
             <h3 className="text-h3 font-semibold text-ink mb-2.5">
               {t.delivery.title}
             </h3>
-            <div className="text-small font-semibold text-ink">
-              {address.name}
-            </div>
-            <div className="text-small text-ink-mute mt-1 leading-relaxed">
-              {isAr ? address.line_ar : address.line_en} —{' '}
-              {isAr ? address.city_ar : address.city_en}
-            </div>
-            <div className="text-micro text-amber font-semibold mt-1.5">
-              ◉ {isAr ? address.landmark_ar : address.landmark_en}
-            </div>
-            <div className="text-micro text-ink-mute mt-2 normal-case tracking-normal">
-              {t.delivery.phoneLabel}{' '}
-              <span className="font-mono" dir="ltr">
-                {address.phone}
-              </span>
-            </div>
+            {address && (
+              <>
+                <div className="text-small font-semibold text-ink">
+                  {address.name}
+                </div>
+                <div className="text-small text-ink-mute mt-1 leading-relaxed">
+                  {isAr ? address.line_ar : address.line_en} —{' '}
+                  {isAr ? address.city_ar : address.city_en}
+                </div>
+                <div className="text-micro text-amber font-semibold mt-1.5">
+                  ◉ {isAr ? address.landmark_ar : address.landmark_en}
+                </div>
+                <div className="text-micro text-ink-mute mt-2 normal-case tracking-normal">
+                  {t.delivery.phoneLabel}{' '}
+                  <span className="font-mono" dir="ltr">
+                    {address.phone}
+                  </span>
+                </div>
+              </>
+            )}
           </div>
 
           <div className="flex flex-col gap-2">

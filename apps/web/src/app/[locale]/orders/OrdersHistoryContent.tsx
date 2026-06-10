@@ -3,14 +3,14 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionary';
-import { useOrders } from '@/lib/state/orders-store';
 import { StatusPill } from '@/components/orders/StatusPill';
 import { PriceTag } from '@/components/PriceTag';
-import type { DemoOrderStatus } from '@bartal/shared';
+import type { DemoOrderStatus, Order } from '@bartal/shared';
 
 interface Props {
   locale: Locale;
   dict: Dictionary;
+  orders: Order[];
 }
 
 type Filter = 'all' | 'processing' | 'shipping' | 'completed';
@@ -30,9 +30,8 @@ function formatDate(iso: string, locale: Locale): string {
   }).format(new Date(iso));
 }
 
-export function OrdersHistoryContent({ locale, dict }: Props) {
+export function OrdersHistoryContent({ locale, dict, orders }: Props) {
   const isAr = locale === 'ar';
-  const orders = useOrders((s) => s.orders);
   const [filter, setFilter] = useState<Filter>('all');
   const t = dict.web.orders.history;
 

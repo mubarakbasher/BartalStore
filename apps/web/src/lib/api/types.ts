@@ -146,3 +146,163 @@ export interface CartView {
   subtotal: number;
   total_quantity: number;
 }
+
+// ─── Orders (server view) ─────────────────────────────────────────────
+
+export type OrderStatusValue =
+  | 'PENDING'
+  | 'AWAITING_PAYMENT'
+  | 'RECEIPT_UPLOADED'
+  | 'PAYMENT_CONFIRMED'
+  | 'PAYMENT_REJECTED'
+  | 'PROCESSING'
+  | 'SHIPPED'
+  | 'DELIVERED'
+  | 'CANCELLED'
+  | 'REFUNDED';
+
+export type PaymentMethodValue = 'BANK_TRANSFER' | 'CASH_ON_DELIVERY';
+export type PaymentStatusValue = 'UNPAID' | 'PAID' | 'REFUNDED';
+
+export interface OrderItemView {
+  id: string;
+  product_id: string;
+  product_name_ar: string;
+  product_name_en: string;
+  product_image: string | null;
+  quantity: number;
+  unit_price: number;
+  total_price: number;
+}
+
+export interface OrderAddressView {
+  id: string;
+  label: string;
+  full_name: string;
+  phone: string;
+  secondary_phone: string | null;
+  district: string;
+  street: string | null;
+  landmark: string;
+  delivery_notes: string | null;
+  zone: DeliveryZone;
+}
+
+export interface OrderStatusHistoryView {
+  status: OrderStatusValue;
+  note: string | null;
+  created_at: string;
+}
+
+export interface OrderView {
+  id: string;
+  order_number: string;
+  status: OrderStatusValue;
+  payment_method: PaymentMethodValue;
+  payment_status: PaymentStatusValue;
+  subtotal: number;
+  delivery_fee: number;
+  discount: number;
+  total: number;
+  notes: string | null;
+  receipt_url: string | null;
+  receipt_uploaded_at: string | null;
+  paid_at: string | null;
+  shipped_at: string | null;
+  delivered_at: string | null;
+  cancelled_at: string | null;
+  cancellation_reason: string | null;
+  created_at: string;
+  updated_at: string;
+  items: OrderItemView[];
+  address: OrderAddressView;
+  timeline: OrderStatusHistoryView[];
+}
+
+export interface CreateOrderDto {
+  address_id: string;
+  payment_method: PaymentMethodValue;
+  notes?: string;
+  items: Array<{ product_id: string; quantity: number }>;
+}
+
+// ─── Users / profile (server view) ────────────────────────────────────
+
+export type VerificationStatusValue = 'UNVERIFIED' | 'PENDING' | 'VERIFIED';
+export type GenderValue = 'MALE' | 'FEMALE' | 'OTHER';
+
+export interface UserProfileView {
+  id: string;
+  phone: string;
+  name: string;
+  email: string | null;
+  role: 'CUSTOMER' | 'ADMIN';
+  language: 'AR' | 'EN';
+  is_verified: boolean;
+  email_verified: boolean;
+  national_id_status: VerificationStatusValue;
+  date_of_birth: string | null;
+  gender: GenderValue | null;
+  loyalty_points: number;
+  orders_count: number;
+  lifetime_spend: number;
+  created_at: string;
+}
+
+export interface UpdateProfileDto {
+  name?: string;
+  email?: string;
+  date_of_birth?: string | null;
+  gender?: GenderValue;
+}
+
+export interface ChangePasswordDto {
+  currentPassword: string;
+  newPassword: string;
+}
+
+// ─── Addresses (server view) ──────────────────────────────────────────
+
+export interface ApiAddress {
+  id: string;
+  label: string;
+  full_name: string;
+  phone: string;
+  secondary_phone: string | null;
+  district: string;
+  street: string | null;
+  landmark: string;
+  delivery_notes: string | null;
+  zone: DeliveryZone;
+  is_default: boolean;
+  created_at: string;
+}
+
+export interface CreateAddressDto {
+  label: string;
+  full_name: string;
+  phone: string;
+  secondary_phone?: string;
+  district: string;
+  street?: string;
+  landmark: string;
+  delivery_notes?: string;
+  zone: DeliveryZone;
+  is_default?: boolean;
+}
+
+// ─── Wishlist (server view) ───────────────────────────────────────────
+
+export interface WishlistItemView {
+  id: string;
+  product_id: string;
+  slug: string;
+  name_ar: string;
+  name_en: string;
+  price: number;
+  compare_price: number | null;
+  image_url: string | null;
+  stock: number;
+  is_active: boolean;
+  added_at: string;
+}

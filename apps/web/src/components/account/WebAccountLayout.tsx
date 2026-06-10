@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionary';
-import { useAccount } from '@/lib/state/account-store';
 import { useAuth } from '@/lib/auth/state';
 import { GridIcon, UserIcon, TruckIcon, BagIcon, BankIcon, SearchIcon } from '@/components/Icons';
 import { BARTAL } from '@/design/tokens';
@@ -44,12 +43,11 @@ const HREFS: Record<AccountNavKey, string> = {
 
 export function WebAccountLayout({ locale, dict, active, children }: WebAccountLayoutProps) {
   const t = dict.web.account;
-  const user = useAccount((s) => s.user);
   const auth = useAuth();
   const router = useRouter();
   const liveUser = auth.user;
-  const displayName = liveUser?.name ?? `${user.firstName} ${user.lastName}`;
-  const displayPhone = liveUser?.phone ?? user.phone;
+  const displayName = liveUser?.name ?? '';
+  const displayPhone = liveUser?.phone ?? '';
   const initials = liveUser
     ? liveUser.name
         .split(/\s+/)
@@ -57,7 +55,7 @@ export function WebAccountLayout({ locale, dict, active, children }: WebAccountL
         .slice(0, 2)
         .join('')
         .toUpperCase()
-    : `${user.firstName[0] ?? ''}${user.lastName[0] ?? ''}`.toUpperCase();
+    : '';
   const nav: AccountNavKey[] = [
     'dashboard',
     'profile',

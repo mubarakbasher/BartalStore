@@ -1,7 +1,5 @@
 'use client';
 import Link from 'next/link';
-import { useAccount } from '@/lib/state/account-store';
-import { useOrders } from '@/lib/state/orders-store';
 import { StatCard } from '@/components/account/StatCard';
 import { StatusPill } from '@/components/orders/StatusPill';
 import { BagIcon } from '@/components/Icons';
@@ -9,10 +7,13 @@ import { BARTAL, fmtSDG } from '@/design/tokens';
 import { tt } from '@/lib/i18n/dictionary';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionary';
+import type { Order, UserProfile } from '@bartal/shared';
 
 interface Props {
   locale: Locale;
   dict: Dictionary;
+  profile: UserProfile | null;
+  orders: Order[];
 }
 
 function formatDate(iso: string, locale: Locale): string {
@@ -44,10 +45,22 @@ function abbreviateSpend(amount: number, locale: Locale): string {
   return fmtSDG(amount, locale);
 }
 
-export function AccountDashboardContent({ locale, dict }: Props) {
+const EMPTY_PROFILE: UserProfile = {
+  id: '',
+  firstName: '',
+  lastName: '',
+  phone: '',
+  email: '',
+  memberSince: new Date().toISOString(),
+  ordersCount: 0,
+  lifetimeSpend: 0,
+  loyaltyPoints: 0,
+  verifications: { phone: 'unverified', email: 'unverified', nationalId: 'unverified' },
+};
+
+export function AccountDashboardContent({ locale, dict, profile, orders }: Props) {
   const isAr = locale === 'ar';
-  const user = useAccount((s) => s.user);
-  const orders = useOrders((s) => s.orders);
+  const user = profile ?? EMPTY_PROFILE;
   const t = dict.web.account.dashboard;
 
   const activeOrders = orders.filter(

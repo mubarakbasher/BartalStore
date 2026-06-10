@@ -203,7 +203,7 @@ export function CartView({ locale, dict }: CartViewProps) {
           />
 
           <Link
-            href={`/${locale}/checkout`}
+            href={`/${locale}/checkout/address`}
             className="mt-5 inline-flex w-full items-center justify-center h-12 bg-amber text-white rounded-bartal font-bold hover:bg-[#B57208]"
           >
             {dict.web.cart.checkout}

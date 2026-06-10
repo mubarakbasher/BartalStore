@@ -1,93 +1,83 @@
 'use client';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import type { Address } from '@bartal/shared';
-
-const DEMO_ADDRESSES: Address[] = [
-  {
-    id: 'home',
-    label: 'home',
-    name: 'Mohammed Osman Ahmed',
-    phone: '+249 91 234 5678',
-    line_ar: 'الرياض، بلوك ٣٢، منزل ١٤',
-    line_en: 'Al-Riyadh, block 32, house 14',
-    city_ar: 'الخرطوم',
-    city_en: 'Khartoum',
-    zone: 'B',
-    landmark_ar: 'بجانب مسجد النور',
-    landmark_en: 'Next to Al-Nur Mosque',
-    isDefault: true,
-  },
-  {
-    id: 'work',
-    label: 'work',
-    name: 'Mohammed Osman Ahmed',
-    phone: '+249 91 234 5678',
-    line_ar: 'العمارات، شارع ٦١، برج النيل',
-    line_en: 'Amarat, Street 61, Nile Tower',
-    city_ar: 'الخرطوم',
-    city_en: 'Khartoum',
-    zone: 'A',
-    landmark_ar: 'مقابل صيدلية الشفاء',
-    landmark_en: 'Opposite Al-Shifa Pharmacy',
-  },
-  {
-    id: 'parents',
-    label: 'parents',
-    name: 'Osman Ahmed',
-    phone: '+249 92 876 5432',
-    line_ar: 'بحري، الشعبية، بلوك ١٤',
-    line_en: 'Bahri, Shabiyya, block 14',
-    city_ar: 'الخرطوم بحري',
-    city_en: 'Khartoum North',
-    zone: 'C',
-    landmark_ar: 'خلف مدرسة الخرطوم بحري الثانوية',
-    landmark_en: 'Behind Bahri Secondary School',
-  },
-];
+import type { Locale } from '@/lib/i18n/config';
+import type { CreateAddressDto } from '@/lib/api/types';
+import type { ActionResult } from '@/lib/api/action-result';
+import {
+  createAddressAction,
+  updateAddressAction,
+  deleteAddressAction,
+  setDefaultAddressAction,
+} from '@/lib/addresses/actions';
 
 interface AddressesState {
   addresses: Address[];
-  add: (address: Omit<Address, 'id'> & { id?: string }) => string;
-  update: (id: string, patch: Partial<Address>) => void;
-  remove: (id: string) => void;
-  setDefault: (id: string) => void;
+  hydrated: boolean;
+  /** Seed the cache from a server fetch (Server Component → client). */
+  hydrate: (items: Address[]) => void;
+  create: (dto: CreateAddressDto, locale: Locale) => Promise<ActionResult<Address>>;
+  update: (
+    id: string,
+    dto: Partial<CreateAddressDto>,
+    locale: Locale,
+  ) => Promise<ActionResult<Address>>;
+  remove: (id: string, locale: Locale) => Promise<ActionResult<{ success: true }>>;
+  setDefault: (id: string, locale: Locale) => Promise<ActionResult<Address>>;
 }
 
-let demoIdCounter = 1;
+export const useAddresses = create<AddressesState>()((set) => ({
+  addresses: [],
+  hydrated: false,
+  hydrate: (items) => set({ addresses: items, hydrated: true }),
 
-export const useAddresses = create<AddressesState>()(
-  persist(
-    (set) => ({
-      addresses: DEMO_ADDRESSES,
-      add: (address) => {
-        const id = address.id ?? `addr-${Date.now()}-${demoIdCounter++}`;
-        set((state) => ({
-          addresses: [...state.addresses, { ...address, id } as Address],
-        }));
-        return id;
-      },
-      update: (id, patch) =>
-        set((state) => ({
-          addresses: state.addresses.map((a) =>
-            a.id === id ? { ...a, ...patch } : a,
-          ),
-        })),
-      remove: (id) =>
-        set((state) => ({
-          addresses: state.addresses.filter((a) => a.id !== id),
-        })),
-      setDefault: (id) =>
-        set((state) => ({
-          addresses: state.addresses.map((a) => ({
-            ...a,
-            isDefault: a.id === id,
-          })),
-        })),
-    }),
-    { name: 'bartal-addresses', version: 1 },
-  ),
-);
+  create: async (dto, locale) => {
+    const res = await createAddressAction(dto, locale);
+    if (res.ok) {
+      set((s) => ({
+        // a new default unsets others client-side too
+        addresses: res.data.isDefault
+          ? [...s.addresses.map((a) => ({ ...a, isDefault: false })), res.data]
+          : [...s.addresses, res.data],
+      }));
+    }
+    return res;
+  },
+
+  update: async (id, dto, locale) => {
+    const res = await updateAddressAction(id, dto, locale);
+    if (res.ok) {
+      set((s) => ({
+        addresses: s.addresses.map((a) =>
+          a.id === id
+            ? res.data
+            : res.data.isDefault
+              ? { ...a, isDefault: false }
+              : a,
+        ),
+      }));
+    }
+    return res;
+  },
+
+  remove: async (id, locale) => {
+    const res = await deleteAddressAction(id, locale);
+    if (res.ok) {
+      set((s) => ({ addresses: s.addresses.filter((a) => a.id !== id) }));
+    }
+    return res;
+  },
+
+  setDefault: async (id, locale) => {
+    const res = await setDefaultAddressAction(id, locale);
+    if (res.ok) {
+      set((s) => ({
+        addresses: s.addresses.map((a) => ({ ...a, isDefault: a.id === id })),
+      }));
+    }
+    return res;
+  },
+}));
 
 /** Convenience selector — the current default address, or first available. */
 export function selectDefaultAddress(addresses: Address[]): Address | undefined {

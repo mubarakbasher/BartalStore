@@ -1,10 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionary';
 import { tt } from '@/lib/i18n/dictionary';
-import { useOrders } from '@/lib/state/orders-store';
+import type { Order } from '@bartal/shared';
+import { submitReviewAction } from '@/lib/orders/actions';
 import { StarIcon, CheckIcon } from '@/components/Icons';
 import { BARTAL } from '@/design/tokens';
 import {
@@ -15,12 +16,11 @@ import {
 interface Props {
   locale: Locale;
   dict: Dictionary;
-  orderId: string;
+  order: Order | null;
 }
 
-export function WriteReviewContent({ locale, dict, orderId }: Props) {
+export function WriteReviewContent({ locale, dict, order }: Props) {
   const isAr = locale === 'ar';
-  const order = useOrders((s) => s.orders.find((o) => o.id === orderId || o.number === orderId));
   const t = dict.web.orders.review;
 
   const [stars, setStars] = useState(5);
@@ -30,6 +30,23 @@ export function WriteReviewContent({ locale, dict, orderId }: Props) {
   const [tags, setTags] = useState<number[]>([0, 2]);
   const [anonymous, setAnonymous] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [pending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  const submit = () => {
+    if (!order) return;
+    setError(null);
+    const productId = order.items[0]?.productId;
+    if (!productId) return;
+    startTransition(async () => {
+      const res = await submitReviewAction(productId, { rating: stars, comment: body }, locale);
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        setError(isAr ? res.error.message_ar : res.error.message_en);
+      }
+    });
+  };
 
   if (!order) {
     return (
@@ -227,11 +244,15 @@ export function WriteReviewContent({ locale, dict, orderId }: Props) {
             </div>
           </button>
 
+          {error && (
+            <div className="text-small text-danger font-semibold mb-3">{error}</div>
+          )}
           <div className="flex gap-2.5 flex-wrap">
             <button
               type="button"
-              onClick={() => setSubmitted(true)}
-              className="bg-amber text-white rounded-bartal px-7 py-3 text-small font-bold hover:opacity-90"
+              disabled={pending}
+              onClick={submit}
+              className="bg-amber text-white rounded-bartal px-7 py-3 text-small font-bold hover:opacity-90 disabled:opacity-60"
             >
               {t.submit}
             </button>
