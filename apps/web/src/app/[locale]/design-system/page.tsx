@@ -10,7 +10,7 @@ import {
 import { BARTAL } from '@/design/tokens';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
 const PALETTE: { name: string; hex: string; role: string; darkChip?: boolean }[] = [
@@ -64,7 +64,8 @@ const SURFACES = [
   { lbl: 'Brand',  sub: 'Logo, wordmark, motifs, photography placeholders',      count: 'this tile' },
 ];
 
-export default function DesignSystemPage({ params }: PageProps) {
+export default async function DesignSystemPage(props: PageProps) {
+  const params = await props.params;
   // Internal reference only — not exposed in production.
   if (process.env.NODE_ENV === 'production') notFound();
   if (!isLocale(params.locale)) notFound();
@@ -432,7 +433,8 @@ function MicroLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function generateMetadata({ params }: PageProps) {
+export async function generateMetadata(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) return {};
   return {
     title: 'Design system · Bartal (internal)',

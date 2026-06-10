@@ -11,18 +11,22 @@ import { CategoryFilter } from '@/components/CategoryFilter';
 import { SortChips } from '@/components/SortChips';
 import { bilingualAlternates } from '@/lib/seo/site';
 
+interface ProductsSearchParams {
+  category?: string;
+  sort?: 'price_asc' | 'price_desc' | 'newest' | 'popular';
+  page?: string;
+}
+
 interface ProductsPageProps {
-  params: { locale: string };
-  searchParams: {
-    category?: string;
-    sort?: 'price_asc' | 'price_desc' | 'newest' | 'popular';
-    page?: string;
-  };
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<ProductsSearchParams>;
 }
 
 export const dynamic = 'force-dynamic';
 
-export function generateMetadata({ params, searchParams }: ProductsPageProps): Metadata {
+export async function generateMetadata(props: ProductsPageProps): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   if (!isLocale(params.locale)) return {};
   const locale = params.locale as Locale;
   const base = locale === 'ar' ? 'جميع المنتجات' : 'All products';
@@ -38,7 +42,7 @@ export function generateMetadata({ params, searchParams }: ProductsPageProps): M
   };
 }
 
-async function fetchPage(locale: Locale, params: ProductsPageProps['searchParams']) {
+async function fetchPage(locale: Locale, params: ProductsSearchParams) {
   const page = Number(params.page ?? '1') || 1;
   const url = new URL(
     'products',
@@ -70,7 +74,9 @@ async function fetchCategories(locale: Locale): Promise<CategoryNode[]> {
   }
 }
 
-export default async function ProductsPage({ params, searchParams }: ProductsPageProps) {
+export default async function ProductsPage(props: ProductsPageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);
@@ -154,7 +160,7 @@ function Pagination({
 }: {
   locale: Locale;
   meta: PaginationMeta;
-  searchParams: ProductsPageProps['searchParams'];
+  searchParams: ProductsSearchParams;
 }) {
   const pages = Array.from({ length: meta.totalPages }, (_, i) => i + 1);
   const buildHref = (p: number) => {

@@ -7,10 +7,11 @@ import { TableOfContents } from '@/components/static/TableOfContents';
 import { StaticSection } from '@/components/static/StaticSection';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
-export default function PrivacyPage({ params }: PageProps) {
+export default async function PrivacyPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);
@@ -40,7 +41,8 @@ export default function PrivacyPage({ params }: PageProps) {
   );
 }
 
-export function generateMetadata({ params }: PageProps) {
+export async function generateMetadata(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) return {};
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

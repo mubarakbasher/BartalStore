@@ -6,7 +6,7 @@ import { WebStaticShell } from '@/components/static/WebStaticShell';
 import { BARTAL } from '@/design/tokens';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
 const ACCENT_BG: Record<'amber' | 'navy' | 'green', string> = {
@@ -15,7 +15,8 @@ const ACCENT_BG: Record<'amber' | 'navy' | 'green', string> = {
   green: 'bg-ok',
 };
 
-export default function AboutPage({ params }: PageProps) {
+export default async function AboutPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);
@@ -163,7 +164,8 @@ function BrandStrip({
   );
 }
 
-export function generateMetadata({ params }: PageProps) {
+export async function generateMetadata(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) return {};
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

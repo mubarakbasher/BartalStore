@@ -8,12 +8,13 @@ import type { Order } from '@bartal/shared';
 import { OrdersHistoryContent } from './OrdersHistoryContent';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
 export const dynamic = 'force-dynamic';
 
-export default async function OrdersPage({ params }: PageProps) {
+export default async function OrdersPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

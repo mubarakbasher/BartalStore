@@ -6,10 +6,11 @@ import { TrustMetricsCard } from '@/components/static/TrustMetricsCard';
 import { BrandContent } from './BrandContent';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
-export default function BrandPage({ params }: PageProps) {
+export default async function BrandPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

@@ -5,10 +5,11 @@ import { CheckoutShell } from '@/components/checkout/CheckoutShell';
 import { CheckoutBankStep } from './CheckoutBankStep';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
-export default function CheckoutBankPage({ params }: PageProps) {
+export default async function CheckoutBankPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

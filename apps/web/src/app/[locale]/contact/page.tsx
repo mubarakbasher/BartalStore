@@ -8,10 +8,11 @@ import { WhatsappIcon } from '@/components/Icons';
 const WHATSAPP_GREEN = '#25D366';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
-export default function ContactPage({ params }: PageProps) {
+export default async function ContactPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);
@@ -141,7 +142,8 @@ export default function ContactPage({ params }: PageProps) {
   );
 }
 
-export function generateMetadata({ params }: PageProps) {
+export async function generateMetadata(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) return {};
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

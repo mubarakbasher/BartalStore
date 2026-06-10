@@ -8,12 +8,13 @@ import type { Order } from '@bartal/shared';
 import { WriteReviewContent } from './WriteReviewContent';
 
 interface PageProps {
-  params: { locale: string; id: string };
+  params: Promise<{ locale: string; id: string }>;
 }
 
 export const dynamic = 'force-dynamic';
 
-export default async function WriteReviewPage({ params }: PageProps) {
+export default async function WriteReviewPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

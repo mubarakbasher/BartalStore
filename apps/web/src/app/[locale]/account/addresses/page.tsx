@@ -9,12 +9,13 @@ import type { Address } from '@bartal/shared';
 import { AccountAddressesContent } from './AccountAddressesContent';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
 export const dynamic = 'force-dynamic';
 
-export default async function AccountAddressesPage({ params }: PageProps) {
+export default async function AccountAddressesPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

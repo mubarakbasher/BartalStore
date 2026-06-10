@@ -7,12 +7,18 @@ import type { Address } from '@bartal/shared';
 
 interface LayoutProps {
   children: ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
 export const dynamic = 'force-dynamic';
 
-export default async function CheckoutLayout({ children, params }: LayoutProps) {
+export default async function CheckoutLayout(props: LayoutProps) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   const locale = (isLocale(params.locale) ? params.locale : 'ar') as Locale;
 
   let addresses: Address[] = [];

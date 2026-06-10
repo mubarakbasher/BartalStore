@@ -1,5 +1,5 @@
 import 'server-only';
-import { cookies } from 'next/headers';
+import { cookies, type UnsafeUnwrappedCookies } from 'next/headers';
 import type { AuthSuccess, AuthUser, TokenPair } from '../api/types';
 
 export const ACCESS_COOKIE = 'bartal_access';
@@ -22,7 +22,7 @@ function commonFlags() {
 }
 
 export function setAuthCookies(payload: AuthSuccess): void {
-  const jar = cookies();
+  const jar = (cookies() as unknown as UnsafeUnwrappedCookies);
   jar.set(ACCESS_COOKIE, payload.accessToken, { ...commonFlags(), maxAge: ACCESS_MAX_AGE });
   jar.set(REFRESH_COOKIE, payload.refreshToken, { ...commonFlags(), maxAge: REFRESH_MAX_AGE });
   jar.set(USER_COOKIE, JSON.stringify(payload.user), {
@@ -35,13 +35,13 @@ export function setAuthCookies(payload: AuthSuccess): void {
 }
 
 export function setTokenCookiesOnly(tokens: TokenPair): void {
-  const jar = cookies();
+  const jar = (cookies() as unknown as UnsafeUnwrappedCookies);
   jar.set(ACCESS_COOKIE, tokens.accessToken, { ...commonFlags(), maxAge: ACCESS_MAX_AGE });
   jar.set(REFRESH_COOKIE, tokens.refreshToken, { ...commonFlags(), maxAge: REFRESH_MAX_AGE });
 }
 
 export function clearAuthCookies(): void {
-  const jar = cookies();
+  const jar = (cookies() as unknown as UnsafeUnwrappedCookies);
   jar.set(ACCESS_COOKIE, '', { ...commonFlags(), maxAge: 0 });
   jar.set(REFRESH_COOKIE, '', { ...commonFlags(), maxAge: 0 });
   jar.set(USER_COOKIE, '', {
@@ -54,15 +54,15 @@ export function clearAuthCookies(): void {
 }
 
 export function readAccessToken(): string | null {
-  return cookies().get(ACCESS_COOKIE)?.value ?? null;
+  return (cookies() as unknown as UnsafeUnwrappedCookies).get(ACCESS_COOKIE)?.value ?? null;
 }
 
 export function readRefreshToken(): string | null {
-  return cookies().get(REFRESH_COOKIE)?.value ?? null;
+  return (cookies() as unknown as UnsafeUnwrappedCookies).get(REFRESH_COOKIE)?.value ?? null;
 }
 
 export function readServerUser(): AuthUser | null {
-  const raw = cookies().get(USER_COOKIE)?.value;
+  const raw = (cookies() as unknown as UnsafeUnwrappedCookies).get(USER_COOKIE)?.value;
   if (!raw) return null;
   try {
     return JSON.parse(raw) as AuthUser;

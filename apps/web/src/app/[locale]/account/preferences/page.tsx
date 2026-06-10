@@ -5,10 +5,11 @@ import { WebAccountLayout } from '@/components/account/WebAccountLayout';
 import { AccountPreferencesContent } from './AccountPreferencesContent';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
-export default function AccountPreferencesPage({ params }: PageProps) {
+export default async function AccountPreferencesPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

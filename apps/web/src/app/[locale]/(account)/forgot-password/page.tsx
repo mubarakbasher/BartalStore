@@ -4,10 +4,11 @@ import { getDictionary } from '@/lib/i18n/dictionary';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
-export default function ForgotPasswordPage({ params }: PageProps) {
+export default async function ForgotPasswordPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);
