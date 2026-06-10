@@ -11,7 +11,11 @@ module.exports = {
   env: { node: true, jest: true },
   ignorePatterns: ['.eslintrc.cjs', 'dist', 'node_modules', 'prisma/migrations'],
   rules: {
+    // TS already errors on genuinely undefined identifiers; the core rule
+    // false-positives on ambient types (Express namespace, globalThis).
+    'no-undef': 'off',
+    'no-unused-vars': 'off',
     '@typescript-eslint/no-explicit-any': 'warn',
-    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
   },
 };

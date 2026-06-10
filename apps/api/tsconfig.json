@@ -23,7 +23,6 @@
     "emitDecoratorMetadata": true,
     "incremental": false,
     "outDir": "./dist",
-    "rootDir": "./src",
     "baseUrl": "./"
   },
   "include": ["src/**/*", "prisma/**/*", "test/**/*"],

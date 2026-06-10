@@ -20,7 +20,6 @@ const RECEIPT_KEY = 'receipts/2026/05/admin-e2e/key.webp';
 describe('Admin (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
-  let testCategoryId: string;
   let testProductId: string;
   let originalZoneCFee: number | null = null;
 
@@ -105,7 +104,6 @@ describe('Admin (e2e)', () => {
         sort_order: 99,
       },
     });
-    testCategoryId = category.id;
     const product = await prisma.product.create({
       data: {
         name_ar: 'كركديه إداري',

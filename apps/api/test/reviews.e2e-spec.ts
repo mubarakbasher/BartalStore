@@ -21,7 +21,6 @@ describe('Reviews (e2e)', () => {
   let prisma: PrismaService;
   let testCategoryId: string;
   let testProductId: string;
-  let buyerOrderId: string | null = null;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
@@ -136,7 +135,7 @@ describe('Reviews (e2e)', () => {
     });
 
     // Insert a DELIVERED order directly so verified-purchase passes.
-    const order = await prisma.order.create({
+    await prisma.order.create({
       data: {
         order_number: 'BRT-2026-99001',
         user_id: buyer.id,
@@ -163,7 +162,6 @@ describe('Reviews (e2e)', () => {
         },
       },
     });
-    buyerOrderId = order.id;
 
     // Happy path: POST review (lands in moderation queue as PENDING)
     const post = await request(app.getHttpServer())
