@@ -1,7 +1,15 @@
 import * as fs from 'node:fs';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as admin from 'firebase-admin';
+import {
+  cert,
+  getApp,
+  getApps,
+  initializeApp,
+  type App,
+  type ServiceAccount,
+} from 'firebase-admin/app';
+import { getMessaging } from 'firebase-admin/messaging';
 import { PrismaService } from '../../prisma/prisma.service';
 import {
   AT_SUCCESS_STATUS_CODES,
@@ -37,7 +45,7 @@ export class NotificationsService implements OnModuleInit {
   private readonly logger = new Logger(NotificationsService.name);
   private smsStubMode = true;
   private fcmStubMode = true;
-  private fcmApp: admin.app.App | null = null;
+  private fcmApp: App | null = null;
 
   constructor(
     private readonly config: ConfigService,
@@ -64,13 +72,13 @@ export class NotificationsService implements OnModuleInit {
         throw new Error(`FCM service-account file missing at ${fcmPath}`);
       }
       const raw = fs.readFileSync(fcmPath, 'utf8');
-      const serviceAccount = JSON.parse(raw) as admin.ServiceAccount;
-      if (admin.apps.length === 0) {
-        this.fcmApp = admin.initializeApp({
-          credential: admin.credential.cert(serviceAccount),
+      const serviceAccount = JSON.parse(raw) as ServiceAccount;
+      if (getApps().length === 0) {
+        this.fcmApp = initializeApp({
+          credential: cert(serviceAccount),
         });
       } else {
-        this.fcmApp = admin.app();
+        this.fcmApp = getApp();
       }
       this.fcmStubMode = false;
       this.logger.log('Firebase Admin SDK initialized.');
@@ -233,7 +241,7 @@ export class NotificationsService implements OnModuleInit {
       return;
     }
     try {
-      const messageId = await admin.messaging().send({
+      const messageId = await getMessaging(this.fcmApp ?? undefined).send({
         token: fcmToken,
         notification: { title, body },
         data: data ?? {},

@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, type JwtSignOptions } from '@nestjs/jwt';
 import { ThrottlerException } from '@nestjs/throttler';
 import { OtpPurpose } from '@bartal/shared';
 import type { User } from '@prisma/client';
@@ -315,7 +315,8 @@ export class AuthService {
     const payload: JwtPayload = { sub: user.id, phone: user.phone, role: user.role };
     const accessToken = await this.jwt.signAsync(payload, {
       secret: this.config.get<string>('jwt.accessSecret'),
-      expiresIn: this.config.get<string>('jwt.accessTtl') ?? '15m',
+      expiresIn: (this.config.get<string>('jwt.accessTtl') ??
+        '15m') as JwtSignOptions['expiresIn'],
     });
 
     const refreshToken = generateRefreshToken();
