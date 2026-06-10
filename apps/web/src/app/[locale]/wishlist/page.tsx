@@ -8,12 +8,13 @@ import type { WishlistItem } from '@bartal/shared';
 import { WishlistContent } from './WishlistContent';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
 export const dynamic = 'force-dynamic';
 
-export default async function WishlistPage({ params }: PageProps) {
+export default async function WishlistPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

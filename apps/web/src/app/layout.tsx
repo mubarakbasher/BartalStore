@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { headers } from 'next/headers';
+import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
 import { cairo, poppins, jetbrainsMono } from './fonts';
 import './globals.css';
 import { Providers } from './providers';
@@ -14,7 +14,7 @@ import {
 } from '@/lib/seo/site';
 
 function detectLocale(): Locale {
-  const h = headers();
+  const h = (headers() as unknown as UnsafeUnwrappedHeaders);
   const pathname = h.get('x-bartal-pathname') ?? '';
   const segment = pathname.split('/').filter(Boolean)[0];
   return segment && isLocale(segment) ? segment : defaultLocale;

@@ -5,10 +5,11 @@ import { WebStaticShell } from '@/components/static/WebStaticShell';
 import { JournalContent } from './JournalContent';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
-export default function JournalPage({ params }: PageProps) {
+export default async function JournalPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

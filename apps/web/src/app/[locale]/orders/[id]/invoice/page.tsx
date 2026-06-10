@@ -7,12 +7,13 @@ import type { Order } from '@bartal/shared';
 import { InvoicePrintContent } from './InvoicePrintContent';
 
 interface PageProps {
-  params: { locale: string; id: string };
+  params: Promise<{ locale: string; id: string }>;
 }
 
 export const dynamic = 'force-dynamic';
 
-export default async function InvoicePage({ params }: PageProps) {
+export default async function InvoicePage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

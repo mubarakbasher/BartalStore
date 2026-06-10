@@ -7,12 +7,13 @@ import type { Order } from '@bartal/shared';
 import { ThankYouContent } from './ThankYouContent';
 
 interface PageProps {
-  params: { locale: string; orderId: string };
+  params: Promise<{ locale: string; orderId: string }>;
 }
 
 export const dynamic = 'force-dynamic';
 
-export default async function ThankYouPage({ params }: PageProps) {
+export default async function ThankYouPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

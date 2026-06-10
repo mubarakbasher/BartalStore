@@ -4,11 +4,13 @@ import { getDictionary } from '@/lib/i18n/dictionary';
 import { ResetPasswordForm } from './ResetPasswordForm';
 
 interface PageProps {
-  params: { locale: string };
-  searchParams: { phone?: string; code?: string };
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ phone?: string; code?: string }>;
 }
 
-export default function ResetPasswordPage({ params, searchParams }: PageProps) {
+export default async function ResetPasswordPage(props: PageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const phone = (searchParams.phone ?? '').trim();

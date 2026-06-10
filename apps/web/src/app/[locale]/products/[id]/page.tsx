@@ -14,12 +14,13 @@ import { bilingualAlternates } from '@/lib/seo/site';
 import { BARTAL } from '@/design/tokens';
 
 interface PageProps {
-  params: { locale: string; id: string };
+  params: Promise<{ locale: string; id: string }>;
 }
 
 export const dynamic = 'force-dynamic';
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const params = await props.params;
   if (!isLocale(params.locale)) return {};
   const locale = params.locale as Locale;
   try {
@@ -46,7 +47,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default async function ProductDetailPage({ params }: PageProps) {
+export default async function ProductDetailPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);
@@ -87,18 +89,17 @@ export default async function ProductDetailPage({ params }: PageProps) {
           {locale === 'ar' ? product.category.name_ar : product.category.name_en}
         </Link>
       </nav>
-
       <div className="grid md:grid-cols-2 gap-8">
         {/* Image gallery */}
         <div>
           <div className="aspect-square bg-sand rounded-bartal-lg overflow-hidden border border-line">
             {primaryImage ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img
+              (<img
                 src={primaryImage.url}
                 alt={(locale === 'ar' ? primaryImage.alt_ar : primaryImage.alt_en) ?? name}
                 className="w-full h-full object-cover"
-              />
+              />)
             ) : (
               <ProductPlaceholder label={product.name_en} hue={hue} />
             )}
@@ -203,7 +204,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
           </div>
         </div>
       </div>
-
       {/* Description block */}
       <section className="mt-12">
         <h2 className="text-h2 font-bold text-ink mb-3">{dict.web.product.description}</h2>

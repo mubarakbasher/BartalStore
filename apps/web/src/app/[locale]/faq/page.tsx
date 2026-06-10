@@ -4,10 +4,11 @@ import { getDictionary, tt } from '@/lib/i18n/dictionary';
 import { FaqSearchAccordion } from './FaqSearchAccordion';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
-export default function FaqPage({ params }: PageProps) {
+export default async function FaqPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);
@@ -44,7 +45,8 @@ export default function FaqPage({ params }: PageProps) {
   );
 }
 
-export function generateMetadata({ params }: PageProps) {
+export async function generateMetadata(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) return {};
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

@@ -8,8 +8,8 @@ import { SearchIcon } from '@/components/Icons';
 import { BARTAL } from '@/design/tokens';
 
 interface PageProps {
-  params: { locale: string };
-  searchParams: { q?: string };
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ q?: string }>;
 }
 
 export const dynamic = 'force-dynamic';
@@ -34,7 +34,9 @@ async function search(locale: Locale, q: string) {
   }
 }
 
-export default async function SearchPage({ params, searchParams }: PageProps) {
+export default async function SearchPage(props: PageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

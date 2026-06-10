@@ -4,8 +4,8 @@ import { OtpForm } from './OtpForm';
 import type { OtpPurpose } from '@/lib/api/types';
 
 interface PageProps {
-  params: { locale: string };
-  searchParams: { phone?: string; purpose?: string };
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ phone?: string; purpose?: string }>;
 }
 
 function normalizePurpose(value: string | undefined): OtpPurpose {
@@ -13,7 +13,9 @@ function normalizePurpose(value: string | undefined): OtpPurpose {
   return 'REGISTER';
 }
 
-export default function VerifyOtpPage({ params, searchParams }: PageProps) {
+export default async function VerifyOtpPage(props: PageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const phone = (searchParams.phone ?? '').trim();

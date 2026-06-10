@@ -1,9 +1,10 @@
 import { redirect } from 'next/navigation';
 
 interface PageProps {
-  params: { locale: string; slug: string };
+  params: Promise<{ locale: string; slug: string }>;
 }
 
-export default function CategoryPage({ params }: PageProps) {
+export default async function CategoryPage(props: PageProps) {
+  const params = await props.params;
   redirect(`/${params.locale}/products?category=${params.slug}`);
 }

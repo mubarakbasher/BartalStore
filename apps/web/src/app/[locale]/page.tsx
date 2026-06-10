@@ -10,12 +10,13 @@ import { CategoryTiles } from '@/components/CategoryTiles';
 import { bilingualAlternates, siteDescription, siteTitle } from '@/lib/seo/site';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
 export const dynamic = 'force-dynamic';
 
-export function generateMetadata({ params }: PageProps): Metadata {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const params = await props.params;
   if (!isLocale(params.locale)) return {};
   const locale = params.locale as Locale;
   return {
@@ -43,7 +44,8 @@ async function fetchHome(locale: Locale) {
   }
 }
 
-export default async function HomePage({ params }: PageProps) {
+export default async function HomePage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

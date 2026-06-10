@@ -9,12 +9,13 @@ import type { Order, UserProfile } from '@bartal/shared';
 import { AccountDashboardContent } from './AccountDashboardContent';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
 export const dynamic = 'force-dynamic';
 
-export default async function AccountPage({ params }: PageProps) {
+export default async function AccountPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);

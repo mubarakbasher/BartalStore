@@ -4,10 +4,11 @@ import { getDictionary } from '@/lib/i18n/dictionary';
 import { RegisterForm } from './RegisterForm';
 
 interface PageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
-export default function RegisterPage({ params }: PageProps) {
+export default async function RegisterPage(props: PageProps) {
+  const params = await props.params;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDictionary(locale);
