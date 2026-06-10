@@ -1,13 +1,10 @@
 'use client';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionary';
 import { tt } from '@/lib/i18n/dictionary';
 import type { Order } from '@bartal/shared';
-import { useCart } from '@/lib/state/cart-store';
 import { useCheckout } from '@/lib/state/checkout-store';
-import { useOrderTotal } from '@/lib/state/use-order-total';
 import { findBankById, BANKS } from '@/lib/state/checkout-banks';
 import { ThankYouHero } from '@/components/checkout/ThankYouHero';
 import { BankInstructionsCard } from '@/components/checkout/BankInstructionsCard';
@@ -28,43 +25,59 @@ interface ThankYouContentProps {
   order: Order | null;
 }
 
-export function ThankYouContent({ locale, dict, orderId, order }: ThankYouContentProps) {
+export function ThankYouContent({ locale, dict, order }: ThankYouContentProps) {
   const isAr = locale === 'ar';
-  const cartItems = useCart((s) => s.items);
-  const addresses = useCheckout((s) => s.addresses);
-  const selectedAddressId = useCheckout((s) => s.selectedAddressId);
   const selectedBankId = useCheckout((s) => s.selectedBankId);
-  const computedTotals = useOrderTotal(locale);
-  const [pageHydrated, setPageHydrated] = useState(false);
-  useEffect(() => setPageHydrated(true), []);
+  const t = dict.web.checkout.thankYou;
 
-  // Prefer the real, server-fetched order; fall back to client stores only if
-  // the order couldn't be loaded (e.g. a stale link).
-  const items = order
-    ? order.items.map((it) => ({
-        product_id: it.productId,
-        slug: it.slug,
-        name_ar: it.name_ar,
-        name_en: it.name_en,
-        unit_price: it.unitPrice,
-        image_url: it.imageUrl,
-        quantity: it.quantity,
-      }))
-    : cartItems;
-  const subtotal = order ? order.subtotal : computedTotals.subtotal;
-  const deliveryFee = order ? order.deliveryFee : computedTotals.deliveryFee;
-  const total = order ? order.total : computedTotals.total;
-  const reference = order ? order.number : orderId;
+  // No fabricated fallback: if the order couldn't be loaded (stale link,
+  // foreign id), say so instead of rendering demo data as a real receipt.
+  if (!order) {
+    const f = t.loadFailed;
+    const waNumber = dict.web.contact.channels.whatsapp.value.replace(/[\s+]/g, '');
+    return (
+      <div className="max-w-[640px] mx-auto px-6 py-16">
+        <div className="bg-white border border-line rounded-bartal-lg p-8 text-center">
+          <h1 className="text-h2 font-bold text-ink">{f.title}</h1>
+          <p className="text-small text-ink-mute leading-relaxed mt-3">{f.body}</p>
+          <div className="flex flex-col gap-2 mt-6">
+            <Link
+              href={`/${locale}/orders`}
+              className="inline-flex items-center justify-center h-11 bg-navy text-white rounded-bartal font-bold hover:bg-navy-deep transition-colors text-small"
+            >
+              {f.goToOrders}
+            </Link>
+            <a
+              href={`https://wa.me/${waNumber}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center h-11 bg-transparent border border-line text-ink rounded-bartal font-semibold hover:bg-sand transition-colors text-small"
+            >
+              {f.contactSupport}
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  const address = order
-    ? order.shippingAddress
-    : addresses.find((a) => a.id === selectedAddressId) ?? addresses[0];
+  const items = order.items.map((it) => ({
+    product_id: it.productId,
+    slug: it.slug,
+    name_ar: it.name_ar,
+    name_en: it.name_en,
+    unit_price: it.unitPrice,
+    image_url: it.imageUrl,
+    quantity: it.quantity,
+  }));
+  const subtotal = order.subtotal;
+  const deliveryFee = order.deliveryFee;
+  const total = order.total;
+  const reference = order.number;
+  const address = order.shippingAddress;
   const bank = findBankById(selectedBankId) ?? BANKS[0];
   const firstName = address ? address.name.split(' ')[0] ?? address.name : '';
-
-  const t = dict.web.checkout.thankYou;
   const unit = isAr ? 'ج.س' : 'SDG';
-  const lineCount = order ? items.length : pageHydrated ? items.length : 0;
 
   return (
     <div className="max-w-[1100px] mx-auto px-6 py-8">
@@ -93,7 +106,7 @@ export function ThankYouContent({ locale, dict, orderId, order }: ThankYouConten
               {t.summary.title}
             </h3>
 
-            {lineCount === 0 ? (
+            {items.length === 0 ? (
               <div className="text-small text-ink-mute leading-relaxed">
                 {dict.web.cart.empty}
               </div>

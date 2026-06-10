@@ -605,6 +605,13 @@ const webAr = {
       backToBank: 'الرجوع إلى الدفع',
     },
     thankYou: {
+      loadFailed: {
+        title: 'تعذّر تحميل تفاصيل الطلب',
+        body:
+          'لم نتمكن من العثور على هذا الطلب أو تحميل تفاصيله. إذا أكملت الدفع للتو فلا تقلق — طلبك مسجّل لدينا ويمكنك متابعته من صفحة طلباتي.',
+        goToOrders: 'الذهاب إلى طلباتي',
+        contactSupport: 'تواصل معنا عبر واتساب',
+      },
       hero: {
         greeting: 'شكراً لك يا {name}',
         headline: 'تم استلام طلبك',
@@ -1542,6 +1549,13 @@ const webEn: typeof webAr = {
       backToBank: 'Back to payment',
     },
     thankYou: {
+      loadFailed: {
+        title: "We couldn't load your order",
+        body:
+          "We couldn't find this order or load its details. If you just completed checkout, don't worry — your order is recorded and you can follow it from your orders page.",
+        goToOrders: 'Go to my orders',
+        contactSupport: 'Contact us on WhatsApp',
+      },
       hero: {
         greeting: 'Thank you, {name}',
         headline: 'Your order is in.',
