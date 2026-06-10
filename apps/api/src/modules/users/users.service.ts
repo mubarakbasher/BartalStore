@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Prisma, type Address, type User } from '@prisma/client';
+import { OrderStatus } from '@bartal/shared';
 import { PrismaService } from '../../prisma/prisma.service';
 import { comparePassword, hashPassword } from '../../common/utils/password';
 import type { PublicUser } from '../auth/auth.service';
@@ -16,6 +17,11 @@ import type {
   UpdateProfileDto,
 } from './dto/users.dto';
 
+export interface UserProfileView extends PublicUser {
+  orders_count: number;
+  lifetime_spend: number;
+}
+
 function publicUserShape(user: User): PublicUser {
   return {
     id: user.id,
@@ -25,6 +31,11 @@ function publicUserShape(user: User): PublicUser {
     role: user.role,
     language: user.language,
     is_verified: user.is_verified,
+    email_verified: user.email_verified,
+    national_id_status: user.national_id_status,
+    date_of_birth: user.date_of_birth,
+    gender: user.gender,
+    loyalty_points: user.loyalty_points,
     created_at: user.created_at,
   };
 }
@@ -44,13 +55,13 @@ export class UsersService {
   // Profile
   // ───────────────────────────────────────────────────────────────────
 
-  async getProfile(userId: string): Promise<PublicUser> {
+  async getProfile(userId: string): Promise<UserProfileView> {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user || !user.is_active) throw this.userNotFoundError();
-    return publicUserShape(user);
+    return this.withStats(user);
   }
 
-  async updateProfile(userId: string, dto: UpdateProfileDto): Promise<PublicUser> {
+  async updateProfile(userId: string, dto: UpdateProfileDto): Promise<UserProfileView> {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user || !user.is_active) throw this.userNotFoundError();
 
@@ -70,9 +81,34 @@ export class UsersService {
     if (dto.email !== undefined) data.email = dto.email;
     if (dto.language !== undefined) data.language = dto.language;
     if (dto.fcm_token !== undefined) data.fcm_token = dto.fcm_token;
+    if (dto.date_of_birth !== undefined) {
+      data.date_of_birth = dto.date_of_birth === null ? null : new Date(dto.date_of_birth);
+    }
+    if (dto.gender !== undefined) data.gender = dto.gender;
 
     const updated = await this.prisma.user.update({ where: { id: userId }, data });
-    return publicUserShape(updated);
+    return this.withStats(updated);
+  }
+
+  /**
+   * Enriches a user row with computed order stats. `lifetime_spend` mirrors
+   * the admin customer-detail aggregate (excludes CANCELLED + REFUNDED).
+   */
+  private async withStats(user: User): Promise<UserProfileView> {
+    const [count, spend] = await Promise.all([
+      this.prisma.order.count({
+        where: { user_id: user.id, status: { notIn: [OrderStatus.CANCELLED, OrderStatus.REFUNDED] } },
+      }),
+      this.prisma.order.aggregate({
+        _sum: { total: true },
+        where: { user_id: user.id, status: { notIn: [OrderStatus.CANCELLED, OrderStatus.REFUNDED] } },
+      }),
+    ]);
+    return {
+      ...publicUserShape(user),
+      orders_count: count,
+      lifetime_spend: spend._sum.total ? Number(spend._sum.total) : 0,
+    };
   }
 
   async changePassword(userId: string, dto: ChangePasswordDto): Promise<{ success: true }> {

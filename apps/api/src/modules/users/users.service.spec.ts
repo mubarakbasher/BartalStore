@@ -27,6 +27,11 @@ function makeUser(overrides: Partial<{ id: string; phone: string; email: string 
     email: overrides.email === undefined ? 'mo@example.sd' : overrides.email,
     password_hash: 'hashed:Password123',
     is_verified: true,
+    email_verified: false,
+    national_id_status: 'UNVERIFIED' as const,
+    date_of_birth: null,
+    gender: null,
+    loyalty_points: 0,
     is_active: overrides.is_active ?? true,
     role: 'CUSTOMER' as const,
     language: 'AR' as const,
@@ -59,6 +64,7 @@ describe('UsersService', () => {
   let service: UsersService;
   let prisma: {
     user: { findUnique: jest.Mock; update: jest.Mock };
+    order: { count: jest.Mock; aggregate: jest.Mock };
     address: {
       findMany: jest.Mock;
       findFirst: jest.Mock;
@@ -75,6 +81,10 @@ describe('UsersService', () => {
   beforeEach(async () => {
     prisma = {
       user: { findUnique: jest.fn(), update: jest.fn() },
+      order: {
+        count: jest.fn().mockResolvedValue(0),
+        aggregate: jest.fn().mockResolvedValue({ _sum: { total: null } }),
+      },
       address: {
         findMany: jest.fn(),
         findFirst: jest.fn(),
@@ -121,6 +131,22 @@ describe('UsersService', () => {
 
       prisma.user.findUnique.mockResolvedValue(makeUser({ is_active: false }));
       await expect(service.getProfile('u1')).rejects.toBeInstanceOf(NotFoundException);
+    });
+
+    it('enriches the profile with computed order stats + new profile fields', async () => {
+      prisma.user.findUnique.mockResolvedValue(
+        makeUser({ id: 'u1' }),
+      );
+      prisma.order.count.mockResolvedValue(3);
+      prisma.order.aggregate.mockResolvedValue({ _sum: { total: new Prisma.Decimal(127500) } });
+      const result = await service.getProfile('u1');
+      expect(result).toMatchObject({
+        orders_count: 3,
+        lifetime_spend: 127500,
+        loyalty_points: 0,
+        email_verified: false,
+        national_id_status: 'UNVERIFIED',
+      });
     });
   });
 

@@ -3,19 +3,25 @@ import {
   IsBoolean,
   IsEmail,
   IsEnum,
+  IsISO8601,
   IsOptional,
   IsString,
   Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { DeliveryZone, Language, SUDAN_PHONE_REGEX } from '@bartal/shared';
+import { DeliveryZone, Gender, Language, SUDAN_PHONE_REGEX } from '@bartal/shared';
 
 export class UpdateProfileDto {
   @ApiPropertyOptional() @IsOptional() @IsString() @MinLength(2) @MaxLength(80) name?: string;
   @ApiPropertyOptional() @IsOptional() @IsEmail() email?: string;
   @ApiPropertyOptional({ enum: Language }) @IsOptional() @IsEnum(Language) language?: Language;
   @ApiPropertyOptional() @IsOptional() @IsString() fcm_token?: string;
+  @ApiPropertyOptional({ description: 'ISO 8601 date; null to clear' })
+  @IsOptional()
+  @IsISO8601()
+  date_of_birth?: string | null;
+  @ApiPropertyOptional({ enum: Gender }) @IsOptional() @IsEnum(Gender) gender?: Gender;
 }
 
 export class ChangePasswordDto {

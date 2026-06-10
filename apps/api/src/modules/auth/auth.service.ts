@@ -44,6 +44,11 @@ export interface PublicUser {
   role: User['role'];
   language: User['language'];
   is_verified: boolean;
+  email_verified: boolean;
+  national_id_status: User['national_id_status'];
+  date_of_birth: Date | null;
+  gender: User['gender'];
+  loyalty_points: number;
   created_at: Date;
 }
 
@@ -56,6 +61,11 @@ function publicUserShape(user: User): PublicUser {
     role: user.role,
     language: user.language,
     is_verified: user.is_verified,
+    email_verified: user.email_verified,
+    national_id_status: user.national_id_status,
+    date_of_birth: user.date_of_birth,
+    gender: user.gender,
+    loyalty_points: user.loyalty_points,
     created_at: user.created_at,
   };
 }
