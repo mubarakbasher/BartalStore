@@ -1,0 +1,114 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    name: API (lint + tsc + unit + build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:shared
+      - run: pnpm --filter @bartal/api exec tsc --noEmit
+      - run: pnpm --filter @bartal/api lint
+      - run: pnpm --filter @bartal/api test
+      - run: pnpm --filter @bartal/api build
+
+  web:
+    name: Web (lint + tsc + build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:shared
+      - run: pnpm --filter @bartal/web exec tsc --noEmit
+      - run: pnpm --filter @bartal/web lint
+      - run: pnpm --filter @bartal/web build
+
+  admin:
+    name: Admin (lint + tsc + build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:shared
+      - run: pnpm --filter @bartal/admin exec tsc --noEmit
+      - run: pnpm --filter @bartal/admin lint
+      - run: pnpm --filter @bartal/admin build
+
+  e2e:
+    name: API e2e (postgres + redis)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: bartal
+          POSTGRES_PASSWORD: bartal_ci_pw
+          POSTGRES_DB: bartal_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U bartal"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://bartal:bartal_ci_pw@localhost:5432/bartal_test?schema=public
+      REDIS_URL: redis://localhost:6379
+      API_PORT: '3001'
+      JWT_ACCESS_SECRET: ci-only-access-secret-do-not-reuse
+      JWT_ACCESS_TTL: 15m
+      JWT_REFRESH_SECRET: ci-only-refresh-secret-do-not-reuse
+      JWT_REFRESH_TTL: 30d
+      BCRYPT_ROUNDS: '4'
+      OTP_TTL_SECONDS: '600'
+      OTP_MAX_PER_WINDOW: '5'
+      OTP_WINDOW_SECONDS: '900'
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:shared
+      - run: pnpm --filter @bartal/api prisma:deploy
+      - run: pnpm --filter @bartal/api test:e2e
