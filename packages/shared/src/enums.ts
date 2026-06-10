@@ -12,6 +12,20 @@ export const Language = {
 } as const;
 export type Language = (typeof Language)[keyof typeof Language];
 
+export const Gender = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE',
+  OTHER: 'OTHER',
+} as const;
+export type Gender = (typeof Gender)[keyof typeof Gender];
+
+export const VerificationStatus = {
+  UNVERIFIED: 'UNVERIFIED',
+  PENDING: 'PENDING',
+  VERIFIED: 'VERIFIED',
+} as const;
+export type VerificationStatus = (typeof VerificationStatus)[keyof typeof VerificationStatus];
+
 export const DeliveryZone = {
   ZONE_A: 'ZONE_A',
   ZONE_B: 'ZONE_B',

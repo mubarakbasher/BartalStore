@@ -24,20 +24,37 @@ enum Language {
   EN
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+}
+
 model User {
-  id            String    @id @default(cuid())
-  phone         String    @unique
-  name          String
-  email         String?   @unique
-  password_hash String
-  is_verified   Boolean   @default(false)
-  is_active     Boolean   @default(true)
-  role          UserRole  @default(CUSTOMER)
-  language      Language  @default(AR)
-  fcm_token     String?
-  last_login_at DateTime?
-  created_at    DateTime  @default(now())
-  updated_at    DateTime  @updatedAt
+  id                 String             @id @default(cuid())
+  phone              String             @unique
+  name               String
+  email              String?            @unique
+  password_hash      String
+  is_verified        Boolean            @default(false)
+  email_verified     Boolean            @default(false)
+  national_id_status VerificationStatus @default(UNVERIFIED)
+  date_of_birth      DateTime?
+  gender             Gender?
+  loyalty_points     Int                @default(0)
+  is_active          Boolean            @default(true)
+  role               UserRole           @default(CUSTOMER)
+  language           Language           @default(AR)
+  fcm_token          String?
+  last_login_at      DateTime?
+  created_at         DateTime           @default(now())
+  updated_at         DateTime           @updatedAt
 
   addresses           Address[]
   orders              Order[]
@@ -46,6 +63,7 @@ model User {
   otp_codes           OtpCode[]
   refresh_tokens      RefreshToken[]
   cart_session        CartSession?
+  wishlist            WishlistItem[]
   audit_logs          AuditLog[]
   inventory_movements InventoryMovement[]
   refunds_requested   RefundRequest[]     @relation("RefundRequester")
@@ -183,10 +201,25 @@ model Product {
   reviews             Review[]
   order_items         OrderItem[]
   inventory_movements InventoryMovement[]
+  wishlisted_by       WishlistItem[]
 
   @@index([category_id, is_active])
   @@index([is_featured])
   @@map("products")
+}
+
+model WishlistItem {
+  id         String   @id @default(cuid())
+  user_id    String
+  product_id String
+  created_at DateTime @default(now())
+
+  user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, product_id])
+  @@index([user_id, created_at])
+  @@map("wishlist_items")
 }
 
 model ProductImage {
