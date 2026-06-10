@@ -9,6 +9,7 @@ import {
   Matches,
   MaxLength,
   MinLength,
+  ValidateIf,
 } from 'class-validator';
 import { DeliveryZone, Gender, Language, SUDAN_PHONE_REGEX } from '@bartal/shared';
 
@@ -19,6 +20,7 @@ export class UpdateProfileDto {
   @ApiPropertyOptional() @IsOptional() @IsString() fcm_token?: string;
   @ApiPropertyOptional({ description: 'ISO 8601 date; null to clear' })
   @IsOptional()
+  @ValidateIf((_, value) => value !== null)
   @IsISO8601()
   date_of_birth?: string | null;
   @ApiPropertyOptional({ enum: Gender }) @IsOptional() @IsEnum(Gender) gender?: Gender;

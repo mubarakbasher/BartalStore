@@ -6,8 +6,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { validate } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
 import { DeliveryZone, Language } from '@bartal/shared';
 import { UsersService } from './users.service';
+import { UpdateProfileDto } from './dto/users.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 
 jest.mock('../../common/utils/password', () => ({
@@ -395,5 +398,25 @@ describe('UsersService', () => {
       prisma.address.findFirst.mockResolvedValue(null);
       await expect(service.setDefaultAddress('attacker', 'a1')).rejects.toBeInstanceOf(NotFoundException);
     });
+  });
+});
+
+describe('UpdateProfileDto validation', () => {
+  it('accepts explicit null date_of_birth (clear-the-field path)', async () => {
+    const dto = plainToInstance(UpdateProfileDto, { date_of_birth: null });
+    const errors = await validate(dto);
+    expect(errors).toHaveLength(0);
+  });
+
+  it('accepts a valid ISO date_of_birth', async () => {
+    const dto = plainToInstance(UpdateProfileDto, { date_of_birth: '1995-04-12' });
+    const errors = await validate(dto);
+    expect(errors).toHaveLength(0);
+  });
+
+  it('rejects a malformed date_of_birth', async () => {
+    const dto = plainToInstance(UpdateProfileDto, { date_of_birth: 'not-a-date' });
+    const errors = await validate(dto);
+    expect(errors.some((e) => e.property === 'date_of_birth')).toBe(true);
   });
 });
