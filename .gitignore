@@ -12,6 +12,9 @@ out/
 .tsbuildinfo
 *.tsbuildinfo
 
+# Dev-only local storage mirror (stub-mode uploads, no R2 creds)
+.dev-storage/
+
 # Env files
 .env
 .env.local
