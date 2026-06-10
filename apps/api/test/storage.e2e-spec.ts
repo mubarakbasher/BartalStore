@@ -1,4 +1,6 @@
 import 'reflect-metadata';
+import { promises as fsp } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { Test } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -231,4 +233,57 @@ describe('Storage (e2e, stub mode)', () => {
       .expect(403);
     expect(denied.body.error.code).toBe('FORBIDDEN');
   }, 60_000);
+
+  describe('GET /storage/dev/* (stub-mode static serve)', () => {
+    // writeDevFile is a no-op under NODE_ENV=test, so seed the mirror directly.
+    const devDir = join(process.cwd(), '.dev-storage');
+    const devKey = 'receipts/e2e/dev-serve-test.webp';
+    let webp: Buffer;
+
+    const binaryParser = (
+      res: request.Response,
+      cb: (err: Error | null, body: Buffer) => void,
+    ): void => {
+      const stream = res as unknown as NodeJS.ReadableStream;
+      const chunks: Buffer[] = [];
+      stream.on('data', (c) => chunks.push(c as Buffer));
+      stream.on('end', () => cb(null, Buffer.concat(chunks)));
+    };
+
+    beforeAll(async () => {
+      webp = await sharp({
+        create: { width: 4, height: 4, channels: 3, background: { r: 10, g: 20, b: 30 } },
+      })
+        .webp()
+        .toBuffer();
+      await fsp.mkdir(dirname(join(devDir, devKey)), { recursive: true });
+      await fsp.writeFile(join(devDir, devKey), webp);
+    });
+
+    afterAll(async () => {
+      await fsp.rm(join(devDir, 'receipts', 'e2e'), { recursive: true, force: true });
+    });
+
+    it('serves a stubbed file publicly with image/webp and the exact bytes', async () => {
+      const res = await request(app.getHttpServer())
+        .get(`/api/storage/dev/${devKey}`)
+        .buffer(true)
+        .parse(binaryParser)
+        .expect(200);
+      expect(res.headers['content-type']).toContain('image/webp');
+      expect(Buffer.compare(res.body as Buffer, webp)).toBe(0);
+    });
+
+    it('returns 404 for a missing key', async () => {
+      await request(app.getHttpServer())
+        .get('/api/storage/dev/receipts/e2e/does-not-exist.webp')
+        .expect(404);
+    });
+
+    it('returns 404 for a path-traversal attempt', async () => {
+      await request(app.getHttpServer())
+        .get('/api/storage/dev/..%2F..%2Fpackage.json')
+        .expect(404);
+    });
+  });
 });
