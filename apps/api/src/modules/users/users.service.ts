@@ -17,6 +17,11 @@ import type {
   UpdateProfileDto,
 } from './dto/users.dto';
 
+/**
+ * Internal Date-typed profile shape. The JSON wire format clients consume
+ * is `UserProfileView` in `@bartal/shared` (dates serialized to ISO
+ * strings) — keep the two in sync when adding fields.
+ */
 export interface UserProfileView extends PublicUser {
   orders_count: number;
   lifetime_spend: number;

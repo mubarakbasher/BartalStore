@@ -1,4 +1,9 @@
-import type { DeliveryZone, PaginationMeta } from '@bartal/shared';
+import type {
+  DeliveryZone,
+  Gender as SharedGender,
+  PaginationMeta,
+  VerificationStatus as SharedVerificationStatus,
+} from '@bartal/shared';
 
 export interface ProductImage {
   id: string;
@@ -228,26 +233,11 @@ export interface CreateOrderDto {
 
 // ─── Users / profile (server view) ────────────────────────────────────
 
-export type VerificationStatusValue = 'UNVERIFIED' | 'PENDING' | 'VERIFIED';
-export type GenderValue = 'MALE' | 'FEMALE' | 'OTHER';
-
-export interface UserProfileView {
-  id: string;
-  phone: string;
-  name: string;
-  email: string | null;
-  role: 'CUSTOMER' | 'ADMIN';
-  language: 'AR' | 'EN';
-  is_verified: boolean;
-  email_verified: boolean;
-  national_id_status: VerificationStatusValue;
-  date_of_birth: string | null;
-  gender: GenderValue | null;
-  loyalty_points: number;
-  orders_count: number;
-  lifetime_spend: number;
-  created_at: string;
-}
+// Wire shapes now live in @bartal/shared (single source of truth with the
+// API). Aliases preserved so existing imports keep working.
+export type VerificationStatusValue = SharedVerificationStatus;
+export type GenderValue = SharedGender;
+export type { UserProfileView } from '@bartal/shared';
 
 export interface UpdateProfileDto {
   name?: string;

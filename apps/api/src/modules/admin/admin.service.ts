@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import {
   Prisma,
-  RefundStatus,
   type Category,
   type DeliveryZoneFee,
   type Product,
@@ -17,6 +16,7 @@ import {
   DeliveryZone,
   OrderStatus,
   PaymentStatus,
+  RefundStatus,
 } from '@bartal/shared';
 import { PrismaService } from '../../prisma/prisma.service';
 import { OrdersService } from '../orders/orders.service';
@@ -2328,13 +2328,10 @@ export class AdminService {
     }
     // Status filter is applied post-derive since `status` is computed.
 
-    const [allItems, total] = await this.prisma.$transaction([
-      this.prisma.promo.findMany({
-        where,
-        orderBy: { created_at: 'desc' },
-      }),
-      this.prisma.promo.count({ where }),
-    ]);
+    const allItems = await this.prisma.promo.findMany({
+      where,
+      orderBy: { created_at: 'desc' },
+    });
 
     const enriched = allItems.map((p) => ({ ...p, derived_status: derivePromoStatus(p) }));
     const filtered =

@@ -1,4 +1,13 @@
-import type { DeliveryZone, OrderStatus, PaymentStatus } from '@bartal/shared';
+import type {
+  BannerStatus,
+  DeliveryZone,
+  InventoryMovementType,
+  OrderStatus,
+  PaymentStatus,
+  PromoType,
+  RefundStatus,
+  ReviewModerationStatus,
+} from '@bartal/shared';
 
 // ─── Dashboard ─────────────────────────────────────────────
 
@@ -21,6 +30,7 @@ export interface DashboardTopProduct {
   slug: string;
   image_url: string | null;
   units_sold: number;
+  revenue: number;
 }
 
 export interface DashboardDailyRevenue {
@@ -281,7 +291,7 @@ export interface AdminCategoryNode {
 
 // ─── Reviews moderation ────────────────────────────────────
 
-export type ReviewModerationStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+export type { ReviewModerationStatus };
 export type AdminReviewFilter = 'pending' | 'flagged' | 'approved' | 'rejected' | 'all';
 
 export interface AdminReviewItem {
@@ -381,7 +391,7 @@ export interface AdminAnalyticsTopProductsResponse {
 
 // ─── Slice 3b-1: Inventory movements ───────────────────────
 
-export type InventoryMovementType = 'SALE' | 'RETURN' | 'RESTOCK' | 'ADJUST';
+export type { InventoryMovementType };
 
 export interface InventoryMovementRow {
   id: string;
@@ -443,7 +453,7 @@ export interface AbandonedCartsResponse {
 
 // ─── Slice 3b-2: Refunds ───────────────────────────────────
 
-export type RefundStatusValue = 'PENDING' | 'APPROVED' | 'REJECTED';
+export type RefundStatusValue = RefundStatus;
 export type RefundFilter = 'pending' | 'approved' | 'rejected' | 'all';
 
 export interface AdminRefundRow {
@@ -538,7 +548,7 @@ export interface AdminTemplatesResponse {
 
 // ─── Slice 3b-3: Promos ────────────────────────────────────
 
-export type PromoType = 'PERCENTAGE' | 'FIXED_AMOUNT' | 'FREE_SHIPPING';
+export type { PromoType };
 export type PromoStatus = 'active' | 'scheduled' | 'expired' | 'inactive';
 export type PromoFilter = PromoStatus | 'all';
 
@@ -575,7 +585,7 @@ export interface AdminPromoListResponse {
 
 // ─── Slice 3b-3: Banners ──────────────────────────────────
 
-export type BannerStatusValue = 'LIVE' | 'DRAFT';
+export type BannerStatusValue = BannerStatus;
 export type BannerFilter = 'live' | 'draft' | 'all';
 
 export interface AdminBannerRow {

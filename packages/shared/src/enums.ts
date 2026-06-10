@@ -67,3 +67,40 @@ export const PaymentStatus = {
   REFUNDED: 'REFUNDED',
 } as const;
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus];
+
+export const ReviewModerationStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+} as const;
+export type ReviewModerationStatus =
+  (typeof ReviewModerationStatus)[keyof typeof ReviewModerationStatus];
+
+export const InventoryMovementType = {
+  SALE: 'SALE',
+  RETURN: 'RETURN',
+  RESTOCK: 'RESTOCK',
+  ADJUST: 'ADJUST',
+} as const;
+export type InventoryMovementType =
+  (typeof InventoryMovementType)[keyof typeof InventoryMovementType];
+
+export const RefundStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+} as const;
+export type RefundStatus = (typeof RefundStatus)[keyof typeof RefundStatus];
+
+export const PromoType = {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED_AMOUNT: 'FIXED_AMOUNT',
+  FREE_SHIPPING: 'FREE_SHIPPING',
+} as const;
+export type PromoType = (typeof PromoType)[keyof typeof PromoType];
+
+export const BannerStatus = {
+  DRAFT: 'DRAFT',
+  LIVE: 'LIVE',
+} as const;
+export type BannerStatus = (typeof BannerStatus)[keyof typeof BannerStatus];
