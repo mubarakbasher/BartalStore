@@ -11,7 +11,7 @@ import { ApiClientError } from '@/lib/api/client';
 import { useTopbarTitle } from '@/lib/state/topbar-store';
 import { usePrefsStore } from '@/lib/state/prefs-store';
 import { getDictionary } from '@/lib/i18n/dictionary';
-import { LEGAL_PAGES, type LegalSlug } from '../tabs/LegalTab';
+import { LEGAL_PAGES, type LegalSlug } from '../legal-pages';
 
 const LABEL: Record<LegalSlug, { ar: string; en: string }> = {
   terms: { ar: 'الشروط والأحكام', en: 'Terms & Conditions' },

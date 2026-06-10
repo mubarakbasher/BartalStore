@@ -4,9 +4,7 @@ import { AdmCard } from '@/components/primitives/AdmCard';
 import { useAdminSettings } from '@/lib/api/queries';
 import { usePrefsStore } from '@/lib/state/prefs-store';
 import { getDictionary } from '@/lib/i18n/dictionary';
-
-export const LEGAL_PAGES = ['terms', 'privacy', 'refund', 'shipping', 'about', 'contact'] as const;
-export type LegalSlug = (typeof LEGAL_PAGES)[number];
+import { LEGAL_PAGES, type LegalSlug } from '../legal-pages';
 
 const LABEL: Record<LegalSlug, { ar: string; en: string }> = {
   terms: { ar: 'الشروط والأحكام', en: 'Terms & Conditions' },

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { PrismaClient, DeliveryZone, UserRole, Language } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { KHARTOUM_DELIVERY_ZONES } from '@bartal/shared';

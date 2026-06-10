@@ -110,7 +110,7 @@ export class NotificationsService implements OnModuleInit {
       return;
     }
 
-    let logId: string | null = null;
+    let logId: string;
     try {
       const created = await this.prisma.smsLog.create({
         data: {
