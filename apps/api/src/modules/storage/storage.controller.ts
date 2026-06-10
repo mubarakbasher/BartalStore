@@ -99,14 +99,16 @@ export class StorageController {
    * tags from the admin/web origins can load it directly.
    */
   @Public()
-  @Get('dev/*')
+  @Get('dev/*key')
   @ApiOperation({ summary: 'Dev-only: serve a stub-stored image (stub mode only)' })
   async devFile(@Req() req: Request, @Res() res: Response): Promise<void> {
     if (!this.storage.isStubMode) {
       res.status(404).end();
       return;
     }
-    const key = (req.params as Record<string, string>)[0] ?? '';
+    // Express 5 named wildcards expose the match as an array of segments.
+    const match = (req.params as Record<string, string | string[]>).key;
+    const key = Array.isArray(match) ? match.join('/') : (match ?? '');
     const buf = await this.storage.readDevFile(key);
     if (!buf) {
       res.status(404).end();

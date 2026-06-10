@@ -16,13 +16,14 @@ const certMock = jest.fn(() => ({}));
 const appMock = jest.fn();
 const messagingMock = jest.fn(() => ({ send: sendMock }));
 
-jest.mock('firebase-admin', () => ({
-  apps: [] as unknown[],
+jest.mock('firebase-admin/app', () => ({
+  getApps: jest.fn(() => [] as unknown[]),
   initializeApp: initializeAppMock,
-  credential: { cert: certMock },
-  messaging: messagingMock,
-  app: appMock,
-  SDK_VERSION: 'mock',
+  cert: certMock,
+  getApp: appMock,
+}));
+jest.mock('firebase-admin/messaging', () => ({
+  getMessaging: messagingMock,
 }));
 
 import { NotificationsService } from './notifications.service';
