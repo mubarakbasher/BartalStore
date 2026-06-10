@@ -3,6 +3,11 @@ packages:
   - "apps/web"
   - "apps/admin"
   - "packages/*"
+
+# Large native tarballs (sharp, @next/swc) exceed the default 60s fetch
+# timeout on slow connections — the same constraint this product targets.
+fetchTimeout: 600000
+fetchRetries: 5
 allowBuilds:
   "@nestjs/core": true
   "@prisma/client": true
