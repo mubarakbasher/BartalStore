@@ -16,6 +16,8 @@ const config: Config = {
           DEFAULT: '#D4860B',
           soft: '#F2B544',
           tint: '#FDF4E2',
+          hover: '#B57208',
+          active: '#9A6206',
         },
         sand: '#F7F3EC',
         paper: '#FBFAF7',
