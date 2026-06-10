@@ -4,7 +4,7 @@ import { AdmInput } from '@/components/primitives/AdmInput';
 import { AdmSelect } from '@/components/primitives/AdmSelect';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import { useAdminCategories } from '@/lib/api/queries';
 import {
   useCreateCategory,

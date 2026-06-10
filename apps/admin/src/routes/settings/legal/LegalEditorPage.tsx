@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { AdmCard } from '@/components/primitives/AdmCard';
 import { AdmTextarea } from '@/components/primitives/AdmTextarea';
@@ -6,7 +6,7 @@ import { AdmSelect } from '@/components/primitives/AdmSelect';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { useAdminSettings } from '@/lib/api/queries';
 import { useUpdateSettings } from '@/lib/api/mutations';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import { ApiClientError } from '@/lib/api/client';
 import { useTopbarTitle } from '@/lib/state/topbar-store';
 import { usePrefsStore } from '@/lib/state/prefs-store';
@@ -36,7 +36,10 @@ export function LegalEditorPage() {
   const bodyArKey = `legal.${slug}.body_ar`;
   const bodyEnKey = `legal.${slug}.body_en`;
   const statusKey = `legal.${slug}.status`;
-  const allKeys = [bodyArKey, bodyEnKey, statusKey];
+  const allKeys = useMemo(
+    () => [bodyArKey, bodyEnKey, statusKey],
+    [bodyArKey, bodyEnKey, statusKey],
+  );
 
   const [draft, setDraft] = useState<Record<string, string>>({});
 
@@ -45,7 +48,7 @@ export function LegalEditorPage() {
     const next: Record<string, string> = {};
     for (const k of allKeys) next[k] = server[k] ?? '';
     setDraft(next);
-  }, [server, slug]);
+  }, [server, allKeys]);
 
   const dirty = server ? allKeys.some((k) => (draft[k] ?? '') !== (server[k] ?? '')) : false;
 

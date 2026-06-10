@@ -3,7 +3,7 @@ import { AdmCard } from '@/components/primitives/AdmCard';
 import { AdmInput } from '@/components/primitives/AdmInput';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { AdmTextarea } from '@/components/primitives/AdmTextarea';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import { useAdminSettings } from '@/lib/api/queries';
 import { useUpdateSettings } from '@/lib/api/mutations';
 import { ApiClientError } from '@/lib/api/client';

@@ -10,7 +10,7 @@ import { getDictionary } from '@/lib/i18n/dictionary';
 import { AdmCard } from '@/components/primitives/AdmCard';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import { BannerFormDialog } from './BannerFormDialog';
 
 const TABS: Array<{ key: BannerFilter; label_en: string; label_ar: string }> = [

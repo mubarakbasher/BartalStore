@@ -12,7 +12,7 @@ import { AdmStatCard } from '@/components/primitives/AdmStatCard';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
 import { PriceTag } from '@/components/primitives/PriceTag';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import { RefundCreateDialog } from './RefundCreateDialog';
 
 const TABS: Array<{ key: RefundFilter; label_en: string; label_ar: string }> = [

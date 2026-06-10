@@ -8,7 +8,7 @@ import {
   useUpdateBanner,
   useUploadBannerImage,
 } from '@/lib/api/mutations';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import type { AdminLocale } from '@/lib/state/prefs-store';
 import type { AdminBannerRow, BannerStatusValue } from '@/lib/api/types';
 

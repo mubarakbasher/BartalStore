@@ -9,7 +9,7 @@ import { AdmTextarea } from '@/components/primitives/AdmTextarea';
 import { AdmSelect } from '@/components/primitives/AdmSelect';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import { ImageManager } from './ImageManager';
 import { useAdminCategories, useAdminProduct } from '@/lib/api/queries';
 import {

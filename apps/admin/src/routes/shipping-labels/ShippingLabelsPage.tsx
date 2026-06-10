@@ -9,7 +9,7 @@ import { usePrefsStore } from '@/lib/state/prefs-store';
 import { getDictionary } from '@/lib/i18n/dictionary';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import { ShippingLabelPreview } from './ShippingLabelPreview';
 import { fmtSDG } from '@/design/tokens';
 import './print-styles.css';

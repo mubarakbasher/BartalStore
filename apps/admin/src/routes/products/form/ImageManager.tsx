@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { AdmInput } from '@/components/primitives/AdmInput';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import {
   useDeleteProductImage,
   useUpdateProductImage,

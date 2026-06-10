@@ -8,7 +8,7 @@ import { AdmStatusPill } from '@/components/primitives/AdmStatusPill';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
 import { AdmDialog } from '@/components/primitives/AdmDialog';
 import { PriceTag } from '@/components/primitives/PriceTag';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import { AdmStatusTimeline } from '@/components/orders/AdmStatusTimeline';
 import { ReceiptViewerDialog } from '@/components/orders/ReceiptViewerDialog';
 import { useAdminOrder } from '@/lib/api/queries';

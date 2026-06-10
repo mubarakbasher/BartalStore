@@ -3,7 +3,7 @@ import { AdmCard } from '@/components/primitives/AdmCard';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { useAdminSettings } from '@/lib/api/queries';
 import { useUpdateSettings } from '@/lib/api/mutations';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import { ApiClientError } from '@/lib/api/client';
 import { usePrefsStore } from '@/lib/state/prefs-store';
 import { getDictionary } from '@/lib/i18n/dictionary';

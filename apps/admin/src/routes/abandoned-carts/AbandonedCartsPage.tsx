@@ -10,7 +10,7 @@ import { AdmCard } from '@/components/primitives/AdmCard';
 import { AdmStatCard } from '@/components/primitives/AdmStatCard';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
 import { PriceTag } from '@/components/primitives/PriceTag';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import { fmtSDG } from '@/design/tokens';
 
 const STAGE_TABS: Array<{ key: AbandonedCartStage | 'ALL'; label_en: string; label_ar: string }> =

@@ -3,7 +3,7 @@ import { AdmCard } from '@/components/primitives/AdmCard';
 import { AdmInput } from '@/components/primitives/AdmInput';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import { useDeliveryZones } from '@/lib/api/queries';
 import { useUpdateZoneFee } from '@/lib/api/mutations';
 import { useTopbarTitle } from '@/lib/state/topbar-store';

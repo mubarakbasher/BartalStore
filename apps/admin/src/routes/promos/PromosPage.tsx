@@ -11,7 +11,7 @@ import { AdmCard } from '@/components/primitives/AdmCard';
 import { AdmStatCard } from '@/components/primitives/AdmStatCard';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import { PromoFormDialog } from './PromoFormDialog';
 
 const TABS: Array<{ key: PromoFilter; label_en: string; label_ar: string }> = [

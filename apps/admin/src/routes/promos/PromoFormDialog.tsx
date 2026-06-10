@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { AdmDialog } from '@/components/primitives/AdmDialog';
 import { AdmInput } from '@/components/primitives/AdmInput';
-import { AdmTextarea } from '@/components/primitives/AdmTextarea';
 import { AdmSelect } from '@/components/primitives/AdmSelect';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { useCreatePromo, useUpdatePromo } from '@/lib/api/mutations';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import type { AdminLocale } from '@/lib/state/prefs-store';
 import type { AdminPromoRow, PromoType } from '@/lib/api/types';
 

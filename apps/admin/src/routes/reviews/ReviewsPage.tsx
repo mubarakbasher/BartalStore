@@ -5,7 +5,7 @@ import { AdmStatCard } from '@/components/primitives/AdmStatCard';
 import { AdmTabs } from '@/components/primitives/AdmTabs';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
 import { AdmButton } from '@/components/primitives/AdmButton';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import { useAdminReviewKpis, useAdminReviews } from '@/lib/api/queries';
 import {
   useApproveReview,

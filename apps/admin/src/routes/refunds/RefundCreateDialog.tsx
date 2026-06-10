@@ -4,7 +4,7 @@ import { AdmInput } from '@/components/primitives/AdmInput';
 import { AdmTextarea } from '@/components/primitives/AdmTextarea';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { useCreateRefund } from '@/lib/api/mutations';
-import { pushToast } from '@/components/primitives/AdmToaster';
+import { pushToast } from '@/components/primitives/toast-bus';
 import type { AdminLocale } from '@/lib/state/prefs-store';
 
 interface Props {
