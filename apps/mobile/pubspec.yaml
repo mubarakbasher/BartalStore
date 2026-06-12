@@ -1,0 +1,78 @@
+name: bartal_mobile
+description: "Bartal (برتال) — bilingual Arabic-first e-commerce app for Sudan. Customer mobile surface (Phase 4)."
+publish_to: 'none'
+
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.11.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # Navigation
+  go_router: ^14.8.1
+
+  # Networking + storage
+  dio: ^5.7.0
+  flutter_secure_storage: ^9.2.4
+  shared_preferences: ^2.3.5
+  connectivity_plus: ^6.1.2
+
+  # UI
+  cached_network_image: ^3.4.1
+  cupertino_icons: ^1.0.8
+  path_drawing: ^1.0.1 # SVG path-data → ui.Path (design bundle ports)
+
+  # Utils
+  intl: any # pinned by flutter_localizations
+  decimal: ^3.0.2
+  url_launcher: ^6.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  # Direct dep so tests can swap in an in-memory secure-storage platform.
+  flutter_secure_storage_platform_interface: ^1.1.2
+  riverpod_generator: ^2.6.3
+  build_runner: ^2.4.14
+  mocktail: ^1.0.4
+
+flutter:
+  uses-material-design: true
+  generate: true # gen-l10n
+
+  assets:
+    - assets/fonts/
+
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo-400.ttf
+          weight: 400
+        - asset: assets/fonts/Cairo-600.ttf
+          weight: 600
+        - asset: assets/fonts/Cairo-700.ttf
+          weight: 700
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-400.ttf
+          weight: 400
+        - asset: assets/fonts/Poppins-500.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-600.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-700.ttf
+          weight: 700
+    - family: JetBrainsMono
+      fonts:
+        - asset: assets/fonts/JetBrainsMono-500.ttf
+          weight: 500

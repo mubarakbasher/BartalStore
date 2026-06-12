@@ -1,0 +1,7 @@
+# AR is the template — every key is authored Arabic-first per CLAUDE.md §4 (i18n).
+arb-dir: lib/l10n
+template-arb-file: app_ar.arb
+output-localization-file: l10n.dart
+output-class: L10n
+output-dir: lib/l10n/gen
+nullable-getter: false
