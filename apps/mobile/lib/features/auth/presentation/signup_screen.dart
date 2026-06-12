@@ -1,0 +1,14 @@
+import 'package:flutter/material.dart';
+
+/// Placeholder — Slice 1 replaces with the 3-step signup form
+/// (`auth-screens.jsx::SignupScreen`).
+class SignupScreen extends StatelessWidget {
+  const SignupScreen({super.key, this.from});
+
+  final String? from;
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text('Signup — Slice 1')));
+  }
+}

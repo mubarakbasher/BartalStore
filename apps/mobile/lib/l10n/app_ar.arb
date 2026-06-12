@@ -1,0 +1,164 @@
+{
+  "@@locale": "ar",
+
+  "appName": "بَرتال",
+  "tagline": "بوابتك للتسوق في السودان",
+
+  "commonYes": "نعم",
+  "commonNo": "لا",
+  "commonOk": "حسناً",
+  "commonCancel": "إلغاء",
+  "commonConfirm": "تأكيد",
+  "commonSave": "حفظ",
+  "commonDelete": "حذف",
+  "commonEdit": "تعديل",
+  "commonBack": "رجوع",
+  "commonNext": "التالي",
+  "commonSkip": "تخطي",
+  "commonRetry": "إعادة المحاولة",
+  "commonLoading": "جارٍ التحميل…",
+  "commonSearch": "بحث",
+  "commonOptional": "اختياري",
+  "commonRequired": "مطلوب",
+  "commonSeeAll": "عرض الكل",
+
+  "navHome": "الرئيسية",
+  "navShop": "المتجر",
+  "navCategories": "الفئات",
+  "navCart": "السلة",
+  "navOrders": "طلباتي",
+  "navProfile": "حسابي",
+  "navSettings": "الإعدادات",
+  "navWishlist": "المفضلة",
+  "navNotifications": "الإشعارات",
+
+  "authLogin": "تسجيل الدخول",
+  "authLogout": "تسجيل الخروج",
+  "authRegister": "إنشاء حساب",
+  "authPhone": "رقم الهاتف",
+  "authPhonePlaceholder": "+249 XXX XXX XXX",
+  "authPassword": "كلمة المرور",
+  "authConfirmPassword": "تأكيد كلمة المرور",
+  "authName": "الاسم الكامل",
+  "authEmail": "البريد الإلكتروني (اختياري)",
+  "authOtpTitle": "أدخل الرمز",
+  "authOtpSubtitle": "أرسلنا رمزاً مكوناً من 6 أرقام إلى {phone}",
+  "@authOtpSubtitle": {
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+  "authOtpResend": "إعادة إرسال الرمز",
+  "authOtpResendIn": "يمكنك إعادة الإرسال خلال {seconds} ثانية",
+  "@authOtpResendIn": {
+    "placeholders": {
+      "seconds": { "type": "String" }
+    }
+  },
+  "authForgotPassword": "نسيت كلمة المرور؟",
+  "authResetPassword": "إعادة تعيين كلمة المرور",
+  "authInvalidPhone": "أدخل رقم هاتف سوداني صحيح (+249)",
+  "authPasswordTooShort": "كلمة المرور 8 أحرف على الأقل",
+  "authPasswordsMismatch": "كلمتا المرور غير متطابقتين",
+
+  "productsAddToCart": "أضف إلى السلة",
+  "productsBuyNow": "اشتر الآن",
+  "productsInStock": "متوفر",
+  "productsOutOfStock": "نفذت الكمية",
+  "productsLowStock": "تبقى {count} فقط",
+  "@productsLowStock": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "productsReviews": "تقييم",
+  "productsReviewsTitle": "التقييمات",
+  "productsRelated": "قد يعجبك أيضاً",
+  "productsShare": "مشاركة",
+  "productsShareWhatsapp": "مشاركة عبر واتساب",
+  "productsNoResults": "لا توجد منتجات تطابق بحثك.",
+  "productsDescription": "الوصف",
+  "productsSpecs": "المواصفات",
+  "productsFeatured": "مختارات بارتال",
+  "productsNewArrivals": "وصل حديثاً",
+  "productsSale": "خصم",
+  "productsColor": "اللون",
+  "productsVerifiedPurchase": "شراء موثّق",
+
+  "searchPlaceholder": "ابحث عن أي شيء",
+  "searchResults": "نتائج البحث",
+  "searchResultsCount": "{count} نتيجة",
+  "@searchResultsCount": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "searchFilters": "تصفية",
+  "searchSort": "ترتيب",
+  "searchSortNewest": "الأحدث",
+  "searchSortPriceAsc": "السعر: من الأقل",
+  "searchSortPriceDesc": "السعر: من الأعلى",
+  "searchSortPopular": "الأكثر رواجاً",
+  "searchFilterCategory": "الفئة",
+  "searchFilterPrice": "نطاق السعر",
+  "searchFilterInStock": "المتوفر فقط",
+  "searchApplyFilters": "تطبيق",
+  "searchClearFilters": "مسح الكل",
+
+  "cartTitle": "سلتي",
+  "cartEmpty": "سلتك فارغة.",
+  "cartSubtotal": "المجموع الفرعي",
+  "cartDeliveryFee": "رسوم التوصيل",
+  "cartDiscount": "الخصم",
+  "cartTotal": "الإجمالي",
+  "cartCheckout": "إتمام الشراء",
+  "cartPlaceOrder": "إتمام الطلب",
+  "cartContinueShopping": "متابعة التسوق",
+
+  "deliveryTo": "التوصيل إلى",
+  "deliveryFreeDelivery": "توصيل مجاني",
+  "deliveryZoneA": "وسط الخرطوم",
+  "deliveryZoneB": "أمدرمان",
+  "deliveryZoneC": "بحري",
+  "deliveryZoneD": "شرق الخرطوم",
+  "deliveryEtaDays": "{min}-{max} يوم",
+  "@deliveryEtaDays": {
+    "placeholders": {
+      "min": { "type": "String" },
+      "max": { "type": "String" }
+    }
+  },
+
+  "wishlistTitle": "المفضلة",
+  "wishlistEmpty": "لا توجد عناصر في المفضلة بعد.",
+  "wishlistPriceDropped": "انخفض السعر",
+
+  "emptyCartTitle": "سلتك فارغة",
+  "emptyCartBody": "اكتشف منتجات رائعة وأضفها لسلتك — من العطور إلى الإلكترونيات.",
+  "emptyCartCta": "ابدأ التسوق",
+  "emptyOrdersTitle": "لا توجد طلبات بعد",
+  "emptyOrdersBody": "طلباتك ستظهر هنا فور إتمام أول عملية شراء.",
+  "emptyOrdersCta": "تسوق الآن",
+  "emptySearchTitle": "لا توجد نتائج",
+  "emptySearchBody": "جرّب كلمات بحث أخرى أو تصفح الفئات.",
+  "emptySearchCta": "تصفح الفئات",
+  "emptyAddressesTitle": "لا توجد عناوين",
+  "emptyAddressesBody": "أضف عنواناً لتسريع عملية الدفع في المرات القادمة.",
+  "emptyAddressesCta": "أضف عنواناً",
+
+  "errorServerTag": "خطأ في الخادم",
+  "errorServerTitle": "حدث خطأ غير متوقع",
+  "errorServerBody": "نحن نعمل على إصلاح المشكلة. حاول مرة أخرى بعد قليل.",
+  "errorOfflineTag": "غير متصل",
+  "errorOfflineTitle": "لا يوجد اتصال بالإنترنت",
+  "errorOfflineBody": "تحقق من الواي فاي أو البيانات الخلوية وحاول مجدداً.",
+  "errorOfflineBanner": "أنت غير متصل بالإنترنت",
+  "errorTryAgain": "إعادة المحاولة",
+
+  "errorsNetwork": "لا يوجد اتصال بالإنترنت. الرجاء المحاولة مرة أخرى.",
+  "errorsGeneric": "حدث خطأ ما. الرجاء المحاولة مرة أخرى.",
+  "errorsUnauthorized": "الرجاء تسجيل الدخول للمتابعة.",
+  "errorsNotFound": "غير موجود.",
+  "errorsValidation": "يرجى مراجعة الحقول المظللة.",
+  "errorsRateLimited": "محاولات كثيرة. الرجاء الانتظار قليلاً."
+}

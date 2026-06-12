@@ -1,6 +1,6 @@
 # Bartal — Tasks
 
-_Last updated: 2026-06-10T20:43:34Z_
+_Last updated: 2026-06-12T21:16:24Z_
 
 > Living task tracker. Updated every time work starts, completes, blocks, or scope changes.
 > Source of truth for "what's done / what's next". See `CLAUDE.md` §"Task Tracking" for the rules.
@@ -16,7 +16,7 @@ _Last updated: 2026-06-10T20:43:34Z_
 | Shared package (`@bartal/shared`) | 6 / 6 | ✅ | Builds clean to `dist/` |
 | Backend modules (`apps/api`) | 13 / 13 | ✅ | **Phase 2 complete.** 13 modules: products, categories, delivery, health, auth, users, cart, orders, storage, notifications, reviews, **wishlist** (2026-06-07: `GET /wishlist` + `POST/DELETE /wishlist/:productId`, 6 unit + 1 e2e suite), **admin**. Users module extended 2026-06-07 with real profile fields (date_of_birth, gender, loyalty_points, email_verified, national_id_status) + computed orders_count/lifetime_spend on `GET /users/me`. Test suite as of 2026-06-10 audit: **243 unit tests across 15 suites + 6 e2e suites** (earlier "198 unit + 9 e2e" figure was stale). Admin module gained `GET /admin/reviews`, `GET /admin/reviews/kpis`, `POST /admin/reviews/:id/{approve,reject,reset}`, `GET /admin/staff`, `GET /admin/audit-log` for Slice 3a moderation. Review schema gained moderation columns (status, flagged_reason, rejection_reason, moderated_by, moderated_at) + auto-flag at customer create. `AuditLog` model + inline writes from every admin mutation, including review actions. |
 | Database (`apps/api/prisma`) | 4 / 4 | ✅ | Migration applied, seed run against Postgres :5433. Migration `add_review_moderation` (2026-05-22) added `ReviewModerationStatus` enum + 5 columns on `reviews` + 2 indexes + backfill of existing rows to APPROVED. |
-| Mobile screens (`apps/mobile`) | 0 / ~45 | — | Phase 4 not started. Variation: `mobile-v1.jsx` (Marketplace Classic) per CLAUDE.md §5. |
+| Mobile screens (`apps/mobile`) | 0 / 44 | 🔨 | **Phase 4 STARTED 2026-06-12.** Slices 0–2 (foundations + auth 8 + browse/discovery 8) in progress. Variation: `mobile-v1.jsx` (Marketplace Classic) per CLAUDE.md §5. Count corrected ~45→44 = the enumerated Phase 4 checklist. Plan: `~/.claude/plans/plan-flutter-mobile-app-purring-bentley.md`. |
 | Web pages (`apps/web`) | 38 / 38 | ✅ | **Phase 5 complete + commerce flow API-backed (2026-06-07).** The logged-in surfaces (orders, checkout order-placement, account/profile, addresses, wishlist, receipt upload, review) were previously demo Zustand stores; now wired to the real API via Server Components (cookie-bearer reads) + Server Actions. Checkout `Place Order` creates a real `BRT-…` order. **Phase 5 complete.** Static (8) + checkout (4) + Account+Orders+Wishlist (11) + Journal + Brand (2) + Login/Register/Forgot/Verify-OTP/Reset-Password (5, real backend wired) = **38 `page.tsx` routes total** (2026-06-10 audit; incl. dev-only `/design-system` and the 404 catch-all — the previous "40" was the `next build` route count, which adds system routes). Auth glue (Server Actions + httpOnly cookies + middleware refresh + cart sync) + SEO/perf (sitemap, robots, OG, AVIF/WebP, per-page metadata) all shipped. |
 | Admin pages (`apps/admin`) | 23 / 23 | ✅ | **Phase 6 Slices 1 + 2 + 3a + 3b-1 + 3b-2 shipped.** Slice 1: Login + Dashboard + Orders + Customers + Zones + Settings (General/Banking). Slice 2: Products + Categories. Slice 3a: AdminReviews + AdminStaff. Slice 3b-1: Analytics + InventoryLog + AbandonedCarts. **Slice 3b-2 (order ops & compliance):** AdminRefunds (admin-initiated `RefundRequest` model with `RFD-YYYY-NNNNN` numbering, approve cascades to Order.status=REFUNDED + payment_status=REFUNDED + SMS via new `ORDER_REFUNDED` template, full refunds only), AdminShippingLabels (new `tracking_number`/`label_printed_at` columns on Order, derives `BTL-…` tracking from `BRT-…`, browser print via `@media print` CSS — no PDF lib), AdminTemplates (read-only viewer for the 10 actually-wired SMS templates, SMS-only channel, AR + EN side-by-side with `{{variable}}` highlighting), plus enabled the previously-disabled AbandonedCarts SMS button via new `CART_ABANDONED` template + `POST /admin/abandoned-carts/:userId/sms` endpoint with 24h server-side rate-limit via audit_log lookup. Sidebar reordered: + Refunds (after Orders), + Shipping labels (after Abandoned carts), + Templates (after Analytics). Only `marketing` remains "Soon". **Slice 3b-3 (promos, banners, settings tabs 3–8) shipped 2026-05-24** per the checklist below — the previous snapshot contradicted it. Count is 23 because `AdminReceiptViewer` is a modal, not a page. Only `marketing` page remains "Soon". |
 | Infrastructure (`infra/`) | 0 / 6 | — | Phase 7 not started. |
@@ -169,40 +169,40 @@ _Last updated: 2026-06-10T20:43:34Z_
 > **Variation:** `mobile-v1.jsx` (Marketplace Classic — dense grid + bottom tabs) per CLAUDE.md §5. Default fonts: Cairo (AR), Poppins (EN). RTL via `EdgeInsetsDirectional` / `AlignmentDirectional` — never `EdgeInsets.only(left:)`.
 
 ### Scaffold + foundations
-- [ ] Flutter 3.x project with `pnpm` excluded (Flutter sits outside the workspace per CLAUDE.md §3)
-- [ ] Riverpod 2.x + go_router + `flutter_secure_storage` + `dio` + `flutter_localizations`
-- [ ] Design tokens module (mirror `apps/web/src/design/tokens.ts` → Dart `BartalColors`, `BartalRadii`, `BartalSpacing`)
-- [ ] Cairo + Poppins via `pubspec` assets, scaled `TextTheme`
-- [ ] `MotifTile` + `MotifBg` ported to a Flutter `CustomPainter`
-- [ ] API client with token refresh interceptor
-- [ ] L10n: AR (`ar.arb`) + EN (`en.arb`) — keys mirror `@bartal/shared` STR table
+- [~] Flutter 3.x project with `pnpm` excluded (Flutter sits outside the workspace per CLAUDE.md §3) — started 2026-06-12
+- [~] Riverpod 2.x + go_router + `flutter_secure_storage` + `dio` + `flutter_localizations` — started 2026-06-12
+- [~] Design tokens module (mirror `apps/web/src/design/tokens.ts` → Dart `BartalColors`, `BartalRadii`, `BartalSpacing`) — started 2026-06-12
+- [~] Cairo + Poppins via `pubspec` assets, scaled `TextTheme` — started 2026-06-12
+- [~] `MotifTile` + `MotifBg` ported to a Flutter `CustomPainter` — started 2026-06-12
+- [~] API client with token refresh interceptor — started 2026-06-12
+- [~] L10n: AR (`ar.arb`) + EN (`en.arb`) — keys mirror `@bartal/shared` STR table — started 2026-06-12
 
 ### Auth flow (8 screens)
 > Source: `auth-screens.jsx`, `auth-gaps.jsx`
-- [ ] `SplashScreen` — `auth-gaps.jsx::SplashScreen`
-- [ ] `OnboardingScreen` (3 slides) — `auth-gaps.jsx::OnboardingScreen`
-- [ ] `WelcomeScreen` — `auth-screens.jsx::WelcomeScreen`
-- [ ] `LoginScreen` — `auth-screens.jsx::LoginScreen`
-- [ ] `SignupScreen` — `auth-screens.jsx::SignupScreen`
-- [ ] `OtpScreen` — `auth-screens.jsx::OtpScreen`
-- [ ] `ForgotPasswordScreen` — `auth-gaps.jsx::ForgotPasswordScreen`
-- [ ] `ResetPasswordScreen` — `auth-gaps.jsx::ResetPasswordScreen`
+- [~] `SplashScreen` — `auth-gaps.jsx::SplashScreen` — started 2026-06-12
+- [~] `OnboardingScreen` (3 slides) — `auth-gaps.jsx::OnboardingScreen` — started 2026-06-12
+- [~] `WelcomeScreen` — `auth-screens.jsx::WelcomeScreen` — started 2026-06-12
+- [~] `LoginScreen` — `auth-screens.jsx::LoginScreen` — started 2026-06-12
+- [~] `SignupScreen` — `auth-screens.jsx::SignupScreen` — started 2026-06-12
+- [~] `OtpScreen` — `auth-screens.jsx::OtpScreen` — started 2026-06-12
+- [~] `ForgotPasswordScreen` — `auth-gaps.jsx::ForgotPasswordScreen` — started 2026-06-12
+- [~] `ResetPasswordScreen` — `auth-gaps.jsx::ResetPasswordScreen` — started 2026-06-12
 
 ### Browse + product (5 screens)
-- [ ] Home with hero + categories + featured grid — `mobile-v1.jsx::V1Home`
-- [ ] Product detail (gallery + bilingual desc + add-to-cart + WhatsApp share) — `mobile-v1.jsx::V1Detail`
-- [ ] Categories grid — `final-additions.jsx::MobileCategoriesScreen`
-- [ ] PDP reviews tab — `final-additions.jsx::MobilePdpReviewsScreen`
-- [ ] Bottom tab bar (5 tabs) — `mobile-v1.jsx::V1TabBar`
+- [~] Home with hero + categories + featured grid — `mobile-v1.jsx::V1Home` — started 2026-06-12
+- [~] Product detail (gallery + bilingual desc + add-to-cart + WhatsApp share) — `mobile-v1.jsx::V1Detail` — started 2026-06-12
+- [~] Categories grid — `final-additions.jsx::MobileCategoriesScreen` — started 2026-06-12
+- [~] PDP reviews tab — `final-additions.jsx::MobilePdpReviewsScreen` — started 2026-06-12
+- [~] Bottom tab bar (5 tabs) — `mobile-v1.jsx::V1TabBar` — started 2026-06-12
 
 ### Search + discovery (3 screens)
-- [ ] Search results — `mobile-extras.jsx::SearchResultsScreen`
-- [ ] Filters bottom sheet — `mobile-extras.jsx::FiltersSheet`
-- [ ] Wishlist — `mobile-extras.jsx::WishlistScreen`
+- [~] Search results — `mobile-extras.jsx::SearchResultsScreen` — started 2026-06-12
+- [~] Filters bottom sheet — `mobile-extras.jsx::FiltersSheet` — started 2026-06-12
+- [~] Wishlist — `mobile-extras.jsx::WishlistScreen` — started 2026-06-12
 
 ### Cart + checkout (8 screens)
 - [ ] Cart — `secondary-screens.jsx::CartScreen`
-- [ ] Cart with promo applied — `final-additions.jsx::MobileCartPromoScreen`
+- [-] Cart with promo applied — `final-additions.jsx::MobileCartPromoScreen` — deferred 2026-06-12: no customer apply-promo endpoint exists (promos are admin-only); web made the same call. Revisit when the backend adds one.
 - [ ] Checkout stepper shell — `checkout-flow.jsx::CheckoutStepper`
 - [ ] Checkout address step — `checkout-flow.jsx::CheckoutAddressScreen`
 - [ ] Checkout payment method step — `checkout-flow.jsx::CheckoutPaymentScreen`
@@ -216,7 +216,7 @@ _Last updated: 2026-06-10T20:43:34Z_
 - [ ] Upload receipt (camera + gallery + WebP compress before send) — `receipt-flow.jsx::UploadReceiptScreen`
 - [ ] Receipt submitted ack — `receipt-flow.jsx::ReceiptSubmittedScreen`
 - [ ] Receipt rejected state — `mobile-extras.jsx::ReceiptRejectedScreen`
-- [ ] Order tracking timeline — `receipt-flow.jsx::TrackingScreen`
+- [ ] Order tracking timeline — `receipt-flow.jsx::TrackingScreen` — scope note 2026-06-12: adapted to real data — timeline from `status_history`, courier card becomes WhatsApp-support card, map strip decorative-only (backend has no courier/live-ETA)
 - [ ] Write review — `order-thanks-and-reviews.jsx::MobileWriteReview`
 
 ### Profile + settings (6 screens)
@@ -228,16 +228,16 @@ _Last updated: 2026-06-10T20:43:34Z_
 - [ ] Settings (lang, theme, notifications) — `profile-flow.jsx::SettingsScreen`
 
 ### Notifications + help (3 screens)
-- [ ] Notifications inbox — `mobile-extras.jsx::NotificationsScreen`
+- [ ] Notifications inbox — `mobile-extras.jsx::NotificationsScreen` — scope note 2026-06-12: local on-device inbox (no backend inbox endpoint); fed by FCM handler + observed status changes
 - [ ] Help / FAQ — `mobile-extras.jsx::HelpFaqScreen`
 - [ ] FCM background handler + deep-link routing
 
 ### System states (5 screens)
 > Source: `system-kit.jsx`
-- [ ] Empty states (cart / wishlist / orders / search / notifications) — `system-kit.jsx::MobileEmptyState`
-- [ ] Skeleton states (home / list / detail) — `system-kit.jsx::MobileSkeletonScreen`
-- [ ] Error / offline screens — `system-kit.jsx::MobileErrorScreen`
-- [ ] Offline banner + connectivity listener (cart survives drops per PRD §7.1.3)
+- [~] Empty states (cart / wishlist / orders / search / notifications) — `system-kit.jsx::MobileEmptyState` — started 2026-06-12
+- [~] Skeleton states (home / list / detail) — `system-kit.jsx::MobileSkeletonScreen` — started 2026-06-12
+- [~] Error / offline screens — `system-kit.jsx::MobileErrorScreen` — started 2026-06-12
+- [~] Offline banner + connectivity listener (cart survives drops per PRD §7.1.3) — started 2026-06-12 (banner + listener in Slice 0; cart offline queue lands in Slice 3)
 
 ### Ship
 - [ ] Widget tests for critical flows (auth, add-to-cart, place-order)
@@ -385,6 +385,7 @@ _Last updated: 2026-06-10T20:43:34Z_
 
 ## Activity Log
 
+- **2026-06-12T21:16:24Z** — **Phase 4 (mobile) kicked off — Slices 0–2 started.** Plan approved (`~/.claude/plans/plan-flutter-mobile-app-purring-bentley.md`): Flutter 3.41.2 scaffold via `flutter create --org sd.bartal`, stack = Riverpod 2 codegen + go_router (StatefulShellRoute 5-tab) + dio (QueuedInterceptor refresh-rotation) + flutter_secure_storage + gen-l10n AR-template. Session scope: Slice 0 foundations (Dart tokens mirroring `@bartal/shared` design tokens, ThemeExtension light/dark, Cairo/Poppins/JetBrainsMono vendored, MotifPainter, widgets kit from system-kit.jsx) + Slice 1 auth (8 screens) + Slice 2 browse/discovery (8 screens). Decisions: `fmtSDG` follows the design-tokens variant (digits + separate unit — what web ships); guest cart = local + merge-at-login (Slice 3); MobileCartPromoScreen deferred `[-]` (no customer promo endpoint, mirrors web); TrackingScreen adapted to status_history + WhatsApp support card; NotificationsScreen = local on-device inbox; FCM gated to Slice 6b behind a `PushService` interface (no Firebase project yet). Quality layer: ui-ux-pro-max skill rules (plugin on disk, applied from SKILL.md) + CLAUDE.md §5 fidelity checklist per screen. Snapshot count corrected ~45→44 (enumerated checklist).
 - **2026-06-10T20:43:34Z** — **Wave 3 shipped (branch `deps/next-15`, merged) — security dependency waves COMPLETE.** Next 14.2.35→15.5.19 + React 18→19 + eslint-config-next 15.5.19 + next-intl 3.20→3.26 (v4 major deferred). Async request APIs migrated via `@next/codemod next-async-request-api` across all 38 pages + layouts + `lib/auth/cookies.ts`; products page helpers re-typed against the resolved `ProductsSearchParams` (codemod gap). **Verified:** web tsc/lint/build clean + live production-build browser smoke via Playwright — AR home/products/cart render RTL with AR-Indic numerals, EN login renders, unauthenticated `/checkout` redirects to login via middleware, **zero console errors**. **`pnpm audit` end-state: 50→14 (high 19→6, critical 0)** — every remaining high is the unfixable tar@6 chain under bcrypt→@mapbox/node-pre-gyp (install-time only; monitor or swap to @node-rs/bcrypt later); remaining moderates belong to deliberately deferred items (vite/esbuild dev-server — bump vite with the next admin session; next-intl 4; qs via supertest dev-dep; react-router minor). Deferred majors per plan: Tailwind 4, Zod 4, TS 6, ESLint web (rides next-intl/Next tooling), Prisma 7. **Phase 2 of the remediation plan is done. Next: Phase 3 infra (I2 containers → I3 edge/DNS → I4 deploy/backups → I5 observability), then Phase 4 mobile.**
 - **2026-06-10T20:19:02Z** — **Wave 2 shipped (branch `deps/nest-11`, merged).** NestJS 10→11 lockstep (common/core/platform-express/jwt/passport/config 4/swagger 11/throttler/cli/schematics/testing), Prisma 5.22→6, firebase-admin 12→14. Breaking-change fallout, all handled: Express 5 named wildcard (`@Get('dev/*key')`, params now a segment array) in storage controller; `expiresIn` strings cast to ms `StringValue` (auth module + service); firebase namespace API → modular `firebase-admin/app` + `firebase-admin/messaging` (+ spec mocks); `cache-manager` + `@nestjs/cache-manager` REMOVED (declared but unused — Redis goes through the custom ioredis `RedisService`, so the feared Keyv rework was moot); `@scarf/scarf` telemetry postinstall denied. **Verified:** tsc/lint clean, 246/246 unit, 14/14 e2e, `nest build`, live boot smoke (health 200 envelope, Swagger 200, dev route 404-on-miss). **`pnpm audit`: 46→29 (high 18→12)** — multer DoS + cli-glob injection cleared. Remaining highs: Next 14 chain (Wave 3 next, branch `deps/next-15`) + unfixable tar@6-via-bcrypt (monitor).
 - **2026-06-10T19:52:29Z** — **CI + dependency waves 0–1 shipped.** (1) `.github/workflows/ci.yml`: 4 jobs on push/PR — api (lint/tsc/unit/build), web + admin (lint/tsc/build), api e2e against postgres:15 + redis:7 service containers with `prisma migrate deploy`; pnpm via corepack from `packageManager`. (2) Wave 0: installed pnpm 11.1.1 (matches declared `packageManager`; corepack unavailable on Node 25 → npm -g); full reinstall, lockfile resolutions unchanged; added `fetchTimeout: 600000` to `pnpm-workspace.yaml` (large native tarballs exceeded the 60s default on this connection — same constraint the product targets); gotcha: the purge required `prisma generate` re-run before tests passed. (3) Wave 1: jest 29→30.4.2 (+ts-jest 29.4.11, @types/jest 30) — kills the lodash/tmp vuln chain, suites run ~40% faster; ESLint 8→**10.4.1** flat config for api + admin (plan said 9, but the picomatch ReDoS fix lands in 10.4.1 and the whole plugin matrix — typescript-eslint 8.61, react-hooks 7.1.1, react-refresh 0.5.2 — supports ^10, verified via peer ranges); api now owns its lint deps (was riding pnpm public-hoist of web's eslint); new-rule fallout fixed (no-useless-assignment in notifications.service, 2 stale no-console directives, `LEGAL_PAGES` extracted to `settings/legal-pages.ts` for the stricter react-refresh rule). Web stays ESLint 8 until the Next 15 wave. **Verified:** api+admin lint clean, api+admin tsc clean, 246/246 unit, 14/14 e2e, admin build. `pnpm audit`: 50→46 (high 19→18); remaining highs belong to Next 14 (Wave 3) and NestJS 10/multer (Wave 2) + unfixable tar@6-via-bcrypt. Next: Wave 2 — NestJS 11 lockstep + Prisma 6 + firebase-admin 14 on branch `deps/nest-11`.
