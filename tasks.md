@@ -1,6 +1,6 @@
 # Bartal — Tasks
 
-_Last updated: 2026-06-12T21:16:24Z_
+_Last updated: 2026-06-13T09:52:38Z_
 
 > Living task tracker. Updated every time work starts, completes, blocks, or scope changes.
 > Source of truth for "what's done / what's next". See `CLAUDE.md` §"Task Tracking" for the rules.
@@ -16,7 +16,7 @@ _Last updated: 2026-06-12T21:16:24Z_
 | Shared package (`@bartal/shared`) | 6 / 6 | ✅ | Builds clean to `dist/` |
 | Backend modules (`apps/api`) | 13 / 13 | ✅ | **Phase 2 complete.** 13 modules: products, categories, delivery, health, auth, users, cart, orders, storage, notifications, reviews, **wishlist** (2026-06-07: `GET /wishlist` + `POST/DELETE /wishlist/:productId`, 6 unit + 1 e2e suite), **admin**. Users module extended 2026-06-07 with real profile fields (date_of_birth, gender, loyalty_points, email_verified, national_id_status) + computed orders_count/lifetime_spend on `GET /users/me`. Test suite as of 2026-06-10 audit: **243 unit tests across 15 suites + 6 e2e suites** (earlier "198 unit + 9 e2e" figure was stale). Admin module gained `GET /admin/reviews`, `GET /admin/reviews/kpis`, `POST /admin/reviews/:id/{approve,reject,reset}`, `GET /admin/staff`, `GET /admin/audit-log` for Slice 3a moderation. Review schema gained moderation columns (status, flagged_reason, rejection_reason, moderated_by, moderated_at) + auto-flag at customer create. `AuditLog` model + inline writes from every admin mutation, including review actions. |
 | Database (`apps/api/prisma`) | 4 / 4 | ✅ | Migration applied, seed run against Postgres :5433. Migration `add_review_moderation` (2026-05-22) added `ReviewModerationStatus` enum + 5 columns on `reviews` + 2 indexes + backfill of existing rows to APPROVED. |
-| Mobile screens (`apps/mobile`) | 0 / 44 | 🔨 | **Phase 4 STARTED 2026-06-12.** Slices 0–2 (foundations + auth 8 + browse/discovery 8) in progress. Variation: `mobile-v1.jsx` (Marketplace Classic) per CLAUDE.md §5. Count corrected ~45→44 = the enumerated Phase 4 checklist. Plan: `~/.claude/plans/plan-flutter-mobile-app-purring-bentley.md`. |
+| Mobile screens (`apps/mobile`) | 16 / 44 | 🔨 | **Phase 4 Slices 0–2 SHIPPED 2026-06-13.** Foundations (design system, dio+refresh, models, l10n, router, V1TabBar) + auth (8 screens) + browse/discovery (8: V1Home, V1Detail, PDP reviews, categories, category products, search+filters, wishlist). **Verified on Android emulator against live API:** seeded-account login → V1Home renders live categories + featured products w/ AR-Indic SDG prices → V1Detail shows live stock/description. `flutter analyze` clean, 26 unit/widget tests green, debug APK builds, RTL grep gate clean. Variation: `mobile-v1.jsx` (Marketplace Classic) per CLAUDE.md §5. Remaining: Slices 3–6 (cart/checkout, orders/receipt, profile/settings, hardening+FCM). Plan: `~/.claude/plans/plan-flutter-mobile-app-purring-bentley.md`. |
 | Web pages (`apps/web`) | 38 / 38 | ✅ | **Phase 5 complete + commerce flow API-backed (2026-06-07).** The logged-in surfaces (orders, checkout order-placement, account/profile, addresses, wishlist, receipt upload, review) were previously demo Zustand stores; now wired to the real API via Server Components (cookie-bearer reads) + Server Actions. Checkout `Place Order` creates a real `BRT-…` order. **Phase 5 complete.** Static (8) + checkout (4) + Account+Orders+Wishlist (11) + Journal + Brand (2) + Login/Register/Forgot/Verify-OTP/Reset-Password (5, real backend wired) = **38 `page.tsx` routes total** (2026-06-10 audit; incl. dev-only `/design-system` and the 404 catch-all — the previous "40" was the `next build` route count, which adds system routes). Auth glue (Server Actions + httpOnly cookies + middleware refresh + cart sync) + SEO/perf (sitemap, robots, OG, AVIF/WebP, per-page metadata) all shipped. |
 | Admin pages (`apps/admin`) | 23 / 23 | ✅ | **Phase 6 Slices 1 + 2 + 3a + 3b-1 + 3b-2 shipped.** Slice 1: Login + Dashboard + Orders + Customers + Zones + Settings (General/Banking). Slice 2: Products + Categories. Slice 3a: AdminReviews + AdminStaff. Slice 3b-1: Analytics + InventoryLog + AbandonedCarts. **Slice 3b-2 (order ops & compliance):** AdminRefunds (admin-initiated `RefundRequest` model with `RFD-YYYY-NNNNN` numbering, approve cascades to Order.status=REFUNDED + payment_status=REFUNDED + SMS via new `ORDER_REFUNDED` template, full refunds only), AdminShippingLabels (new `tracking_number`/`label_printed_at` columns on Order, derives `BTL-…` tracking from `BRT-…`, browser print via `@media print` CSS — no PDF lib), AdminTemplates (read-only viewer for the 10 actually-wired SMS templates, SMS-only channel, AR + EN side-by-side with `{{variable}}` highlighting), plus enabled the previously-disabled AbandonedCarts SMS button via new `CART_ABANDONED` template + `POST /admin/abandoned-carts/:userId/sms` endpoint with 24h server-side rate-limit via audit_log lookup. Sidebar reordered: + Refunds (after Orders), + Shipping labels (after Abandoned carts), + Templates (after Analytics). Only `marketing` remains "Soon". **Slice 3b-3 (promos, banners, settings tabs 3–8) shipped 2026-05-24** per the checklist below — the previous snapshot contradicted it. Count is 23 because `AdminReceiptViewer` is a modal, not a page. Only `marketing` page remains "Soon". |
 | Infrastructure (`infra/`) | 0 / 6 | — | Phase 7 not started. |
@@ -169,36 +169,37 @@ _Last updated: 2026-06-12T21:16:24Z_
 > **Variation:** `mobile-v1.jsx` (Marketplace Classic — dense grid + bottom tabs) per CLAUDE.md §5. Default fonts: Cairo (AR), Poppins (EN). RTL via `EdgeInsetsDirectional` / `AlignmentDirectional` — never `EdgeInsets.only(left:)`.
 
 ### Scaffold + foundations
-- [~] Flutter 3.x project with `pnpm` excluded (Flutter sits outside the workspace per CLAUDE.md §3) — started 2026-06-12
-- [~] Riverpod 2.x + go_router + `flutter_secure_storage` + `dio` + `flutter_localizations` — started 2026-06-12
-- [~] Design tokens module (mirror `apps/web/src/design/tokens.ts` → Dart `BartalColors`, `BartalRadii`, `BartalSpacing`) — started 2026-06-12
-- [~] Cairo + Poppins via `pubspec` assets, scaled `TextTheme` — started 2026-06-12
-- [~] `MotifTile` + `MotifBg` ported to a Flutter `CustomPainter` — started 2026-06-12
-- [~] API client with token refresh interceptor — started 2026-06-12
-- [~] L10n: AR (`ar.arb`) + EN (`en.arb`) — keys mirror `@bartal/shared` STR table — started 2026-06-12
+- [x] Flutter 3.x project with `pnpm` excluded (Flutter sits outside the workspace per CLAUDE.md §3) — 2026-06-12
+- [x] Riverpod 2.x + go_router + `flutter_secure_storage` + `dio` + `flutter_localizations` — 2026-06-12
+- [x] Design tokens module (mirror `apps/web/src/design/tokens.ts` → Dart `BartalColors`, `BartalRadii`, `BartalSpacing`) — 2026-06-12
+- [x] Cairo + Poppins via `pubspec` assets, scaled `TextTheme` (+ JetBrains Mono) — 2026-06-12
+- [x] `MotifTile` + `MotifBg` ported to a Flutter `CustomPainter` (standard/header/large tiles) — 2026-06-12
+- [x] API client with token refresh interceptor (QueuedInterceptor, single-flight rotation, persist-before-retry, logout-on-failure) — 2026-06-12
+- [x] L10n: AR (`app_ar.arb`, template) + EN (`app_en.arb`) — gen-l10n, ~245 keys seeded from `@bartal/shared` + design STR — 2026-06-12/13
 
 ### Auth flow (8 screens)
 > Source: `auth-screens.jsx`, `auth-gaps.jsx`
-- [~] `SplashScreen` — `auth-gaps.jsx::SplashScreen` — started 2026-06-12
-- [~] `OnboardingScreen` (3 slides) — `auth-gaps.jsx::OnboardingScreen` — started 2026-06-12
-- [~] `WelcomeScreen` — `auth-screens.jsx::WelcomeScreen` — started 2026-06-12
-- [~] `LoginScreen` — `auth-screens.jsx::LoginScreen` — started 2026-06-12
-- [~] `SignupScreen` — `auth-screens.jsx::SignupScreen` — started 2026-06-12
-- [~] `OtpScreen` — `auth-screens.jsx::OtpScreen` — started 2026-06-12
-- [~] `ForgotPasswordScreen` — `auth-gaps.jsx::ForgotPasswordScreen` — started 2026-06-12
-- [~] `ResetPasswordScreen` — `auth-gaps.jsx::ResetPasswordScreen` — started 2026-06-12
+- [x] `SplashScreen` — `auth-gaps.jsx::SplashScreen` — 2026-06-13 (verified on emulator)
+- [x] `OnboardingScreen` (3 slides) — `auth-gaps.jsx::OnboardingScreen` — 2026-06-13 (verified on emulator)
+- [x] `WelcomeScreen` — `auth-screens.jsx::WelcomeScreen` — 2026-06-13 (verified on emulator)
+- [x] `LoginScreen` — `auth-screens.jsx::LoginScreen` — 2026-06-13 (verified: live login → home)
+- [x] `SignupScreen` — `auth-screens.jsx::SignupScreen` — 2026-06-13
+- [x] `OtpScreen` — `auth-screens.jsx::OtpScreen` — 2026-06-13 (6 LTR boxes, 60s resend countdown)
+- [x] `ForgotPasswordScreen` — `auth-gaps.jsx::ForgotPasswordScreen` — 2026-06-13
+- [x] `ResetPasswordScreen` — `auth-gaps.jsx::ResetPasswordScreen` — 2026-06-13
+> WhatsApp-OTP option rendered disabled across login/otp/forgot (Phase 1 is SMS-only, no WhatsApp API channel) — revisit if backend adds one.
 
 ### Browse + product (5 screens)
-- [~] Home with hero + categories + featured grid — `mobile-v1.jsx::V1Home` — started 2026-06-12
-- [~] Product detail (gallery + bilingual desc + add-to-cart + WhatsApp share) — `mobile-v1.jsx::V1Detail` — started 2026-06-12
-- [~] Categories grid — `final-additions.jsx::MobileCategoriesScreen` — started 2026-06-12
-- [~] PDP reviews tab — `final-additions.jsx::MobilePdpReviewsScreen` — started 2026-06-12
-- [~] Bottom tab bar (5 tabs) — `mobile-v1.jsx::V1TabBar` — started 2026-06-12
+- [x] Home with hero + categories + featured grid — `mobile-v1.jsx::V1Home` — 2026-06-13 (verified: live API data renders)
+- [x] Product detail (gallery + bilingual desc + add-to-cart + WhatsApp share) — `mobile-v1.jsx::V1Detail` — 2026-06-13 (verified: live stock/price). Add-to-cart routes to /cart (real mutation in Slice 3); rating row hidden when no reviews.
+- [x] Categories grid — `final-additions.jsx::MobileCategoriesScreen` — 2026-06-13 (top-brands strip omitted — no API backing)
+- [x] PDP reviews tab — `final-additions.jsx::MobilePdpReviewsScreen` — 2026-06-13 (API-backed sort only; review photos/helpful/city/title omitted — not in API)
+- [x] Bottom tab bar (5 tabs) — `mobile-v1.jsx::V1TabBar` — 2026-06-13 (StatefulShellRoute, verified)
 
 ### Search + discovery (3 screens)
-- [~] Search results — `mobile-extras.jsx::SearchResultsScreen` — started 2026-06-12
-- [~] Filters bottom sheet — `mobile-extras.jsx::FiltersSheet` — started 2026-06-12
-- [~] Wishlist — `mobile-extras.jsx::WishlistScreen` — started 2026-06-12
+- [x] Search results — `mobile-extras.jsx::SearchResultsScreen` — 2026-06-13 (debounced; search q-only, filters switch to browse mode per API)
+- [x] Filters bottom sheet — `mobile-extras.jsx::FiltersSheet` — 2026-06-13 (category/price/in-stock; brand + rating rows omitted — no API backing)
+- [x] Wishlist — `mobile-extras.jsx::WishlistScreen` — 2026-06-13 (optimistic remove; add-to-cart routes to /cart until Slice 3)
 
 ### Cart + checkout (8 screens)
 - [ ] Cart — `secondary-screens.jsx::CartScreen`
@@ -234,10 +235,10 @@ _Last updated: 2026-06-12T21:16:24Z_
 
 ### System states (5 screens)
 > Source: `system-kit.jsx`
-- [~] Empty states (cart / wishlist / orders / search / notifications) — `system-kit.jsx::MobileEmptyState` — started 2026-06-12
-- [~] Skeleton states (home / list / detail) — `system-kit.jsx::MobileSkeletonScreen` — started 2026-06-12
-- [~] Error / offline screens — `system-kit.jsx::MobileErrorScreen` — started 2026-06-12
-- [~] Offline banner + connectivity listener (cart survives drops per PRD §7.1.3) — started 2026-06-12 (banner + listener in Slice 0; cart offline queue lands in Slice 3)
+- [x] Empty states (cart / wishlist / orders / search / notifications) — `system-kit.jsx::MobileEmptyState` — 2026-06-12 (4 ported illustrations)
+- [x] Skeleton states (home / list / detail) — `system-kit.jsx::MobileSkeletonScreen` — 2026-06-12 (shimmer, reduced-motion aware)
+- [x] Error / offline screens — `system-kit.jsx::MobileErrorScreen` — 2026-06-12
+- [x] Offline banner + connectivity listener (cart survives drops per PRD §7.1.3) — 2026-06-12 (banner + listener in Slice 0; cart offline queue lands in Slice 3)
 
 ### Ship
 - [ ] Widget tests for critical flows (auth, add-to-cart, place-order)
@@ -385,6 +386,7 @@ _Last updated: 2026-06-12T21:16:24Z_
 
 ## Activity Log
 
+- **2026-06-13T09:52:38Z** — **Phase 4 Slices 0–2 SHIPPED (3 commits: scaffold + Slice 0 foundations, Slice 1 auth, Slice 2 browse).** 16 screens live: foundations (Dart design-token mirror, ThemeExtension light/dark, MotifPainter + LogoMark + 16-icon stroke set, widgets kit, dio client w/ single-flight refresh rotation, models matched to verified wire shapes, AR-template gen-l10n ~245 keys, go_router + 5-tab StatefulShellRoute); auth (splash/onboarding/welcome/login/signup/otp/forgot/reset — wired to authController); browse (V1Home, V1Detail, PDP reviews, categories, category products, search+filters sheet, wishlist — wired to live catalog/wishlist API). **A mid-run multi-agent workflow for these screens failed entirely (session-limit + transient Anthropic-API errors, 0 files written); rebuilt all 16 directly.** Caught + fixed a real integration bug: API mounts under global `/api` prefix (was missing from the Dart base URL). Renamed the `ProductImage` widget → `ProductThumb` to avoid colliding with the `ProductImage` API model. **Verified end-to-end on Android emulator (Medium_Phone_API_36.1) against the live API** (docker postgres/redis + `pnpm dev:api`): onboarding/welcome/login render pixel-faithfully in AR RTL (motif, Cairo, logo); seeded-account login → V1Home renders live categories + featured products with AR-Indic SDG prices → V1Detail shows live stock (٩٨٠)/description. Gate: `flutter analyze` zero issues, `flutter test` 26/26, debug APK builds (159MB), RTL grep gate clean. Design-vs-API gaps handled honestly (top-brands strip, review photos/helpful/city/title, brand+rating filters omitted where the API can't back them; WhatsApp-OTP rendered-disabled; add-to-cart routes to /cart until Slice 3). MobileCartPromoScreen stays `[-]` deferred. Next: Slice 3 (cart + checkout).
 - **2026-06-12T21:16:24Z** — **Phase 4 (mobile) kicked off — Slices 0–2 started.** Plan approved (`~/.claude/plans/plan-flutter-mobile-app-purring-bentley.md`): Flutter 3.41.2 scaffold via `flutter create --org sd.bartal`, stack = Riverpod 2 codegen + go_router (StatefulShellRoute 5-tab) + dio (QueuedInterceptor refresh-rotation) + flutter_secure_storage + gen-l10n AR-template. Session scope: Slice 0 foundations (Dart tokens mirroring `@bartal/shared` design tokens, ThemeExtension light/dark, Cairo/Poppins/JetBrainsMono vendored, MotifPainter, widgets kit from system-kit.jsx) + Slice 1 auth (8 screens) + Slice 2 browse/discovery (8 screens). Decisions: `fmtSDG` follows the design-tokens variant (digits + separate unit — what web ships); guest cart = local + merge-at-login (Slice 3); MobileCartPromoScreen deferred `[-]` (no customer promo endpoint, mirrors web); TrackingScreen adapted to status_history + WhatsApp support card; NotificationsScreen = local on-device inbox; FCM gated to Slice 6b behind a `PushService` interface (no Firebase project yet). Quality layer: ui-ux-pro-max skill rules (plugin on disk, applied from SKILL.md) + CLAUDE.md §5 fidelity checklist per screen. Snapshot count corrected ~45→44 (enumerated checklist).
 - **2026-06-10T20:43:34Z** — **Wave 3 shipped (branch `deps/next-15`, merged) — security dependency waves COMPLETE.** Next 14.2.35→15.5.19 + React 18→19 + eslint-config-next 15.5.19 + next-intl 3.20→3.26 (v4 major deferred). Async request APIs migrated via `@next/codemod next-async-request-api` across all 38 pages + layouts + `lib/auth/cookies.ts`; products page helpers re-typed against the resolved `ProductsSearchParams` (codemod gap). **Verified:** web tsc/lint/build clean + live production-build browser smoke via Playwright — AR home/products/cart render RTL with AR-Indic numerals, EN login renders, unauthenticated `/checkout` redirects to login via middleware, **zero console errors**. **`pnpm audit` end-state: 50→14 (high 19→6, critical 0)** — every remaining high is the unfixable tar@6 chain under bcrypt→@mapbox/node-pre-gyp (install-time only; monitor or swap to @node-rs/bcrypt later); remaining moderates belong to deliberately deferred items (vite/esbuild dev-server — bump vite with the next admin session; next-intl 4; qs via supertest dev-dep; react-router minor). Deferred majors per plan: Tailwind 4, Zod 4, TS 6, ESLint web (rides next-intl/Next tooling), Prisma 7. **Phase 2 of the remediation plan is done. Next: Phase 3 infra (I2 containers → I3 edge/DNS → I4 deploy/backups → I5 observability), then Phase 4 mobile.**
 - **2026-06-10T20:19:02Z** — **Wave 2 shipped (branch `deps/nest-11`, merged).** NestJS 10→11 lockstep (common/core/platform-express/jwt/passport/config 4/swagger 11/throttler/cli/schematics/testing), Prisma 5.22→6, firebase-admin 12→14. Breaking-change fallout, all handled: Express 5 named wildcard (`@Get('dev/*key')`, params now a segment array) in storage controller; `expiresIn` strings cast to ms `StringValue` (auth module + service); firebase namespace API → modular `firebase-admin/app` + `firebase-admin/messaging` (+ spec mocks); `cache-manager` + `@nestjs/cache-manager` REMOVED (declared but unused — Redis goes through the custom ioredis `RedisService`, so the feared Keyv rework was moot); `@scarf/scarf` telemetry postinstall denied. **Verified:** tsc/lint clean, 246/246 unit, 14/14 e2e, `nest build`, live boot smoke (health 200 envelope, Swagger 200, dev route 404-on-miss). **`pnpm audit`: 46→29 (high 18→12)** — multer DoS + cli-glob injection cleared. Remaining highs: Next 14 chain (Wave 3 next, branch `deps/next-15`) + unfixable tar@6-via-bcrypt (monitor).
