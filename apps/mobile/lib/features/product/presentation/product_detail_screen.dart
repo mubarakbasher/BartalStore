@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/api/envelope.dart';
 import '../../../core/connectivity/connectivity_provider.dart';
 import '../../../core/models/product.dart';
 import '../../../core/utils/money.dart';
@@ -17,6 +18,7 @@ import '../../../widgets/price_tag.dart';
 import '../../../widgets/product_image.dart';
 import '../../../widgets/skeletons.dart';
 import '../../auth/application/auth_controller.dart';
+import '../../cart/application/cart_controller.dart';
 import '../../catalog/application/catalog_providers.dart';
 import '../../wishlist/application/wishlist_controller.dart';
 
@@ -436,13 +438,34 @@ class _RatingRow extends StatelessWidget {
   }
 }
 
-class _StickyBar extends StatelessWidget {
+class _StickyBar extends ConsumerWidget {
   const _StickyBar({required this.product});
 
   final Product product;
 
+  Future<void> _addToCart(BuildContext context, WidgetRef ref) async {
+    final l10n = L10n.of(context);
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    try {
+      await ref.read(cartControllerProvider.notifier).addProduct(product);
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.cartItemAdded),
+          action: SnackBarAction(label: l10n.cartViewCart, onPressed: () => context.go('/cart')),
+        ),
+      );
+    } catch (error) {
+      if (!context.mounted) return;
+      final message = toApiException(error).code == 'OUT_OF_STOCK'
+          ? l10n.cartOutOfStock
+          : toApiException(error).localized(arabic: isAr);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = L10n.of(context);
     final bartal = context.bartal;
     final enabled = product.inStock;
@@ -462,8 +485,7 @@ class _StickyBar extends StatelessWidget {
                 label: l10n.productsAddToCart,
                 variant: AppButtonVariant.outline,
                 size: AppButtonSize.large,
-                // Cart mutations land in Slice 3; routes to the cart for now.
-                onPressed: enabled ? () => context.go('/cart') : null,
+                onPressed: enabled ? () => _addToCart(context, ref) : null,
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -473,7 +495,12 @@ class _StickyBar extends StatelessWidget {
                   size: AppButtonSize.large,
                   expand: true,
                   trailing: const BartalIcon(BartalIcons.arrow, color: Colors.white, size: 16),
-                  onPressed: enabled ? () => context.go('/cart') : null,
+                  onPressed: enabled
+                      ? () async {
+                          await ref.read(cartControllerProvider.notifier).addProduct(product);
+                          if (context.mounted) context.go('/cart');
+                        }
+                      : null,
                 ),
               ),
             ],

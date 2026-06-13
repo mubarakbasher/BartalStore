@@ -674,4 +674,289 @@ class L10nAr extends L10n {
 
   @override
   String get actionFailed => 'تعذّر إكمال العملية. حاول مرة أخرى.';
+
+  @override
+  String get commonCopied => 'تم النسخ';
+
+  @override
+  String get commonRequired2 => 'هذا الحقل مطلوب';
+
+  @override
+  String get cartItemAdded => 'تمت الإضافة إلى السلة';
+
+  @override
+  String get cartViewCart => 'عرض السلة';
+
+  @override
+  String get cartOutOfStock => 'الكمية المتاحة غير كافية';
+
+  @override
+  String get stepAddress => 'العنوان';
+
+  @override
+  String get stepPayment => 'الدفع';
+
+  @override
+  String get stepReview => 'المراجعة';
+
+  @override
+  String get checkoutAddressTitle => 'عنوان التوصيل';
+
+  @override
+  String get checkoutNoAddresses => 'أضف عنوان توصيل للمتابعة';
+
+  @override
+  String get checkoutAddNewAddress => 'إضافة عنوان جديد';
+
+  @override
+  String get checkoutSelected => 'محدد';
+
+  @override
+  String get checkoutEdit => 'تعديل';
+
+  @override
+  String get checkoutDeliveryZone => 'منطقة التوصيل';
+
+  @override
+  String get checkoutContinueToPayment => 'متابعة إلى الدفع';
+
+  @override
+  String get paymentMethodTitle => 'طريقة الدفع';
+
+  @override
+  String get paymentBankTransfer => 'تحويل بنكي';
+
+  @override
+  String get paymentBankSub =>
+      'حوّل من أي بنك سوداني · ارفع الإيصال بعد التحويل';
+
+  @override
+  String get paymentRecommended => 'موصى به';
+
+  @override
+  String get paymentCod => 'الدفع عند الاستلام';
+
+  @override
+  String get paymentCodSub => 'ادفع نقداً عند تسليم الطلب';
+
+  @override
+  String get paymentWallet => 'محفظة رقمية';
+
+  @override
+  String get paymentWalletSub => 'بنكك · فوري · زين كاش';
+
+  @override
+  String get paymentSoon => 'قريباً';
+
+  @override
+  String get paymentContinue => 'متابعة';
+
+  @override
+  String get bankStepTitle => 'حسابات برتال';
+
+  @override
+  String get bankChooseTitle => 'اختر البنك الذي ستحوّل منه';
+
+  @override
+  String get bankChooseBody =>
+      'لدينا حسابات في عدة بنوك لتسهيل التحويل المحلي. بعد التحويل ستقوم برفع إيصال في الخطوة التالية.';
+
+  @override
+  String get bankAccountName => 'اسم الحساب';
+
+  @override
+  String get bankAccountNumber => 'رقم الحساب';
+
+  @override
+  String get bankSwift => 'سويفت';
+
+  @override
+  String get bankAmount => 'المبلغ المطلوب';
+
+  @override
+  String get bankReference => 'المرجع';
+
+  @override
+  String get bankImportantNote => 'ملاحظة مهمة';
+
+  @override
+  String get bankNote1 => 'استخدم رقم الطلب كمرجع في التحويل';
+
+  @override
+  String get bankNote2 => 'التحقق يستغرق ٥-١٥ دقيقة في ساعات العمل';
+
+  @override
+  String get bankNote3 => 'ستصلك رسالة عند تأكيد الدفع';
+
+  @override
+  String get bankContinueToReview => 'متابعة إلى المراجعة';
+
+  @override
+  String get reviewPaymentTitle => 'الدفع';
+
+  @override
+  String get reviewItemsTitle => 'المنتجات';
+
+  @override
+  String reviewQtyEach(String qty, String price) {
+    return 'الكمية $qty · $price';
+  }
+
+  @override
+  String get reviewTotalsTitle => 'الإجمالي';
+
+  @override
+  String get reviewTerms =>
+      'بالضغط على «تأكيد الطلب» فإنك توافق على شروط الاستخدام وسياسة الخصوصية.';
+
+  @override
+  String get reviewPlaceOrder => 'تأكيد الطلب';
+
+  @override
+  String get confirmTitle => 'تم استلام طلبك!';
+
+  @override
+  String get confirmOrderNumber => 'رقم الطلب';
+
+  @override
+  String get confirmBankInstructions => 'تعليمات التحويل البنكي';
+
+  @override
+  String get confirmAmount => 'المبلغ';
+
+  @override
+  String get confirmUploadTitle => 'رفع صورة الإيصال';
+
+  @override
+  String get confirmUploadSub => 'سيتم التحقق من الإيصال خلال ٢٤ ساعة';
+
+  @override
+  String get confirmReceiptLater => 'يمكنك رفع الإيصال لاحقاً من صفحة الطلب';
+
+  @override
+  String get confirmCodTitle => 'ادفع عند الاستلام';
+
+  @override
+  String get confirmCodBody =>
+      'ستدفع المبلغ نقداً عند تسليم طلبك. سنتواصل معك لتأكيد موعد التوصيل.';
+
+  @override
+  String get confirmViewOrder => 'عرض الطلب';
+
+  @override
+  String get confirmContinueShopping => 'متابعة التسوق';
+
+  @override
+  String get addressNewTitle => 'عنوان جديد';
+
+  @override
+  String get addressLabelTitle => 'التسمية';
+
+  @override
+  String get labelHome => 'المنزل';
+
+  @override
+  String get labelWork => 'العمل';
+
+  @override
+  String get labelOther => 'آخر';
+
+  @override
+  String get addressContactTitle => 'جهة الاتصال';
+
+  @override
+  String get addressFullName => 'الاسم الكامل';
+
+  @override
+  String get addressPhone => 'رقم الهاتف';
+
+  @override
+  String get addressStreetTitle => 'العنوان التفصيلي';
+
+  @override
+  String get addressDistrict => 'الحي / الشارع / رقم المنزل';
+
+  @override
+  String get addressDistrictHint => 'مثال: الرياض، بلوك ٣٢، منزل ١٤';
+
+  @override
+  String get addressCity => 'المدينة';
+
+  @override
+  String get addressLandmark => 'علامة مميزة';
+
+  @override
+  String get addressLandmarkHelp => 'ساعد السائق على إيجاد عنوانك بسرعة';
+
+  @override
+  String get addressLandmarkHint => 'مثال: بجانب مسجد النور';
+
+  @override
+  String get addressNotesTitle => 'ملاحظات للسائق';
+
+  @override
+  String get addressNotesHint => 'اختياري — اتصل عند الوصول، الطابق الثاني…';
+
+  @override
+  String get addressSetDefault => 'تعيين كعنوان افتراضي';
+
+  @override
+  String get addressSave => 'حفظ العنوان';
+
+  @override
+  String get addressLandmarkRequired =>
+      'العلامة المميزة مطلوبة (٣ أحرف على الأقل)';
+
+  @override
+  String get addressNameRequired => 'الاسم مطلوب';
+
+  @override
+  String get addressDistrictRequired => 'الحي مطلوب';
+
+  @override
+  String get ordersFilterAll => 'الكل';
+
+  @override
+  String get ordersFilterProcessing => 'قيد التجهيز';
+
+  @override
+  String get ordersFilterShipping => 'قيد الشحن';
+
+  @override
+  String get ordersFilterCompleted => 'مكتملة';
+
+  @override
+  String ordersItemCount(String count) {
+    return '$count منتج';
+  }
+
+  @override
+  String get orderStatusPending => 'قيد الانتظار';
+
+  @override
+  String get orderStatusAwaitingPayment => 'بانتظار الدفع';
+
+  @override
+  String get orderStatusReceiptUploaded => 'إيصال قيد المراجعة';
+
+  @override
+  String get orderStatusPaymentConfirmed => 'تم تأكيد الدفع';
+
+  @override
+  String get orderStatusPaymentRejected => 'تم رفض الدفع';
+
+  @override
+  String get orderStatusProcessing => 'قيد التجهيز';
+
+  @override
+  String get orderStatusShipped => 'تم الشحن';
+
+  @override
+  String get orderStatusDelivered => 'تم التوصيل';
+
+  @override
+  String get orderStatusCancelled => 'ملغى';
+
+  @override
+  String get orderStatusRefunded => 'تم الاسترداد';
 }

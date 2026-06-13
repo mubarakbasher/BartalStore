@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../../core/connectivity/connectivity_provider.dart';
 import '../../../core/models/category.dart';
 import '../../../core/models/product.dart';
-import '../../../core/providers.dart';
 import '../../../design/icons.dart';
 import '../../../design/logo.dart';
 import '../../../design/motif.dart';
@@ -18,6 +17,7 @@ import '../../../widgets/price_tag.dart';
 import '../../../widgets/product_card.dart';
 import '../../../widgets/product_image.dart';
 import '../../../widgets/skeletons.dart';
+import '../../cart/application/cart_controller.dart';
 import '../../catalog/application/catalog_providers.dart';
 
 /// Marketplace Classic home — full port of mobile-v1.jsx::V1Home: navy motif

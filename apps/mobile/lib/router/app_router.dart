@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/address/presentation/add_address_screen.dart';
 import '../features/auth/application/auth_controller.dart';
 import '../features/auth/data/auth_api.dart';
 import '../features/auth/presentation/forgot_password_screen.dart';
@@ -16,7 +17,13 @@ import '../features/cart/presentation/cart_screen.dart';
 import '../features/catalog/presentation/categories_screen.dart';
 import '../features/catalog/presentation/category_products_screen.dart';
 import '../features/catalog/presentation/search_screen.dart';
+import '../features/checkout/presentation/checkout_address_screen.dart';
+import '../features/checkout/presentation/checkout_bank_screen.dart';
+import '../features/checkout/presentation/checkout_payment_screen.dart';
+import '../features/checkout/presentation/checkout_review_screen.dart';
+import '../features/checkout/presentation/confirm_screen.dart';
 import '../features/home/presentation/home_screen.dart';
+import '../features/orders/presentation/order_detail_placeholder.dart';
 import '../features/orders/presentation/orders_screen.dart';
 import '../features/product/presentation/product_detail_screen.dart';
 import '../features/product/presentation/product_reviews_screen.dart';
@@ -27,7 +34,7 @@ import 'tab_shell.dart';
 
 /// Routes that require an authenticated session. Guests are sent to
 /// /welcome with `from` so the flow can resume after login.
-const _protectedPrefixes = ['/wishlist', '/orders', '/profile'];
+const _protectedPrefixes = ['/wishlist', '/orders', '/profile', '/checkout', '/order-confirm', '/addresses'];
 
 /// Routes an authenticated user shouldn't see.
 const _guestOnlyPaths = ['/welcome', '/login', '/signup'];
@@ -169,6 +176,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (_, state) => SearchScreen(initialQuery: state.uri.queryParameters['q']),
       ),
       GoRoute(path: '/wishlist', builder: (_, _) => const WishlistScreen()),
+
+      // Checkout flow (each step carries the stepper chrome).
+      GoRoute(path: '/checkout/address', builder: (_, _) => const CheckoutAddressScreen()),
+      GoRoute(path: '/checkout/payment', builder: (_, _) => const CheckoutPaymentScreen()),
+      GoRoute(path: '/checkout/bank', builder: (_, _) => const CheckoutBankScreen()),
+      GoRoute(path: '/checkout/review', builder: (_, _) => const CheckoutReviewScreen()),
+      GoRoute(
+        path: '/order-confirm/:id',
+        builder: (_, state) => ConfirmScreen(
+          orderId: state.pathParameters['id']!,
+          bankId: state.uri.queryParameters['bank'] ?? 'faisal',
+        ),
+      ),
+      GoRoute(path: '/addresses/new', builder: (_, _) => const AddAddressScreen()),
+      // Order detail + receipt upload land in Slice 4.
+      GoRoute(
+        path: '/orders/:id',
+        builder: (_, state) => OrderDetailPlaceholder(orderId: state.pathParameters['id']!),
+      ),
     ],
   );
 });

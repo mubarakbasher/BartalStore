@@ -678,4 +678,291 @@ class L10nEn extends L10n {
 
   @override
   String get actionFailed => 'Couldn\'t complete the action. Please try again.';
+
+  @override
+  String get commonCopied => 'Copied';
+
+  @override
+  String get commonRequired2 => 'This field is required';
+
+  @override
+  String get cartItemAdded => 'Added to cart';
+
+  @override
+  String get cartViewCart => 'View cart';
+
+  @override
+  String get cartOutOfStock => 'Not enough stock available';
+
+  @override
+  String get stepAddress => 'Address';
+
+  @override
+  String get stepPayment => 'Payment';
+
+  @override
+  String get stepReview => 'Review';
+
+  @override
+  String get checkoutAddressTitle => 'Delivery address';
+
+  @override
+  String get checkoutNoAddresses => 'Add a delivery address to continue';
+
+  @override
+  String get checkoutAddNewAddress => 'Add new address';
+
+  @override
+  String get checkoutSelected => 'Selected';
+
+  @override
+  String get checkoutEdit => 'Edit';
+
+  @override
+  String get checkoutDeliveryZone => 'Delivery zone';
+
+  @override
+  String get checkoutContinueToPayment => 'Continue to payment';
+
+  @override
+  String get paymentMethodTitle => 'Payment method';
+
+  @override
+  String get paymentBankTransfer => 'Bank transfer';
+
+  @override
+  String get paymentBankSub =>
+      'Transfer from any Sudanese bank · Upload receipt after';
+
+  @override
+  String get paymentRecommended => 'Recommended';
+
+  @override
+  String get paymentCod => 'Cash on delivery';
+
+  @override
+  String get paymentCodSub => 'Pay cash when your order is delivered';
+
+  @override
+  String get paymentWallet => 'Mobile wallet';
+
+  @override
+  String get paymentWalletSub => 'Bankak · Fawry · Zain Cash';
+
+  @override
+  String get paymentSoon => 'Soon';
+
+  @override
+  String get paymentContinue => 'Continue';
+
+  @override
+  String get bankStepTitle => 'Bartal accounts';
+
+  @override
+  String get bankChooseTitle => 'Choose the bank you\'ll transfer from';
+
+  @override
+  String get bankChooseBody =>
+      'We have accounts in several banks for easier local transfer. You\'ll upload the receipt in the next step.';
+
+  @override
+  String get bankAccountName => 'Account name';
+
+  @override
+  String get bankAccountNumber => 'Account #';
+
+  @override
+  String get bankSwift => 'SWIFT';
+
+  @override
+  String get bankAmount => 'Amount to transfer';
+
+  @override
+  String get bankReference => 'Reference';
+
+  @override
+  String get bankImportantNote => 'Important note';
+
+  @override
+  String get bankNote1 => 'Use your order number as the transfer reference';
+
+  @override
+  String get bankNote2 => 'Verification takes 5–15 min during business hours';
+
+  @override
+  String get bankNote3 => 'You\'ll get a message when payment is confirmed';
+
+  @override
+  String get bankContinueToReview => 'Continue to review';
+
+  @override
+  String get reviewPaymentTitle => 'Payment';
+
+  @override
+  String get reviewItemsTitle => 'Items';
+
+  @override
+  String reviewQtyEach(String qty, String price) {
+    return 'Qty $qty · $price';
+  }
+
+  @override
+  String get reviewTotalsTitle => 'Totals';
+
+  @override
+  String get reviewTerms =>
+      'By placing this order, you agree to our Terms and Privacy Policy.';
+
+  @override
+  String get reviewPlaceOrder => 'Place order';
+
+  @override
+  String get confirmTitle => 'Order placed!';
+
+  @override
+  String get confirmOrderNumber => 'Order number';
+
+  @override
+  String get confirmBankInstructions => 'Bank transfer instructions';
+
+  @override
+  String get confirmAmount => 'Amount';
+
+  @override
+  String get confirmUploadTitle => 'Upload receipt';
+
+  @override
+  String get confirmUploadSub =>
+      'Your receipt will be verified within 24 hours';
+
+  @override
+  String get confirmReceiptLater =>
+      'You can upload the receipt later from the order page';
+
+  @override
+  String get confirmCodTitle => 'Pay on delivery';
+
+  @override
+  String get confirmCodBody =>
+      'You\'ll pay cash when your order is delivered. We\'ll contact you to confirm the delivery time.';
+
+  @override
+  String get confirmViewOrder => 'View order';
+
+  @override
+  String get confirmContinueShopping => 'Continue shopping';
+
+  @override
+  String get addressNewTitle => 'New address';
+
+  @override
+  String get addressLabelTitle => 'Label';
+
+  @override
+  String get labelHome => 'Home';
+
+  @override
+  String get labelWork => 'Work';
+
+  @override
+  String get labelOther => 'Other';
+
+  @override
+  String get addressContactTitle => 'Contact';
+
+  @override
+  String get addressFullName => 'Full name';
+
+  @override
+  String get addressPhone => 'Phone number';
+
+  @override
+  String get addressStreetTitle => 'Street address';
+
+  @override
+  String get addressDistrict => 'District / street / house #';
+
+  @override
+  String get addressDistrictHint => 'e.g. Al-Riyadh, block 32, house 14';
+
+  @override
+  String get addressCity => 'City';
+
+  @override
+  String get addressLandmark => 'Landmark';
+
+  @override
+  String get addressLandmarkHelp => 'Help the driver find your address faster';
+
+  @override
+  String get addressLandmarkHint => 'e.g. Next to Al-Nur Mosque';
+
+  @override
+  String get addressNotesTitle => 'Notes for driver';
+
+  @override
+  String get addressNotesHint => 'Optional — call on arrival, 2nd floor…';
+
+  @override
+  String get addressSetDefault => 'Set as default address';
+
+  @override
+  String get addressSave => 'Save address';
+
+  @override
+  String get addressLandmarkRequired =>
+      'Landmark is required (at least 3 characters)';
+
+  @override
+  String get addressNameRequired => 'Name is required';
+
+  @override
+  String get addressDistrictRequired => 'District is required';
+
+  @override
+  String get ordersFilterAll => 'All';
+
+  @override
+  String get ordersFilterProcessing => 'Processing';
+
+  @override
+  String get ordersFilterShipping => 'Shipping';
+
+  @override
+  String get ordersFilterCompleted => 'Completed';
+
+  @override
+  String ordersItemCount(String count) {
+    return '$count items';
+  }
+
+  @override
+  String get orderStatusPending => 'Pending';
+
+  @override
+  String get orderStatusAwaitingPayment => 'Awaiting payment';
+
+  @override
+  String get orderStatusReceiptUploaded => 'Receipt under review';
+
+  @override
+  String get orderStatusPaymentConfirmed => 'Payment confirmed';
+
+  @override
+  String get orderStatusPaymentRejected => 'Payment rejected';
+
+  @override
+  String get orderStatusProcessing => 'Processing';
+
+  @override
+  String get orderStatusShipped => 'Shipped';
+
+  @override
+  String get orderStatusDelivered => 'Delivered';
+
+  @override
+  String get orderStatusCancelled => 'Cancelled';
+
+  @override
+  String get orderStatusRefunded => 'Refunded';
 }

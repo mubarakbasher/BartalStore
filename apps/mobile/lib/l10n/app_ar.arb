@@ -309,5 +309,119 @@
     }
   },
   "wishlistRemoved": "تمت الإزالة من المفضلة",
-  "actionFailed": "تعذّر إكمال العملية. حاول مرة أخرى."
+  "actionFailed": "تعذّر إكمال العملية. حاول مرة أخرى.",
+
+  "commonCopied": "تم النسخ",
+  "commonRequired2": "هذا الحقل مطلوب",
+
+  "cartItemAdded": "تمت الإضافة إلى السلة",
+  "cartViewCart": "عرض السلة",
+  "cartOutOfStock": "الكمية المتاحة غير كافية",
+
+  "stepAddress": "العنوان",
+  "stepPayment": "الدفع",
+  "stepReview": "المراجعة",
+
+  "checkoutAddressTitle": "عنوان التوصيل",
+  "checkoutNoAddresses": "أضف عنوان توصيل للمتابعة",
+  "checkoutAddNewAddress": "إضافة عنوان جديد",
+  "checkoutSelected": "محدد",
+  "checkoutEdit": "تعديل",
+  "checkoutDeliveryZone": "منطقة التوصيل",
+  "checkoutContinueToPayment": "متابعة إلى الدفع",
+
+  "paymentMethodTitle": "طريقة الدفع",
+  "paymentBankTransfer": "تحويل بنكي",
+  "paymentBankSub": "حوّل من أي بنك سوداني · ارفع الإيصال بعد التحويل",
+  "paymentRecommended": "موصى به",
+  "paymentCod": "الدفع عند الاستلام",
+  "paymentCodSub": "ادفع نقداً عند تسليم الطلب",
+  "paymentWallet": "محفظة رقمية",
+  "paymentWalletSub": "بنكك · فوري · زين كاش",
+  "paymentSoon": "قريباً",
+  "paymentContinue": "متابعة",
+
+  "bankStepTitle": "حسابات برتال",
+  "bankChooseTitle": "اختر البنك الذي ستحوّل منه",
+  "bankChooseBody": "لدينا حسابات في عدة بنوك لتسهيل التحويل المحلي. بعد التحويل ستقوم برفع إيصال في الخطوة التالية.",
+  "bankAccountName": "اسم الحساب",
+  "bankAccountNumber": "رقم الحساب",
+  "bankSwift": "سويفت",
+  "bankAmount": "المبلغ المطلوب",
+  "bankReference": "المرجع",
+  "bankImportantNote": "ملاحظة مهمة",
+  "bankNote1": "استخدم رقم الطلب كمرجع في التحويل",
+  "bankNote2": "التحقق يستغرق ٥-١٥ دقيقة في ساعات العمل",
+  "bankNote3": "ستصلك رسالة عند تأكيد الدفع",
+  "bankContinueToReview": "متابعة إلى المراجعة",
+
+  "reviewPaymentTitle": "الدفع",
+  "reviewItemsTitle": "المنتجات",
+  "reviewQtyEach": "الكمية {qty} · {price}",
+  "@reviewQtyEach": {
+    "placeholders": {
+      "qty": { "type": "String" },
+      "price": { "type": "String" }
+    }
+  },
+  "reviewTotalsTitle": "الإجمالي",
+  "reviewTerms": "بالضغط على «تأكيد الطلب» فإنك توافق على شروط الاستخدام وسياسة الخصوصية.",
+  "reviewPlaceOrder": "تأكيد الطلب",
+
+  "confirmTitle": "تم استلام طلبك!",
+  "confirmOrderNumber": "رقم الطلب",
+  "confirmBankInstructions": "تعليمات التحويل البنكي",
+  "confirmAmount": "المبلغ",
+  "confirmUploadTitle": "رفع صورة الإيصال",
+  "confirmUploadSub": "سيتم التحقق من الإيصال خلال ٢٤ ساعة",
+  "confirmReceiptLater": "يمكنك رفع الإيصال لاحقاً من صفحة الطلب",
+  "confirmCodTitle": "ادفع عند الاستلام",
+  "confirmCodBody": "ستدفع المبلغ نقداً عند تسليم طلبك. سنتواصل معك لتأكيد موعد التوصيل.",
+  "confirmViewOrder": "عرض الطلب",
+  "confirmContinueShopping": "متابعة التسوق",
+
+  "addressNewTitle": "عنوان جديد",
+  "addressLabelTitle": "التسمية",
+  "labelHome": "المنزل",
+  "labelWork": "العمل",
+  "labelOther": "آخر",
+  "addressContactTitle": "جهة الاتصال",
+  "addressFullName": "الاسم الكامل",
+  "addressPhone": "رقم الهاتف",
+  "addressStreetTitle": "العنوان التفصيلي",
+  "addressDistrict": "الحي / الشارع / رقم المنزل",
+  "addressDistrictHint": "مثال: الرياض، بلوك ٣٢، منزل ١٤",
+  "addressCity": "المدينة",
+  "addressLandmark": "علامة مميزة",
+  "addressLandmarkHelp": "ساعد السائق على إيجاد عنوانك بسرعة",
+  "addressLandmarkHint": "مثال: بجانب مسجد النور",
+  "addressNotesTitle": "ملاحظات للسائق",
+  "addressNotesHint": "اختياري — اتصل عند الوصول، الطابق الثاني…",
+  "addressSetDefault": "تعيين كعنوان افتراضي",
+  "addressSave": "حفظ العنوان",
+  "addressLandmarkRequired": "العلامة المميزة مطلوبة (٣ أحرف على الأقل)",
+  "addressNameRequired": "الاسم مطلوب",
+  "addressDistrictRequired": "الحي مطلوب",
+
+  "ordersFilterAll": "الكل",
+  "ordersFilterProcessing": "قيد التجهيز",
+  "ordersFilterShipping": "قيد الشحن",
+  "ordersFilterCompleted": "مكتملة",
+  "ordersItemCount": "{count} منتج",
+  "@ordersItemCount": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+
+  "orderStatusPending": "قيد الانتظار",
+  "orderStatusAwaitingPayment": "بانتظار الدفع",
+  "orderStatusReceiptUploaded": "إيصال قيد المراجعة",
+  "orderStatusPaymentConfirmed": "تم تأكيد الدفع",
+  "orderStatusPaymentRejected": "تم رفض الدفع",
+  "orderStatusProcessing": "قيد التجهيز",
+  "orderStatusShipped": "تم الشحن",
+  "orderStatusDelivered": "تم التوصيل",
+  "orderStatusCancelled": "ملغى",
+  "orderStatusRefunded": "تم الاسترداد"
 }

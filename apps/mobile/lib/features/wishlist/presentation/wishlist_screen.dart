@@ -15,6 +15,7 @@ import '../../../widgets/price_tag.dart';
 import '../../../widgets/product_image.dart';
 import '../../../widgets/screen_header.dart';
 import '../../../widgets/skeletons.dart';
+import '../../cart/application/cart_controller.dart';
 import '../application/wishlist_controller.dart';
 
 /// Saved items — port of mobile-extras.jsx::WishlistScreen. Cards with
@@ -95,6 +96,36 @@ class _WishlistCard extends ConsumerWidget {
     }
   }
 
+  Future<void> _addToCart(BuildContext context, WidgetRef ref) async {
+    final l10n = L10n.of(context);
+    if (item.outOfStock) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.productsOutOfStock)));
+      return;
+    }
+    try {
+      await ref.read(cartControllerProvider.notifier).addLine(
+            productId: item.productId,
+            slug: item.slug,
+            nameAr: item.nameAr,
+            nameEn: item.nameEn,
+            unitPrice: item.price,
+            imageUrl: item.imageUrl,
+            stock: item.stock,
+          );
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.cartItemAdded),
+          action: SnackBarAction(label: l10n.cartViewCart, onPressed: () => context.go('/cart')),
+        ),
+      );
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.actionFailed)));
+      }
+    }
+  }
+
   bool get _priceDropped =>
       item.comparePrice != null && item.price < item.comparePrice!;
 
@@ -161,8 +192,7 @@ class _WishlistCard extends ConsumerWidget {
               children: [
                 _ActionButton(
                   filled: true,
-                  // Add to cart lands in Slice 3 — routes to cart for now.
-                  onTap: () => context.go('/cart'),
+                  onTap: () => _addToCart(context, ref),
                   child: const BartalIcon(BartalIcons.bag, color: Colors.white, size: 14),
                 ),
                 const SizedBox(height: 6),

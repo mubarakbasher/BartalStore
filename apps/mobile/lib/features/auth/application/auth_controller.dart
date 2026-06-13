@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/api/envelope.dart';
 import '../../../core/models/user.dart';
 import '../../../core/providers.dart';
+import '../../cart/application/cart_controller.dart';
 import '../data/auth_api.dart';
 
 sealed class AuthState {
@@ -105,6 +106,8 @@ class AuthController extends AsyncNotifier<AuthState> {
     }
     await ref.read(tokenStorageProvider).clear();
     state = const AsyncData(AuthGuest());
+    // Drop the previous user's cart so a logged-out device starts clean.
+    await ref.read(cartControllerProvider.notifier).clear();
   }
 
   /// Re-fetch the profile (e.g. after the offline-boot null-user state).
@@ -123,6 +126,8 @@ class AuthController extends AsyncNotifier<AuthState> {
           refreshToken: session.tokens.refreshToken,
         );
     state = AsyncData(Authenticated(session.user));
+    // The cart controller watches auth and merges any guest cart into the
+    // server cart on this transition (see CartController.build).
   }
 }
 

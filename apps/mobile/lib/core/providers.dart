@@ -35,7 +35,3 @@ final apiClientProvider = Provider<Dio>((ref) {
   final signal = ref.watch(sessionExpirySignalProvider);
   return buildApiClient(tokens: tokens, onSessionExpired: signal.fire);
 });
-
-/// Live cart line count for the tab-bar badge. Returns 0 until the cart
-/// controller lands in Slice 3 (server cart + guest cart).
-final cartCountProvider = Provider<int>((ref) => 0);
