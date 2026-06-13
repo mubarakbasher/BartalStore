@@ -605,4 +605,77 @@ class L10nEn extends L10n {
 
   @override
   String get resetSuccess => 'Password updated. Sign in now.';
+
+  @override
+  String homeDeliveryEta(String min, String max) {
+    return '· $min-$max days';
+  }
+
+  @override
+  String pdpReviewsWithCount(String count) {
+    return 'Reviews ($count)';
+  }
+
+  @override
+  String pdpRatingCount(String count) {
+    return '($count reviews)';
+  }
+
+  @override
+  String get pdpWriteReview => 'Write a review';
+
+  @override
+  String get pdpNoReviews => 'No reviews yet';
+
+  @override
+  String get pdpNoReviewsBody =>
+      'Be the first to review this product after it\'s delivered.';
+
+  @override
+  String reviewCount(String count) {
+    return '$count reviews';
+  }
+
+  @override
+  String get reviewVerified => 'Verified';
+
+  @override
+  String get reviewFilterAll => 'All';
+
+  @override
+  String get reviewSortNewest => 'Newest first';
+
+  @override
+  String get reviewSortHighest => 'Highest rated';
+
+  @override
+  String get reviewSortLowest => 'Lowest rated';
+
+  @override
+  String get categoriesSearchHint => 'Search in categories…';
+
+  @override
+  String get categoriesSubcategories => 'Subcategories';
+
+  @override
+  String categoriesShopName(String name) {
+    return 'Shop $name';
+  }
+
+  @override
+  String get filtersTitle => 'Filters';
+
+  @override
+  String get filtersResetCleared => 'Filters cleared';
+
+  @override
+  String wishlistSavedCount(String count) {
+    return '$count saved items';
+  }
+
+  @override
+  String get wishlistRemoved => 'Removed from wishlist';
+
+  @override
+  String get actionFailed => 'Couldn\'t complete the action. Please try again.';
 }

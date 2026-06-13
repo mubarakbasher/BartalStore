@@ -602,4 +602,76 @@ class L10nAr extends L10n {
 
   @override
   String get resetSuccess => 'تم تحديث كلمة المرور. سجّل دخولك الآن.';
+
+  @override
+  String homeDeliveryEta(String min, String max) {
+    return '· $min-$max يوم';
+  }
+
+  @override
+  String pdpReviewsWithCount(String count) {
+    return 'التقييمات ($count)';
+  }
+
+  @override
+  String pdpRatingCount(String count) {
+    return '($count تقييم)';
+  }
+
+  @override
+  String get pdpWriteReview => 'اكتب تقييمك';
+
+  @override
+  String get pdpNoReviews => 'لا توجد تقييمات بعد';
+
+  @override
+  String get pdpNoReviewsBody => 'كن أول من يقيّم هذا المنتج بعد استلامه.';
+
+  @override
+  String reviewCount(String count) {
+    return '$count تقييم';
+  }
+
+  @override
+  String get reviewVerified => 'موثّق';
+
+  @override
+  String get reviewFilterAll => 'الكل';
+
+  @override
+  String get reviewSortNewest => 'الأحدث أولاً';
+
+  @override
+  String get reviewSortHighest => 'الأعلى تقييماً';
+
+  @override
+  String get reviewSortLowest => 'الأقل تقييماً';
+
+  @override
+  String get categoriesSearchHint => 'ابحث في الفئات…';
+
+  @override
+  String get categoriesSubcategories => 'الأقسام الفرعية';
+
+  @override
+  String categoriesShopName(String name) {
+    return 'تسوق $name';
+  }
+
+  @override
+  String get filtersTitle => 'الفلاتر';
+
+  @override
+  String get filtersResetCleared => 'تم مسح الفلاتر';
+
+  @override
+  String wishlistSavedCount(String count) {
+    return '$count منتجات محفوظة';
+  }
+
+  @override
+  String get wishlistRemoved => 'تمت الإزالة من المفضلة';
+
+  @override
+  String get actionFailed => 'تعذّر إكمال العملية. حاول مرة أخرى.';
 }

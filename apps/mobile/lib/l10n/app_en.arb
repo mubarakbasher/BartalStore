@@ -211,5 +211,30 @@
   "resetTitle": "Create a new password",
   "resetBody": "Must differ from any previous password used on this account.",
   "resetSave": "Save password & sign in",
-  "resetSuccess": "Password updated. Sign in now."
+  "resetSuccess": "Password updated. Sign in now.",
+
+  "homeDeliveryEta": "· {min}-{max} days",
+
+  "pdpReviewsWithCount": "Reviews ({count})",
+  "pdpRatingCount": "({count} reviews)",
+  "pdpWriteReview": "Write a review",
+  "pdpNoReviews": "No reviews yet",
+  "pdpNoReviewsBody": "Be the first to review this product after it's delivered.",
+  "reviewCount": "{count} reviews",
+  "reviewVerified": "Verified",
+  "reviewFilterAll": "All",
+  "reviewSortNewest": "Newest first",
+  "reviewSortHighest": "Highest rated",
+  "reviewSortLowest": "Lowest rated",
+
+  "categoriesSearchHint": "Search in categories…",
+  "categoriesSubcategories": "Subcategories",
+  "categoriesShopName": "Shop {name}",
+
+  "filtersTitle": "Filters",
+  "filtersResetCleared": "Filters cleared",
+
+  "wishlistSavedCount": "{count} saved items",
+  "wishlistRemoved": "Removed from wishlist",
+  "actionFailed": "Couldn't complete the action. Please try again."
 }

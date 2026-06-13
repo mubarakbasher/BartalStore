@@ -1230,6 +1230,126 @@ abstract class L10n {
   /// In ar, this message translates to:
   /// **'تم تحديث كلمة المرور. سجّل دخولك الآن.'**
   String get resetSuccess;
+
+  /// No description provided for @homeDeliveryEta.
+  ///
+  /// In ar, this message translates to:
+  /// **'· {min}-{max} يوم'**
+  String homeDeliveryEta(String min, String max);
+
+  /// No description provided for @pdpReviewsWithCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقييمات ({count})'**
+  String pdpReviewsWithCount(String count);
+
+  /// No description provided for @pdpRatingCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'({count} تقييم)'**
+  String pdpRatingCount(String count);
+
+  /// No description provided for @pdpWriteReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب تقييمك'**
+  String get pdpWriteReview;
+
+  /// No description provided for @pdpNoReviews.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد تقييمات بعد'**
+  String get pdpNoReviews;
+
+  /// No description provided for @pdpNoReviewsBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'كن أول من يقيّم هذا المنتج بعد استلامه.'**
+  String get pdpNoReviewsBody;
+
+  /// No description provided for @reviewCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} تقييم'**
+  String reviewCount(String count);
+
+  /// No description provided for @reviewVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'موثّق'**
+  String get reviewVerified;
+
+  /// No description provided for @reviewFilterAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get reviewFilterAll;
+
+  /// No description provided for @reviewSortNewest.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأحدث أولاً'**
+  String get reviewSortNewest;
+
+  /// No description provided for @reviewSortHighest.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأعلى تقييماً'**
+  String get reviewSortHighest;
+
+  /// No description provided for @reviewSortLowest.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأقل تقييماً'**
+  String get reviewSortLowest;
+
+  /// No description provided for @categoriesSearchHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابحث في الفئات…'**
+  String get categoriesSearchHint;
+
+  /// No description provided for @categoriesSubcategories.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأقسام الفرعية'**
+  String get categoriesSubcategories;
+
+  /// No description provided for @categoriesShopName.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسوق {name}'**
+  String categoriesShopName(String name);
+
+  /// No description provided for @filtersTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفلاتر'**
+  String get filtersTitle;
+
+  /// No description provided for @filtersResetCleared.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم مسح الفلاتر'**
+  String get filtersResetCleared;
+
+  /// No description provided for @wishlistSavedCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} منتجات محفوظة'**
+  String wishlistSavedCount(String count);
+
+  /// No description provided for @wishlistRemoved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت الإزالة من المفضلة'**
+  String get wishlistRemoved;
+
+  /// No description provided for @actionFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر إكمال العملية. حاول مرة أخرى.'**
+  String get actionFailed;
 }
 
 class _L10nDelegate extends LocalizationsDelegate<L10n> {

@@ -7,8 +7,11 @@ import 'product_placeholder.dart';
 /// Product imagery with the striped placeholder while loading / on error /
 /// when no image exists. Hue derives from the product id so a given product
 /// keeps a stable ramp across screens and sessions.
-class ProductImage extends StatelessWidget {
-  const ProductImage({
+///
+/// Named `ProductThumb` to avoid colliding with the `ProductImage` API model
+/// in core/models/product.dart.
+class ProductThumb extends StatelessWidget {
+  const ProductThumb({
     super.key,
     required this.productId,
     required this.imageUrl,

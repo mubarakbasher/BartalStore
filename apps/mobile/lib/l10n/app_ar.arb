@@ -253,5 +253,61 @@
   "resetTitle": "أنشئ كلمة مرور جديدة",
   "resetBody": "يجب أن تختلف عن كلمات المرور السابقة المستخدمة في حسابك.",
   "resetSave": "حفظ كلمة المرور والدخول",
-  "resetSuccess": "تم تحديث كلمة المرور. سجّل دخولك الآن."
+  "resetSuccess": "تم تحديث كلمة المرور. سجّل دخولك الآن.",
+
+  "homeDeliveryEta": "· {min}-{max} يوم",
+  "@homeDeliveryEta": {
+    "placeholders": {
+      "min": { "type": "String" },
+      "max": { "type": "String" }
+    }
+  },
+
+  "pdpReviewsWithCount": "التقييمات ({count})",
+  "@pdpReviewsWithCount": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "pdpRatingCount": "({count} تقييم)",
+  "@pdpRatingCount": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "pdpWriteReview": "اكتب تقييمك",
+  "pdpNoReviews": "لا توجد تقييمات بعد",
+  "pdpNoReviewsBody": "كن أول من يقيّم هذا المنتج بعد استلامه.",
+  "reviewCount": "{count} تقييم",
+  "@reviewCount": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "reviewVerified": "موثّق",
+  "reviewFilterAll": "الكل",
+  "reviewSortNewest": "الأحدث أولاً",
+  "reviewSortHighest": "الأعلى تقييماً",
+  "reviewSortLowest": "الأقل تقييماً",
+
+  "categoriesSearchHint": "ابحث في الفئات…",
+  "categoriesSubcategories": "الأقسام الفرعية",
+  "categoriesShopName": "تسوق {name}",
+  "@categoriesShopName": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "filtersTitle": "الفلاتر",
+  "filtersResetCleared": "تم مسح الفلاتر",
+
+  "wishlistSavedCount": "{count} منتجات محفوظة",
+  "@wishlistSavedCount": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "wishlistRemoved": "تمت الإزالة من المفضلة",
+  "actionFailed": "تعذّر إكمال العملية. حاول مرة أخرى."
 }

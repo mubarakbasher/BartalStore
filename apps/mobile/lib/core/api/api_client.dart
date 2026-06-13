@@ -13,7 +13,8 @@ Dio buildApiClient({
   String? baseUrl,
 }) {
   final options = BaseOptions(
-    baseUrl: baseUrl ?? apiBaseUrl,
+    // The Nest app sets a global 'api' prefix (apps/api/src/main.ts).
+    baseUrl: '${baseUrl ?? apiBaseUrl}/api',
     connectTimeout: const Duration(seconds: 15),
     receiveTimeout: const Duration(seconds: 20),
     // Let the envelope layer convert error bodies — don't throw on 4xx/5xx

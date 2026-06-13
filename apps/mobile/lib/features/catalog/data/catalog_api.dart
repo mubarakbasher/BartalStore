@@ -54,10 +54,11 @@ class ProductsQuery {
     int? limit,
     bool clearSort = false,
     bool clearPrices = false,
+    bool clearCategory = false,
   }) {
     return ProductsQuery(
       q: q ?? this.q,
-      category: category ?? this.category,
+      category: clearCategory ? null : (category ?? this.category),
       sort: clearSort ? null : (sort ?? this.sort),
       minPrice: clearPrices ? null : (minPrice ?? this.minPrice),
       maxPrice: clearPrices ? null : (maxPrice ?? this.maxPrice),
