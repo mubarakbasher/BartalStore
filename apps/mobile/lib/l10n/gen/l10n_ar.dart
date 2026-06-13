@@ -959,4 +959,238 @@ class L10nAr extends L10n {
 
   @override
   String get orderStatusRefunded => 'تم الاسترداد';
+
+  @override
+  String get orderDetailTitle => 'تفاصيل الطلب';
+
+  @override
+  String orderItemsWithCount(String count) {
+    return 'المنتجات ($count)';
+  }
+
+  @override
+  String orderItemQty(String count) {
+    return 'الكمية: $count';
+  }
+
+  @override
+  String get orderDeliveryTo => 'التوصيل إلى';
+
+  @override
+  String get orderPaymentSummary => 'ملخص الدفع';
+
+  @override
+  String orderBankRefLine(String ref) {
+    return 'مرجع: $ref';
+  }
+
+  @override
+  String get orderHelpTitle => 'تحتاج مساعدة؟';
+
+  @override
+  String orderHelpWhatsapp(String phone) {
+    return 'راسلنا على واتساب: $phone';
+  }
+
+  @override
+  String get orderContactWhatsapp => 'تواصل عبر واتساب';
+
+  @override
+  String get orderAwaitingReceiptMessage =>
+      'أكمل طلبك برفع إيصال التحويل البنكي. سيتم التأكيد خلال ٥–١٥ دقيقة.';
+
+  @override
+  String get orderUnderReviewMessage =>
+      'نراجع إيصالك الآن. ستصلك رسالة خلال ٥–١٥ دقيقة.';
+
+  @override
+  String get orderUploadReceiptCta => 'رفع الإيصال';
+
+  @override
+  String get orderReuploadReceiptCta => 'إعادة رفع الإيصال';
+
+  @override
+  String get orderTrackCta => 'تتبع الطلب';
+
+  @override
+  String get orderCancelCta => 'إلغاء الطلب';
+
+  @override
+  String get orderCodNote => 'ستدفع نقداً عند توصيل طلبك.';
+
+  @override
+  String get orderRejectedTitle => 'تعذر التحقق من الإيصال';
+
+  @override
+  String get orderRejectedMessage =>
+      'لم نتمكن من قراءة المبلغ أو الرقم المرجعي. يرجى رفع صورة أوضح.';
+
+  @override
+  String get orderRejectedNoteTitle => 'ملاحظة من فريق التحقق';
+
+  @override
+  String get orderCancelDialogTitle => 'إلغاء هذا الطلب؟';
+
+  @override
+  String get orderCancelDialogBody =>
+      'لا يمكن التراجع عن هذا الإجراء. يمكنك إخبارنا بالسبب (اختياري).';
+
+  @override
+  String get orderCancelReasonHint => 'السبب (اختياري)';
+
+  @override
+  String get orderCancelConfirm => 'إلغاء الطلب';
+
+  @override
+  String get orderCancelKeep => 'الاحتفاظ بالطلب';
+
+  @override
+  String get orderCancelledToast => 'تم إلغاء الطلب';
+
+  @override
+  String get uploadReceiptTitle => 'رفع الإيصال';
+
+  @override
+  String get uploadAmountTitle => 'المبلغ المطلوب تحويله';
+
+  @override
+  String get uploadRefShort => 'المرجع';
+
+  @override
+  String get uploadTransferTo => 'التحويل إلى';
+
+  @override
+  String get uploadBankLabel => 'البنك';
+
+  @override
+  String get uploadReceiptPhoto => 'صورة الإيصال';
+
+  @override
+  String get uploadTakePhoto => 'التقط صورة الإيصال';
+
+  @override
+  String get uploadPhotoHint => 'تأكد من وضوح رقم المرجع والمبلغ والتاريخ';
+
+  @override
+  String get uploadCamera => 'كاميرا';
+
+  @override
+  String get uploadGallery => 'من المعرض';
+
+  @override
+  String get uploadTip1 => 'الصورة واضحة وغير مظلمة';
+
+  @override
+  String uploadTip2(String ref) {
+    return 'رقم المرجع $ref ظاهر';
+  }
+
+  @override
+  String get uploadTip3 => 'المبلغ يطابق الإجمالي';
+
+  @override
+  String get uploadSubmit => 'إرسال الإيصال للمراجعة';
+
+  @override
+  String get uploadSubmitted => 'تم رفع الإيصال';
+
+  @override
+  String get receiptSubmittedTitle => 'تم استلام الإيصال';
+
+  @override
+  String get receiptSubmittedBody =>
+      'نراجع إيصالك الآن. ستتلقى إشعاراً خلال ٥–١٥ دقيقة.';
+
+  @override
+  String get receiptStepOrderPlaced => 'تم الطلب';
+
+  @override
+  String get receiptStepUnderReview => 'قيد المراجعة';
+
+  @override
+  String get receiptStepConfirmed => 'مؤكد · قيد التجهيز';
+
+  @override
+  String get receiptStepPending => 'قيد الانتظار';
+
+  @override
+  String get trackingTitle => 'تتبع الطلب';
+
+  @override
+  String get trackingStatusLabel => 'الحالة';
+
+  @override
+  String get trackingProgressTitle => 'التقدم';
+
+  @override
+  String get trackingOrderLabel => 'رقم الطلب';
+
+  @override
+  String get trackingSupportBody => 'راسلنا على واتساب وسنساعدك في هذا الطلب.';
+
+  @override
+  String get trackingOnTheWay => 'في الطريق إليك';
+
+  @override
+  String get trackingPreparing => 'جاري تجهيز طلبك';
+
+  @override
+  String get trackingDeliveredHeadline => 'تم التسليم';
+
+  @override
+  String get trackingConfirmedHeadline => 'تم تأكيد الدفع';
+
+  @override
+  String get writeReviewRatingLabel => 'تقييمك';
+
+  @override
+  String get writeReviewRating1 => 'سيء';
+
+  @override
+  String get writeReviewRating2 => 'مقبول';
+
+  @override
+  String get writeReviewRating3 => 'جيد';
+
+  @override
+  String get writeReviewRating4 => 'جيد جداً';
+
+  @override
+  String get writeReviewRating5 => 'ممتاز';
+
+  @override
+  String get writeReviewTagsTitle => 'ما أعجبك؟';
+
+  @override
+  String get writeReviewTag1 => 'يدوم طويلاً';
+
+  @override
+  String get writeReviewTag2 => 'رائحة قوية';
+
+  @override
+  String get writeReviewTag3 => 'تغليف فاخر';
+
+  @override
+  String get writeReviewTag4 => 'توصيل سريع';
+
+  @override
+  String get writeReviewDetailsTitle => 'تفاصيل (اختياري)';
+
+  @override
+  String get writeReviewDetailsHint => 'شاركنا ما أعجبك أو ما يمكن تحسينه…';
+
+  @override
+  String get writeReviewSubmit => 'نشر التقييم';
+
+  @override
+  String get writeReviewVerifiedBuyer => 'مشتر موثّق';
+
+  @override
+  String get writeReviewRatingRequired => 'اضغط نجمة للتقييم';
+
+  @override
+  String get writeReviewSuccess => 'تم إرسال تقييمك — سيظهر بعد الموافقة عليه.';
+
+  @override
+  String get commonContact => 'تواصل';
 }

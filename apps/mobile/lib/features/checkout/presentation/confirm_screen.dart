@@ -9,7 +9,7 @@ import '../../../design/motif.dart';
 import '../../../design/theme.dart';
 import '../../../design/tokens.dart';
 import '../../../l10n/gen/l10n.dart';
-import '../../orders/application/orders_controller.dart';
+import '../../orders/application/order_detail_controller.dart';
 import '../data/banks.dart';
 import 'widgets/checkout_chrome.dart';
 

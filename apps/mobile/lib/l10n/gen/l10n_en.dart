@@ -965,4 +965,242 @@ class L10nEn extends L10n {
 
   @override
   String get orderStatusRefunded => 'Refunded';
+
+  @override
+  String get orderDetailTitle => 'Order details';
+
+  @override
+  String orderItemsWithCount(String count) {
+    return 'Items ($count)';
+  }
+
+  @override
+  String orderItemQty(String count) {
+    return 'Qty: $count';
+  }
+
+  @override
+  String get orderDeliveryTo => 'Delivery to';
+
+  @override
+  String get orderPaymentSummary => 'Payment summary';
+
+  @override
+  String orderBankRefLine(String ref) {
+    return 'Ref: $ref';
+  }
+
+  @override
+  String get orderHelpTitle => 'Need help?';
+
+  @override
+  String orderHelpWhatsapp(String phone) {
+    return 'WhatsApp us: $phone';
+  }
+
+  @override
+  String get orderContactWhatsapp => 'Contact on WhatsApp';
+
+  @override
+  String get orderAwaitingReceiptMessage =>
+      'Complete your order by uploading the bank transfer receipt. Confirmation in 5–15 min.';
+
+  @override
+  String get orderUnderReviewMessage =>
+      'We\'re reviewing your receipt. You\'ll be notified within 5–15 min.';
+
+  @override
+  String get orderUploadReceiptCta => 'Upload receipt';
+
+  @override
+  String get orderReuploadReceiptCta => 'Re-upload receipt';
+
+  @override
+  String get orderTrackCta => 'Track order';
+
+  @override
+  String get orderCancelCta => 'Cancel order';
+
+  @override
+  String get orderCodNote => 'You\'ll pay cash when your order is delivered.';
+
+  @override
+  String get orderRejectedTitle => 'Receipt couldn\'t be verified';
+
+  @override
+  String get orderRejectedMessage =>
+      'We couldn\'t read the amount or reference number. Please upload a clearer photo.';
+
+  @override
+  String get orderRejectedNoteTitle => 'Note from verification team';
+
+  @override
+  String get orderCancelDialogTitle => 'Cancel this order?';
+
+  @override
+  String get orderCancelDialogBody =>
+      'This can\'t be undone. You can tell us why (optional).';
+
+  @override
+  String get orderCancelReasonHint => 'Reason (optional)';
+
+  @override
+  String get orderCancelConfirm => 'Cancel order';
+
+  @override
+  String get orderCancelKeep => 'Keep order';
+
+  @override
+  String get orderCancelledToast => 'Order cancelled';
+
+  @override
+  String get uploadReceiptTitle => 'Upload receipt';
+
+  @override
+  String get uploadAmountTitle => 'Amount to transfer';
+
+  @override
+  String get uploadRefShort => 'REF';
+
+  @override
+  String get uploadTransferTo => 'Transfer to';
+
+  @override
+  String get uploadBankLabel => 'Bank';
+
+  @override
+  String get uploadReceiptPhoto => 'Receipt photo';
+
+  @override
+  String get uploadTakePhoto => 'Take a photo of your receipt';
+
+  @override
+  String get uploadPhotoHint =>
+      'Make sure the reference, amount and date are clearly visible';
+
+  @override
+  String get uploadCamera => 'Camera';
+
+  @override
+  String get uploadGallery => 'From gallery';
+
+  @override
+  String get uploadTip1 => 'Photo is clear and not dark';
+
+  @override
+  String uploadTip2(String ref) {
+    return 'The reference $ref is visible';
+  }
+
+  @override
+  String get uploadTip3 => 'The amount matches the total';
+
+  @override
+  String get uploadSubmit => 'Submit receipt for review';
+
+  @override
+  String get uploadSubmitted => 'Receipt uploaded';
+
+  @override
+  String get receiptSubmittedTitle => 'Receipt received';
+
+  @override
+  String get receiptSubmittedBody =>
+      'We\'re reviewing your receipt now. You\'ll get a notification within 5–15 min.';
+
+  @override
+  String get receiptStepOrderPlaced => 'Order placed';
+
+  @override
+  String get receiptStepUnderReview => 'Under review';
+
+  @override
+  String get receiptStepConfirmed => 'Confirmed · preparing';
+
+  @override
+  String get receiptStepPending => 'Pending';
+
+  @override
+  String get trackingTitle => 'Track order';
+
+  @override
+  String get trackingStatusLabel => 'STATUS';
+
+  @override
+  String get trackingProgressTitle => 'Progress';
+
+  @override
+  String get trackingOrderLabel => 'Order';
+
+  @override
+  String get trackingSupportBody =>
+      'Message us on WhatsApp and we\'ll help with this order.';
+
+  @override
+  String get trackingOnTheWay => 'On the way to you';
+
+  @override
+  String get trackingPreparing => 'Preparing your order';
+
+  @override
+  String get trackingDeliveredHeadline => 'Delivered';
+
+  @override
+  String get trackingConfirmedHeadline => 'Payment confirmed';
+
+  @override
+  String get writeReviewRatingLabel => 'Your rating';
+
+  @override
+  String get writeReviewRating1 => 'Poor';
+
+  @override
+  String get writeReviewRating2 => 'Fair';
+
+  @override
+  String get writeReviewRating3 => 'Good';
+
+  @override
+  String get writeReviewRating4 => 'Very good';
+
+  @override
+  String get writeReviewRating5 => 'Excellent';
+
+  @override
+  String get writeReviewTagsTitle => 'What stood out?';
+
+  @override
+  String get writeReviewTag1 => 'Long lasting';
+
+  @override
+  String get writeReviewTag2 => 'Strong scent';
+
+  @override
+  String get writeReviewTag3 => 'Premium packaging';
+
+  @override
+  String get writeReviewTag4 => 'Fast delivery';
+
+  @override
+  String get writeReviewDetailsTitle => 'Details (optional)';
+
+  @override
+  String get writeReviewDetailsHint =>
+      'Share what you liked or what could be better…';
+
+  @override
+  String get writeReviewSubmit => 'Submit review';
+
+  @override
+  String get writeReviewVerifiedBuyer => 'Verified buyer';
+
+  @override
+  String get writeReviewRatingRequired => 'Tap a star to rate';
+
+  @override
+  String get writeReviewSuccess =>
+      'Review submitted — it\'ll appear once approved.';
+
+  @override
+  String get commonContact => 'Contact';
 }

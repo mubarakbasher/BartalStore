@@ -59,4 +59,25 @@ class OrdersApi {
     final response = await _dio.get<dynamic>(Endpoints.order(id));
     return parseEnvelope(response, (data) => OrderView.fromJson(data as Map<String, dynamic>));
   }
+
+  /// Cancel an eligible order (PENDING / AWAITING_PAYMENT / RECEIPT_UPLOADED).
+  /// Returns the updated order (status CANCELLED). 409 INVALID_STATUS_TRANSITION
+  /// if it's past the cancellable window.
+  Future<OrderView> cancel(String id, {String? reason}) async {
+    final response = await _dio.delete<dynamic>(
+      Endpoints.orderCancel(id),
+      data: {if (reason != null && reason.isNotEmpty) 'reason': reason},
+    );
+    return parseEnvelope(response, (data) => OrderView.fromJson(data as Map<String, dynamic>));
+  }
+
+  /// Step 2 of receipt upload: attach an already-uploaded R2 key to the order
+  /// (POST /orders/:id/receipt) → status RECEIPT_UPLOADED.
+  Future<OrderView> attachReceipt(String id, String receiptKey) async {
+    final response = await _dio.post<dynamic>(
+      Endpoints.orderReceipt(id),
+      data: {'receipt_url': receiptKey},
+    );
+    return parseEnvelope(response, (data) => OrderView.fromJson(data as Map<String, dynamic>));
+  }
 }

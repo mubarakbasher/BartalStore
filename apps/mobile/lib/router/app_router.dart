@@ -23,18 +23,30 @@ import '../features/checkout/presentation/checkout_payment_screen.dart';
 import '../features/checkout/presentation/checkout_review_screen.dart';
 import '../features/checkout/presentation/confirm_screen.dart';
 import '../features/home/presentation/home_screen.dart';
-import '../features/orders/presentation/order_detail_placeholder.dart';
+import '../features/orders/presentation/order_detail_screen.dart';
 import '../features/orders/presentation/orders_screen.dart';
+import '../features/orders/presentation/receipt_submitted_screen.dart';
+import '../features/orders/presentation/tracking_screen.dart';
+import '../features/orders/presentation/upload_receipt_screen.dart';
 import '../features/product/presentation/product_detail_screen.dart';
 import '../features/product/presentation/product_reviews_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
+import '../features/reviews/presentation/write_review_screen.dart';
 import '../features/settings/application/settings_controller.dart';
 import '../features/wishlist/presentation/wishlist_screen.dart';
 import 'tab_shell.dart';
 
 /// Routes that require an authenticated session. Guests are sent to
 /// /welcome with `from` so the flow can resume after login.
-const _protectedPrefixes = ['/wishlist', '/orders', '/profile', '/checkout', '/order-confirm', '/addresses'];
+const _protectedPrefixes = [
+  '/wishlist',
+  '/orders',
+  '/profile',
+  '/checkout',
+  '/order-confirm',
+  '/addresses',
+  '/review',
+];
 
 /// Routes an authenticated user shouldn't see.
 const _guestOnlyPaths = ['/welcome', '/login', '/signup'];
@@ -190,10 +202,33 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(path: '/addresses/new', builder: (_, _) => const AddAddressScreen()),
-      // Order detail + receipt upload land in Slice 4.
+
+      // Order detail + the receipt / tracking flow (Slice 4).
       GoRoute(
         path: '/orders/:id',
-        builder: (_, state) => OrderDetailPlaceholder(orderId: state.pathParameters['id']!),
+        builder: (_, state) => OrderDetailScreen(orderId: state.pathParameters['id']!),
+        routes: [
+          GoRoute(
+            path: 'receipt',
+            builder: (_, state) => UploadReceiptScreen(orderId: state.pathParameters['id']!),
+            routes: [
+              GoRoute(
+                path: 'done',
+                builder: (_, state) => ReceiptSubmittedScreen(orderId: state.pathParameters['id']!),
+              ),
+            ],
+          ),
+          GoRoute(
+            path: 'track',
+            builder: (_, state) => TrackingScreen(orderId: state.pathParameters['id']!),
+          ),
+        ],
+      ),
+
+      // Verified-purchase review authoring (auth-only — see _protectedPrefixes).
+      GoRoute(
+        path: '/review/:productId',
+        builder: (_, state) => WriteReviewScreen(productId: state.pathParameters['productId']!),
       ),
     ],
   );

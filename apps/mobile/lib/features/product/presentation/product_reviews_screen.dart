@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/connectivity/connectivity_provider.dart';
@@ -155,9 +156,7 @@ class _ProductReviewsScreenState extends ConsumerState<ProductReviewsScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: _initialDone && _items.isNotEmpty
-          ? _WriteReviewBar()
-          : null,
+      bottomNavigationBar: _initialDone ? _WriteReviewBar(productId: widget.productId) : null,
     );
   }
 }
@@ -467,11 +466,16 @@ class _EmptyReviews extends StatelessWidget {
 }
 
 class _WriteReviewBar extends StatelessWidget {
+  const _WriteReviewBar({required this.productId});
+
+  final String productId;
+
   @override
   Widget build(BuildContext context) {
     final l10n = L10n.of(context);
     final bartal = context.bartal;
-    // Review authoring lands in Slice 4 — rendered per design but disabled.
+    // Verified-purchase only — the screen surfaces NOT_A_BUYER if the caller
+    // hasn't received this product (Slice 4).
     return Container(
       decoration: BoxDecoration(
         color: bartal.bg,
@@ -481,18 +485,19 @@ class _WriteReviewBar extends StatelessWidget {
         top: false,
         child: Padding(
           padding: const EdgeInsetsDirectional.all(12),
-          child: Opacity(
-            opacity: 0.5,
-            child: Container(
-              height: 48,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: bartal.amber,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                l10n.pdpWriteReview,
-                style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700),
+          child: Material(
+            color: bartal.amber,
+            borderRadius: BorderRadius.circular(12),
+            child: InkWell(
+              onTap: () => context.push('/review/$productId'),
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                height: 48,
+                alignment: Alignment.center,
+                child: Text(
+                  l10n.pdpWriteReview,
+                  style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700),
+                ),
               ),
             ),
           ),

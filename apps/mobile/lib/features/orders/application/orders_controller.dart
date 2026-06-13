@@ -67,8 +67,3 @@ class OrdersController extends AsyncNotifier<OrdersPage> {
 
 final ordersControllerProvider =
     AsyncNotifierProvider<OrdersController, OrdersPage>(OrdersController.new);
-
-/// Single order detail (confirm screen + Slice-4 order detail).
-final orderDetailProvider = FutureProvider.family<OrderView, String>(
-  (ref, id) => ref.read(ordersApiProvider).detail(id),
-);

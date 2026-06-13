@@ -1902,6 +1902,444 @@ abstract class L10n {
   /// In ar, this message translates to:
   /// **'تم الاسترداد'**
   String get orderStatusRefunded;
+
+  /// No description provided for @orderDetailTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل الطلب'**
+  String get orderDetailTitle;
+
+  /// No description provided for @orderItemsWithCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'المنتجات ({count})'**
+  String orderItemsWithCount(String count);
+
+  /// No description provided for @orderItemQty.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكمية: {count}'**
+  String orderItemQty(String count);
+
+  /// No description provided for @orderDeliveryTo.
+  ///
+  /// In ar, this message translates to:
+  /// **'التوصيل إلى'**
+  String get orderDeliveryTo;
+
+  /// No description provided for @orderPaymentSummary.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملخص الدفع'**
+  String get orderPaymentSummary;
+
+  /// No description provided for @orderBankRefLine.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرجع: {ref}'**
+  String orderBankRefLine(String ref);
+
+  /// No description provided for @orderHelpTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحتاج مساعدة؟'**
+  String get orderHelpTitle;
+
+  /// No description provided for @orderHelpWhatsapp.
+  ///
+  /// In ar, this message translates to:
+  /// **'راسلنا على واتساب: {phone}'**
+  String orderHelpWhatsapp(String phone);
+
+  /// No description provided for @orderContactWhatsapp.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل عبر واتساب'**
+  String get orderContactWhatsapp;
+
+  /// No description provided for @orderAwaitingReceiptMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'أكمل طلبك برفع إيصال التحويل البنكي. سيتم التأكيد خلال ٥–١٥ دقيقة.'**
+  String get orderAwaitingReceiptMessage;
+
+  /// No description provided for @orderUnderReviewMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'نراجع إيصالك الآن. ستصلك رسالة خلال ٥–١٥ دقيقة.'**
+  String get orderUnderReviewMessage;
+
+  /// No description provided for @orderUploadReceiptCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفع الإيصال'**
+  String get orderUploadReceiptCta;
+
+  /// No description provided for @orderReuploadReceiptCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة رفع الإيصال'**
+  String get orderReuploadReceiptCta;
+
+  /// No description provided for @orderTrackCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'تتبع الطلب'**
+  String get orderTrackCta;
+
+  /// No description provided for @orderCancelCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء الطلب'**
+  String get orderCancelCta;
+
+  /// No description provided for @orderCodNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستدفع نقداً عند توصيل طلبك.'**
+  String get orderCodNote;
+
+  /// No description provided for @orderRejectedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر التحقق من الإيصال'**
+  String get orderRejectedTitle;
+
+  /// No description provided for @orderRejectedMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم نتمكن من قراءة المبلغ أو الرقم المرجعي. يرجى رفع صورة أوضح.'**
+  String get orderRejectedMessage;
+
+  /// No description provided for @orderRejectedNoteTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظة من فريق التحقق'**
+  String get orderRejectedNoteTitle;
+
+  /// No description provided for @orderCancelDialogTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء هذا الطلب؟'**
+  String get orderCancelDialogTitle;
+
+  /// No description provided for @orderCancelDialogBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يمكن التراجع عن هذا الإجراء. يمكنك إخبارنا بالسبب (اختياري).'**
+  String get orderCancelDialogBody;
+
+  /// No description provided for @orderCancelReasonHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'السبب (اختياري)'**
+  String get orderCancelReasonHint;
+
+  /// No description provided for @orderCancelConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء الطلب'**
+  String get orderCancelConfirm;
+
+  /// No description provided for @orderCancelKeep.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاحتفاظ بالطلب'**
+  String get orderCancelKeep;
+
+  /// No description provided for @orderCancelledToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إلغاء الطلب'**
+  String get orderCancelledToast;
+
+  /// No description provided for @uploadReceiptTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفع الإيصال'**
+  String get uploadReceiptTitle;
+
+  /// No description provided for @uploadAmountTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ المطلوب تحويله'**
+  String get uploadAmountTitle;
+
+  /// No description provided for @uploadRefShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'المرجع'**
+  String get uploadRefShort;
+
+  /// No description provided for @uploadTransferTo.
+  ///
+  /// In ar, this message translates to:
+  /// **'التحويل إلى'**
+  String get uploadTransferTo;
+
+  /// No description provided for @uploadBankLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'البنك'**
+  String get uploadBankLabel;
+
+  /// No description provided for @uploadReceiptPhoto.
+  ///
+  /// In ar, this message translates to:
+  /// **'صورة الإيصال'**
+  String get uploadReceiptPhoto;
+
+  /// No description provided for @uploadTakePhoto.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقط صورة الإيصال'**
+  String get uploadTakePhoto;
+
+  /// No description provided for @uploadPhotoHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكد من وضوح رقم المرجع والمبلغ والتاريخ'**
+  String get uploadPhotoHint;
+
+  /// No description provided for @uploadCamera.
+  ///
+  /// In ar, this message translates to:
+  /// **'كاميرا'**
+  String get uploadCamera;
+
+  /// No description provided for @uploadGallery.
+  ///
+  /// In ar, this message translates to:
+  /// **'من المعرض'**
+  String get uploadGallery;
+
+  /// No description provided for @uploadTip1.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصورة واضحة وغير مظلمة'**
+  String get uploadTip1;
+
+  /// No description provided for @uploadTip2.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم المرجع {ref} ظاهر'**
+  String uploadTip2(String ref);
+
+  /// No description provided for @uploadTip3.
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ يطابق الإجمالي'**
+  String get uploadTip3;
+
+  /// No description provided for @uploadSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال الإيصال للمراجعة'**
+  String get uploadSubmit;
+
+  /// No description provided for @uploadSubmitted.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم رفع الإيصال'**
+  String get uploadSubmitted;
+
+  /// No description provided for @receiptSubmittedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم استلام الإيصال'**
+  String get receiptSubmittedTitle;
+
+  /// No description provided for @receiptSubmittedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'نراجع إيصالك الآن. ستتلقى إشعاراً خلال ٥–١٥ دقيقة.'**
+  String get receiptSubmittedBody;
+
+  /// No description provided for @receiptStepOrderPlaced.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الطلب'**
+  String get receiptStepOrderPlaced;
+
+  /// No description provided for @receiptStepUnderReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get receiptStepUnderReview;
+
+  /// No description provided for @receiptStepConfirmed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤكد · قيد التجهيز'**
+  String get receiptStepConfirmed;
+
+  /// No description provided for @receiptStepPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد الانتظار'**
+  String get receiptStepPending;
+
+  /// No description provided for @trackingTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تتبع الطلب'**
+  String get trackingTitle;
+
+  /// No description provided for @trackingStatusLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحالة'**
+  String get trackingStatusLabel;
+
+  /// No description provided for @trackingProgressTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقدم'**
+  String get trackingProgressTitle;
+
+  /// No description provided for @trackingOrderLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الطلب'**
+  String get trackingOrderLabel;
+
+  /// No description provided for @trackingSupportBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'راسلنا على واتساب وسنساعدك في هذا الطلب.'**
+  String get trackingSupportBody;
+
+  /// No description provided for @trackingOnTheWay.
+  ///
+  /// In ar, this message translates to:
+  /// **'في الطريق إليك'**
+  String get trackingOnTheWay;
+
+  /// No description provided for @trackingPreparing.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري تجهيز طلبك'**
+  String get trackingPreparing;
+
+  /// No description provided for @trackingDeliveredHeadline.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التسليم'**
+  String get trackingDeliveredHeadline;
+
+  /// No description provided for @trackingConfirmedHeadline.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تأكيد الدفع'**
+  String get trackingConfirmedHeadline;
+
+  /// No description provided for @writeReviewRatingLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقييمك'**
+  String get writeReviewRatingLabel;
+
+  /// No description provided for @writeReviewRating1.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيء'**
+  String get writeReviewRating1;
+
+  /// No description provided for @writeReviewRating2.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقبول'**
+  String get writeReviewRating2;
+
+  /// No description provided for @writeReviewRating3.
+  ///
+  /// In ar, this message translates to:
+  /// **'جيد'**
+  String get writeReviewRating3;
+
+  /// No description provided for @writeReviewRating4.
+  ///
+  /// In ar, this message translates to:
+  /// **'جيد جداً'**
+  String get writeReviewRating4;
+
+  /// No description provided for @writeReviewRating5.
+  ///
+  /// In ar, this message translates to:
+  /// **'ممتاز'**
+  String get writeReviewRating5;
+
+  /// No description provided for @writeReviewTagsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما أعجبك؟'**
+  String get writeReviewTagsTitle;
+
+  /// No description provided for @writeReviewTag1.
+  ///
+  /// In ar, this message translates to:
+  /// **'يدوم طويلاً'**
+  String get writeReviewTag1;
+
+  /// No description provided for @writeReviewTag2.
+  ///
+  /// In ar, this message translates to:
+  /// **'رائحة قوية'**
+  String get writeReviewTag2;
+
+  /// No description provided for @writeReviewTag3.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغليف فاخر'**
+  String get writeReviewTag3;
+
+  /// No description provided for @writeReviewTag4.
+  ///
+  /// In ar, this message translates to:
+  /// **'توصيل سريع'**
+  String get writeReviewTag4;
+
+  /// No description provided for @writeReviewDetailsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل (اختياري)'**
+  String get writeReviewDetailsTitle;
+
+  /// No description provided for @writeReviewDetailsHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'شاركنا ما أعجبك أو ما يمكن تحسينه…'**
+  String get writeReviewDetailsHint;
+
+  /// No description provided for @writeReviewSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشر التقييم'**
+  String get writeReviewSubmit;
+
+  /// No description provided for @writeReviewVerifiedBuyer.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشتر موثّق'**
+  String get writeReviewVerifiedBuyer;
+
+  /// No description provided for @writeReviewRatingRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'اضغط نجمة للتقييم'**
+  String get writeReviewRatingRequired;
+
+  /// No description provided for @writeReviewSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال تقييمك — سيظهر بعد الموافقة عليه.'**
+  String get writeReviewSuccess;
+
+  /// No description provided for @commonContact.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل'**
+  String get commonContact;
 }
 
 class _L10nDelegate extends LocalizationsDelegate<L10n> {

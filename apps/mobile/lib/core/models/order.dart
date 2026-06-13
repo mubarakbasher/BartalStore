@@ -32,6 +32,33 @@ enum PaymentMethod {
       .firstWhere((m) => m.wire == value, orElse: () => PaymentMethod.bankTransfer);
 }
 
+enum PaymentStatus {
+  unpaid('UNPAID'),
+  paid('PAID'),
+  refunded('REFUNDED');
+
+  const PaymentStatus(this.wire);
+  final String wire;
+
+  static PaymentStatus fromWire(String? value) => PaymentStatus.values
+      .firstWhere((s) => s.wire == value, orElse: () => PaymentStatus.unpaid);
+}
+
+/// Statuses a customer may cancel from (mirrors the API state machine —
+/// `apps/api/.../helpers/state-machine.ts` `cancellableStatuses`).
+const _cancellableStatuses = {
+  OrderStatus.pending,
+  OrderStatus.awaitingPayment,
+  OrderStatus.receiptUploaded,
+};
+
+/// Statuses where a bank-transfer order accepts a (re-)uploaded receipt
+/// (mirrors the storage/receipt guards on the API).
+const _receiptUploadableStatuses = {
+  OrderStatus.awaitingPayment,
+  OrderStatus.paymentRejected,
+};
+
 /// `OrderView` wire shape (POST /orders, GET /orders/:id).
 class OrderView {
   const OrderView({
@@ -39,6 +66,7 @@ class OrderView {
     required this.orderNumber,
     required this.status,
     required this.paymentMethod,
+    required this.paymentStatus,
     required this.subtotal,
     required this.deliveryFee,
     required this.discount,
@@ -48,6 +76,7 @@ class OrderView {
     required this.address,
     required this.createdAt,
     required this.receiptUrl,
+    required this.cancellationReason,
   });
 
   factory OrderView.fromJson(Map<String, dynamic> json) => OrderView(
@@ -55,11 +84,13 @@ class OrderView {
         orderNumber: json['order_number'] as String? ?? '',
         status: OrderStatus.fromWire(json['status'] as String?),
         paymentMethod: PaymentMethod.fromWire(json['payment_method'] as String?),
+        paymentStatus: PaymentStatus.fromWire(json['payment_status'] as String?),
         subtotal: Money.parse(json['subtotal'] ?? 0),
         deliveryFee: Money.parse(json['delivery_fee'] ?? 0),
         discount: Money.parse(json['discount'] ?? 0),
         total: Money.parse(json['total'] ?? 0),
         receiptUrl: json['receipt_url'] as String?,
+        cancellationReason: json['cancellation_reason'] as String?,
         items: [
           for (final item in (json['items'] as List? ?? const []))
             OrderItem.fromJson(item as Map<String, dynamic>),
@@ -78,11 +109,13 @@ class OrderView {
   final String orderNumber;
   final OrderStatus status;
   final PaymentMethod paymentMethod;
+  final PaymentStatus paymentStatus;
   final Money subtotal;
   final Money deliveryFee;
   final Money discount;
   final Money total;
   final String? receiptUrl;
+  final String? cancellationReason;
   final List<OrderItem> items;
   final List<OrderStatusEvent> statusHistory;
   final OrderAddress? address;
@@ -90,6 +123,48 @@ class OrderView {
 
   int get itemCount => items.fold(0, (sum, item) => sum + item.quantity);
   String? get primaryImageUrl => items.isEmpty ? null : items.first.image;
+
+  bool get isBankTransfer => paymentMethod == PaymentMethod.bankTransfer;
+  bool get hasDiscount => discount > Money.zero;
+
+  /// The customer may cancel from PENDING / AWAITING_PAYMENT / RECEIPT_UPLOADED.
+  bool get canCancel => _cancellableStatuses.contains(status);
+
+  /// A bank-transfer order accepts a (re-)uploaded receipt only while
+  /// AWAITING_PAYMENT or PAYMENT_REJECTED — the server enforces the same.
+  bool get canUploadReceipt =>
+      isBankTransfer && _receiptUploadableStatuses.contains(status);
+
+  bool get isRejected => status == OrderStatus.paymentRejected;
+
+  /// "Track order" makes sense once the order is moving through fulfilment.
+  bool get isTrackable => const {
+        OrderStatus.paymentConfirmed,
+        OrderStatus.processing,
+        OrderStatus.shipped,
+        OrderStatus.delivered,
+      }.contains(status);
+
+  bool get isDelivered => status == OrderStatus.delivered;
+
+  /// The note the verification team left when rejecting payment — the latest
+  /// PAYMENT_REJECTED status-history event's note (the rejection reason).
+  String? get rejectionNote {
+    for (final event in statusHistory.reversed) {
+      if (event.status == OrderStatus.paymentRejected && (event.note?.isNotEmpty ?? false)) {
+        return event.note;
+      }
+    }
+    return cancellationReason;
+  }
+
+  /// When the receipt was last uploaded — the latest RECEIPT_UPLOADED event.
+  DateTime? get receiptUploadedAt {
+    for (final event in statusHistory.reversed) {
+      if (event.status == OrderStatus.receiptUploaded) return event.createdAt;
+    }
+    return null;
+  }
 }
 
 class OrderItem {

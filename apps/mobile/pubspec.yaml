@@ -31,6 +31,12 @@ dependencies:
   cupertino_icons: ^1.0.8
   path_drawing: ^1.0.1 # SVG path-data → ui.Path (design bundle ports)
 
+  # Receipt capture (Slice 4): pick from camera/gallery, then compress to WebP
+  # before upload — small payloads for 2G/3G (CLAUDE.md §2). Server re-encodes
+  # to WebP ≤200KB as a backstop.
+  image_picker: ^1.1.2
+  flutter_image_compress: ^2.3.0
+
   # Utils
   intl: any # pinned by flutter_localizations
   decimal: ^3.0.2
