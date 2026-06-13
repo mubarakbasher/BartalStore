@@ -392,4 +392,217 @@ class L10nEn extends L10n {
 
   @override
   String get errorsRateLimited => 'Too many attempts. Please wait a moment.';
+
+  @override
+  String get commonShow => 'Show';
+
+  @override
+  String get commonHide => 'Hide';
+
+  @override
+  String get commonOr => 'or';
+
+  @override
+  String get commonContinue => 'Continue';
+
+  @override
+  String get splashSubtitle => 'Sudan\'s digital souq';
+
+  @override
+  String get splashInitializing => 'initializing';
+
+  @override
+  String get onboardingSkip => 'Skip';
+
+  @override
+  String get onboardingStart => 'Start shopping';
+
+  @override
+  String get onboarding1Eyebrow => 'Shop';
+
+  @override
+  String get onboarding1Title => 'Everything Sudan sells — in one place.';
+
+  @override
+  String get onboarding1Body =>
+      'Fragrance, electronics, fashion, home. From trusted sellers across the country.';
+
+  @override
+  String get onboarding2Eyebrow => 'Pay';
+
+  @override
+  String get onboarding2Title =>
+      'Pay by bank transfer or cash. No cards needed.';
+
+  @override
+  String get onboarding2Body =>
+      'Faroo, Bank of Khartoum, EBS — or cash on delivery. Upload your receipt to confirm.';
+
+  @override
+  String get onboarding3Eyebrow => 'Track';
+
+  @override
+  String get onboarding3Title =>
+      'Delivery to every state. Track your order in real time.';
+
+  @override
+  String get onboarding3Body =>
+      'Khartoum, Omdurman, Bahri, Port Sudan, Atbara, and more. WhatsApp updates at every step.';
+
+  @override
+  String get welcomeBrandTagline => 'Everything you need · Sudan';
+
+  @override
+  String get welcomeTitle => 'Your portal for smart shopping.';
+
+  @override
+  String get welcomeBody =>
+      'Thousands of products, fast delivery across Khartoum, pay via any Sudanese bank.';
+
+  @override
+  String get welcomeCreateAccount => 'Create new account';
+
+  @override
+  String get welcomeSignIn => 'Sign in';
+
+  @override
+  String get welcomeTermsPrefix => 'By continuing you agree to our ';
+
+  @override
+  String get welcomeTermsLink => 'Terms & Privacy';
+
+  @override
+  String get loginEyebrow => 'Welcome back';
+
+  @override
+  String get loginTitle => 'Sign in to bartal.';
+
+  @override
+  String get loginWhatsappOtp => 'Get code via WhatsApp';
+
+  @override
+  String get loginNoAccount => 'Don\'t have an account? ';
+
+  @override
+  String get loginSignUpLink => 'Sign up';
+
+  @override
+  String authStepOf(String current, String total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get authSignIn => 'Sign in';
+
+  @override
+  String get authNewPassword => 'New password';
+
+  @override
+  String get authPhonePrefix => '+249';
+
+  @override
+  String get signupTitle => 'Create your account.';
+
+  @override
+  String get signupSubtitle => 'We\'ll send a verification code to your phone';
+
+  @override
+  String get signupTermsAgree =>
+      'I agree to bartal Terms of Service and Privacy Policy.';
+
+  @override
+  String get signupSendCode => 'Send verification code';
+
+  @override
+  String get signupHaveAccount => 'Have an account? ';
+
+  @override
+  String get pwStrengthWeak => 'Weak';
+
+  @override
+  String get pwStrengthFair => 'Fair';
+
+  @override
+  String get pwStrengthGood => 'Good';
+
+  @override
+  String get pwStrengthStrong => 'Strong';
+
+  @override
+  String pwStrengthLabel(String value) {
+    return 'Password strength: $value';
+  }
+
+  @override
+  String get pwRuleLength => 'At least 8 characters';
+
+  @override
+  String get pwRuleCase => 'Upper and lower case letter';
+
+  @override
+  String get pwRuleNumber => 'At least one number';
+
+  @override
+  String get pwRuleSymbol => 'Special character (!@#\$)';
+
+  @override
+  String get otpHeading => 'Enter verification code.';
+
+  @override
+  String otpResendCountdown(String time) {
+    return 'You can request a new code in $time';
+  }
+
+  @override
+  String get otpNotReceived => 'Not received?';
+
+  @override
+  String get otpTryWhatsapp => 'Try via WhatsApp';
+
+  @override
+  String get otpVerify => 'Verify & continue';
+
+  @override
+  String get otpSecureNote => 'Secure code · expires in 5 minutes';
+
+  @override
+  String get forgotEyebrow => 'Account recovery';
+
+  @override
+  String get forgotTitle => 'Forgot your password?';
+
+  @override
+  String get forgotBody =>
+      'Enter your phone number and we\'ll send a code to reset your password.';
+
+  @override
+  String get forgotChooseMethod => 'Choose delivery method';
+
+  @override
+  String get channelWhatsapp => 'WhatsApp';
+
+  @override
+  String get channelSms => 'SMS text';
+
+  @override
+  String get forgotSendCode => 'Send reset code';
+
+  @override
+  String get forgotRemembered => 'Remembered your password? ';
+
+  @override
+  String get forgotBackToSignIn => 'Back to sign in';
+
+  @override
+  String get resetTitle => 'Create a new password';
+
+  @override
+  String get resetBody =>
+      'Must differ from any previous password used on this account.';
+
+  @override
+  String get resetSave => 'Save password & sign in';
+
+  @override
+  String get resetSuccess => 'Password updated. Sign in now.';
 }

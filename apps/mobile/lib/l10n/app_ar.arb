@@ -160,5 +160,98 @@
   "errorsUnauthorized": "الرجاء تسجيل الدخول للمتابعة.",
   "errorsNotFound": "غير موجود.",
   "errorsValidation": "يرجى مراجعة الحقول المظللة.",
-  "errorsRateLimited": "محاولات كثيرة. الرجاء الانتظار قليلاً."
+  "errorsRateLimited": "محاولات كثيرة. الرجاء الانتظار قليلاً.",
+
+  "commonShow": "إظهار",
+  "commonHide": "إخفاء",
+  "commonOr": "أو",
+  "commonContinue": "متابعة",
+
+  "splashSubtitle": "سوق السودان الرقمي",
+  "splashInitializing": "جاري التهيئة",
+
+  "onboardingSkip": "تخطي",
+  "onboardingStart": "ابدأ التسوق",
+  "onboarding1Eyebrow": "شراء",
+  "onboarding1Title": "كل ما تحتاجه من سوق السودان، في مكان واحد.",
+  "onboarding1Body": "عطور، إلكترونيات، أزياء، منزل. من متاجر معروفة وبائعين موثوقين.",
+  "onboarding2Eyebrow": "ادفع",
+  "onboarding2Title": "حوّل بنكياً أو بكاش. بدون بطاقات.",
+  "onboarding2Body": "فارو، بنك الخرطوم، EBS — أو ادفع عند الاستلام. صوّر الإيصال لتأكيد الطلب.",
+  "onboarding3Eyebrow": "استلم",
+  "onboarding3Title": "توصيل لكل ولاية. تابع طلبك لحظة بلحظة.",
+  "onboarding3Body": "الخرطوم · أم درمان · بحري · بورتسودان · عطبرة · ومدن أخرى. تحديثات واتساب.",
+
+  "welcomeBrandTagline": "كل ما تحتاجه · السودان",
+  "welcomeTitle": "بوابتك للتسوق الذكي.",
+  "welcomeBody": "آلاف المنتجات، توصيل سريع عبر الخرطوم، دفع بأي بنك سوداني.",
+  "welcomeCreateAccount": "إنشاء حساب جديد",
+  "welcomeSignIn": "تسجيل الدخول",
+  "welcomeTermsPrefix": "بالمتابعة، أنت توافق على ",
+  "welcomeTermsLink": "الشروط والخصوصية",
+
+  "loginEyebrow": "مرحبا بعودتك",
+  "loginTitle": "سجل دخولك إلى برتال.",
+  "loginWhatsappOtp": "استلام رمز عبر واتساب",
+  "loginNoAccount": "ليس لديك حساب؟ ",
+  "loginSignUpLink": "سجّل الآن",
+
+  "authStepOf": "الخطوة {current} من {total}",
+  "@authStepOf": {
+    "placeholders": {
+      "current": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
+  "authSignIn": "تسجيل الدخول",
+  "authNewPassword": "كلمة المرور الجديدة",
+  "authPhonePrefix": "+249",
+
+  "signupTitle": "أنشئ حسابك.",
+  "signupSubtitle": "سنرسل رمز تحقق إلى رقم هاتفك",
+  "signupTermsAgree": "أوافق على الشروط والأحكام وسياسة الخصوصية الخاصة ببرتال.",
+  "signupSendCode": "إرسال رمز التحقق",
+  "signupHaveAccount": "لديك حساب؟ ",
+
+  "pwStrengthWeak": "ضعيفة",
+  "pwStrengthFair": "مقبولة",
+  "pwStrengthGood": "جيدة",
+  "pwStrengthStrong": "قوية",
+  "pwStrengthLabel": "قوة كلمة المرور: {value}",
+  "@pwStrengthLabel": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "pwRuleLength": "٨ أحرف على الأقل",
+  "pwRuleCase": "حرف كبير وحرف صغير",
+  "pwRuleNumber": "رقم واحد على الأقل",
+  "pwRuleSymbol": "رمز خاص (!@#$)",
+
+  "otpHeading": "أدخل رمز التحقق.",
+  "otpResendCountdown": "يمكنك طلب رمز جديد خلال {time}",
+  "@otpResendCountdown": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "otpNotReceived": "لم يصلك؟",
+  "otpTryWhatsapp": "جرّب عبر واتساب",
+  "otpVerify": "تحقق ومتابعة",
+  "otpSecureNote": "رمز آمن · سينتهي خلال ٥ دقائق",
+
+  "forgotEyebrow": "استعادة الحساب",
+  "forgotTitle": "نسيت كلمة المرور؟",
+  "forgotBody": "أدخل رقم هاتفك، وسنرسل رمزاً لإعادة تعيين كلمة المرور.",
+  "forgotChooseMethod": "اختر طريقة الاستلام",
+  "channelWhatsapp": "واتساب",
+  "channelSms": "رسالة SMS",
+  "forgotSendCode": "أرسل رمز التحقق",
+  "forgotRemembered": "تذكّرت كلمة المرور؟ ",
+  "forgotBackToSignIn": "عد لتسجيل الدخول",
+
+  "resetTitle": "أنشئ كلمة مرور جديدة",
+  "resetBody": "يجب أن تختلف عن كلمات المرور السابقة المستخدمة في حسابك.",
+  "resetSave": "حفظ كلمة المرور والدخول",
+  "resetSuccess": "تم تحديث كلمة المرور. سجّل دخولك الآن."
 }

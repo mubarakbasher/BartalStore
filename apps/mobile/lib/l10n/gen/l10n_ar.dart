@@ -391,4 +391,215 @@ class L10nAr extends L10n {
 
   @override
   String get errorsRateLimited => 'محاولات كثيرة. الرجاء الانتظار قليلاً.';
+
+  @override
+  String get commonShow => 'إظهار';
+
+  @override
+  String get commonHide => 'إخفاء';
+
+  @override
+  String get commonOr => 'أو';
+
+  @override
+  String get commonContinue => 'متابعة';
+
+  @override
+  String get splashSubtitle => 'سوق السودان الرقمي';
+
+  @override
+  String get splashInitializing => 'جاري التهيئة';
+
+  @override
+  String get onboardingSkip => 'تخطي';
+
+  @override
+  String get onboardingStart => 'ابدأ التسوق';
+
+  @override
+  String get onboarding1Eyebrow => 'شراء';
+
+  @override
+  String get onboarding1Title => 'كل ما تحتاجه من سوق السودان، في مكان واحد.';
+
+  @override
+  String get onboarding1Body =>
+      'عطور، إلكترونيات، أزياء، منزل. من متاجر معروفة وبائعين موثوقين.';
+
+  @override
+  String get onboarding2Eyebrow => 'ادفع';
+
+  @override
+  String get onboarding2Title => 'حوّل بنكياً أو بكاش. بدون بطاقات.';
+
+  @override
+  String get onboarding2Body =>
+      'فارو، بنك الخرطوم، EBS — أو ادفع عند الاستلام. صوّر الإيصال لتأكيد الطلب.';
+
+  @override
+  String get onboarding3Eyebrow => 'استلم';
+
+  @override
+  String get onboarding3Title => 'توصيل لكل ولاية. تابع طلبك لحظة بلحظة.';
+
+  @override
+  String get onboarding3Body =>
+      'الخرطوم · أم درمان · بحري · بورتسودان · عطبرة · ومدن أخرى. تحديثات واتساب.';
+
+  @override
+  String get welcomeBrandTagline => 'كل ما تحتاجه · السودان';
+
+  @override
+  String get welcomeTitle => 'بوابتك للتسوق الذكي.';
+
+  @override
+  String get welcomeBody =>
+      'آلاف المنتجات، توصيل سريع عبر الخرطوم، دفع بأي بنك سوداني.';
+
+  @override
+  String get welcomeCreateAccount => 'إنشاء حساب جديد';
+
+  @override
+  String get welcomeSignIn => 'تسجيل الدخول';
+
+  @override
+  String get welcomeTermsPrefix => 'بالمتابعة، أنت توافق على ';
+
+  @override
+  String get welcomeTermsLink => 'الشروط والخصوصية';
+
+  @override
+  String get loginEyebrow => 'مرحبا بعودتك';
+
+  @override
+  String get loginTitle => 'سجل دخولك إلى برتال.';
+
+  @override
+  String get loginWhatsappOtp => 'استلام رمز عبر واتساب';
+
+  @override
+  String get loginNoAccount => 'ليس لديك حساب؟ ';
+
+  @override
+  String get loginSignUpLink => 'سجّل الآن';
+
+  @override
+  String authStepOf(String current, String total) {
+    return 'الخطوة $current من $total';
+  }
+
+  @override
+  String get authSignIn => 'تسجيل الدخول';
+
+  @override
+  String get authNewPassword => 'كلمة المرور الجديدة';
+
+  @override
+  String get authPhonePrefix => '+249';
+
+  @override
+  String get signupTitle => 'أنشئ حسابك.';
+
+  @override
+  String get signupSubtitle => 'سنرسل رمز تحقق إلى رقم هاتفك';
+
+  @override
+  String get signupTermsAgree =>
+      'أوافق على الشروط والأحكام وسياسة الخصوصية الخاصة ببرتال.';
+
+  @override
+  String get signupSendCode => 'إرسال رمز التحقق';
+
+  @override
+  String get signupHaveAccount => 'لديك حساب؟ ';
+
+  @override
+  String get pwStrengthWeak => 'ضعيفة';
+
+  @override
+  String get pwStrengthFair => 'مقبولة';
+
+  @override
+  String get pwStrengthGood => 'جيدة';
+
+  @override
+  String get pwStrengthStrong => 'قوية';
+
+  @override
+  String pwStrengthLabel(String value) {
+    return 'قوة كلمة المرور: $value';
+  }
+
+  @override
+  String get pwRuleLength => '٨ أحرف على الأقل';
+
+  @override
+  String get pwRuleCase => 'حرف كبير وحرف صغير';
+
+  @override
+  String get pwRuleNumber => 'رقم واحد على الأقل';
+
+  @override
+  String get pwRuleSymbol => 'رمز خاص (!@#\$)';
+
+  @override
+  String get otpHeading => 'أدخل رمز التحقق.';
+
+  @override
+  String otpResendCountdown(String time) {
+    return 'يمكنك طلب رمز جديد خلال $time';
+  }
+
+  @override
+  String get otpNotReceived => 'لم يصلك؟';
+
+  @override
+  String get otpTryWhatsapp => 'جرّب عبر واتساب';
+
+  @override
+  String get otpVerify => 'تحقق ومتابعة';
+
+  @override
+  String get otpSecureNote => 'رمز آمن · سينتهي خلال ٥ دقائق';
+
+  @override
+  String get forgotEyebrow => 'استعادة الحساب';
+
+  @override
+  String get forgotTitle => 'نسيت كلمة المرور؟';
+
+  @override
+  String get forgotBody =>
+      'أدخل رقم هاتفك، وسنرسل رمزاً لإعادة تعيين كلمة المرور.';
+
+  @override
+  String get forgotChooseMethod => 'اختر طريقة الاستلام';
+
+  @override
+  String get channelWhatsapp => 'واتساب';
+
+  @override
+  String get channelSms => 'رسالة SMS';
+
+  @override
+  String get forgotSendCode => 'أرسل رمز التحقق';
+
+  @override
+  String get forgotRemembered => 'تذكّرت كلمة المرور؟ ';
+
+  @override
+  String get forgotBackToSignIn => 'عد لتسجيل الدخول';
+
+  @override
+  String get resetTitle => 'أنشئ كلمة مرور جديدة';
+
+  @override
+  String get resetBody =>
+      'يجب أن تختلف عن كلمات المرور السابقة المستخدمة في حسابك.';
+
+  @override
+  String get resetSave => 'حفظ كلمة المرور والدخول';
+
+  @override
+  String get resetSuccess => 'تم تحديث كلمة المرور. سجّل دخولك الآن.';
 }

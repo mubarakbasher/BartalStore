@@ -834,6 +834,402 @@ abstract class L10n {
   /// In ar, this message translates to:
   /// **'محاولات كثيرة. الرجاء الانتظار قليلاً.'**
   String get errorsRateLimited;
+
+  /// No description provided for @commonShow.
+  ///
+  /// In ar, this message translates to:
+  /// **'إظهار'**
+  String get commonShow;
+
+  /// No description provided for @commonHide.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء'**
+  String get commonHide;
+
+  /// No description provided for @commonOr.
+  ///
+  /// In ar, this message translates to:
+  /// **'أو'**
+  String get commonOr;
+
+  /// No description provided for @commonContinue.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة'**
+  String get commonContinue;
+
+  /// No description provided for @splashSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سوق السودان الرقمي'**
+  String get splashSubtitle;
+
+  /// No description provided for @splashInitializing.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري التهيئة'**
+  String get splashInitializing;
+
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In ar, this message translates to:
+  /// **'تخطي'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingStart.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ التسوق'**
+  String get onboardingStart;
+
+  /// No description provided for @onboarding1Eyebrow.
+  ///
+  /// In ar, this message translates to:
+  /// **'شراء'**
+  String get onboarding1Eyebrow;
+
+  /// No description provided for @onboarding1Title.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل ما تحتاجه من سوق السودان، في مكان واحد.'**
+  String get onboarding1Title;
+
+  /// No description provided for @onboarding1Body.
+  ///
+  /// In ar, this message translates to:
+  /// **'عطور، إلكترونيات، أزياء، منزل. من متاجر معروفة وبائعين موثوقين.'**
+  String get onboarding1Body;
+
+  /// No description provided for @onboarding2Eyebrow.
+  ///
+  /// In ar, this message translates to:
+  /// **'ادفع'**
+  String get onboarding2Eyebrow;
+
+  /// No description provided for @onboarding2Title.
+  ///
+  /// In ar, this message translates to:
+  /// **'حوّل بنكياً أو بكاش. بدون بطاقات.'**
+  String get onboarding2Title;
+
+  /// No description provided for @onboarding2Body.
+  ///
+  /// In ar, this message translates to:
+  /// **'فارو، بنك الخرطوم، EBS — أو ادفع عند الاستلام. صوّر الإيصال لتأكيد الطلب.'**
+  String get onboarding2Body;
+
+  /// No description provided for @onboarding3Eyebrow.
+  ///
+  /// In ar, this message translates to:
+  /// **'استلم'**
+  String get onboarding3Eyebrow;
+
+  /// No description provided for @onboarding3Title.
+  ///
+  /// In ar, this message translates to:
+  /// **'توصيل لكل ولاية. تابع طلبك لحظة بلحظة.'**
+  String get onboarding3Title;
+
+  /// No description provided for @onboarding3Body.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخرطوم · أم درمان · بحري · بورتسودان · عطبرة · ومدن أخرى. تحديثات واتساب.'**
+  String get onboarding3Body;
+
+  /// No description provided for @welcomeBrandTagline.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل ما تحتاجه · السودان'**
+  String get welcomeBrandTagline;
+
+  /// No description provided for @welcomeTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'بوابتك للتسوق الذكي.'**
+  String get welcomeTitle;
+
+  /// No description provided for @welcomeBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'آلاف المنتجات، توصيل سريع عبر الخرطوم، دفع بأي بنك سوداني.'**
+  String get welcomeBody;
+
+  /// No description provided for @welcomeCreateAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنشاء حساب جديد'**
+  String get welcomeCreateAccount;
+
+  /// No description provided for @welcomeSignIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الدخول'**
+  String get welcomeSignIn;
+
+  /// No description provided for @welcomeTermsPrefix.
+  ///
+  /// In ar, this message translates to:
+  /// **'بالمتابعة، أنت توافق على '**
+  String get welcomeTermsPrefix;
+
+  /// No description provided for @welcomeTermsLink.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشروط والخصوصية'**
+  String get welcomeTermsLink;
+
+  /// No description provided for @loginEyebrow.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرحبا بعودتك'**
+  String get loginEyebrow;
+
+  /// No description provided for @loginTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل دخولك إلى برتال.'**
+  String get loginTitle;
+
+  /// No description provided for @loginWhatsappOtp.
+  ///
+  /// In ar, this message translates to:
+  /// **'استلام رمز عبر واتساب'**
+  String get loginWhatsappOtp;
+
+  /// No description provided for @loginNoAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'ليس لديك حساب؟ '**
+  String get loginNoAccount;
+
+  /// No description provided for @loginSignUpLink.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجّل الآن'**
+  String get loginSignUpLink;
+
+  /// No description provided for @authStepOf.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخطوة {current} من {total}'**
+  String authStepOf(String current, String total);
+
+  /// No description provided for @authSignIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الدخول'**
+  String get authSignIn;
+
+  /// No description provided for @authNewPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الجديدة'**
+  String get authNewPassword;
+
+  /// No description provided for @authPhonePrefix.
+  ///
+  /// In ar, this message translates to:
+  /// **'+249'**
+  String get authPhonePrefix;
+
+  /// No description provided for @signupTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنشئ حسابك.'**
+  String get signupTitle;
+
+  /// No description provided for @signupSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سنرسل رمز تحقق إلى رقم هاتفك'**
+  String get signupSubtitle;
+
+  /// No description provided for @signupTermsAgree.
+  ///
+  /// In ar, this message translates to:
+  /// **'أوافق على الشروط والأحكام وسياسة الخصوصية الخاصة ببرتال.'**
+  String get signupTermsAgree;
+
+  /// No description provided for @signupSendCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال رمز التحقق'**
+  String get signupSendCode;
+
+  /// No description provided for @signupHaveAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'لديك حساب؟ '**
+  String get signupHaveAccount;
+
+  /// No description provided for @pwStrengthWeak.
+  ///
+  /// In ar, this message translates to:
+  /// **'ضعيفة'**
+  String get pwStrengthWeak;
+
+  /// No description provided for @pwStrengthFair.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقبولة'**
+  String get pwStrengthFair;
+
+  /// No description provided for @pwStrengthGood.
+  ///
+  /// In ar, this message translates to:
+  /// **'جيدة'**
+  String get pwStrengthGood;
+
+  /// No description provided for @pwStrengthStrong.
+  ///
+  /// In ar, this message translates to:
+  /// **'قوية'**
+  String get pwStrengthStrong;
+
+  /// No description provided for @pwStrengthLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'قوة كلمة المرور: {value}'**
+  String pwStrengthLabel(String value);
+
+  /// No description provided for @pwRuleLength.
+  ///
+  /// In ar, this message translates to:
+  /// **'٨ أحرف على الأقل'**
+  String get pwRuleLength;
+
+  /// No description provided for @pwRuleCase.
+  ///
+  /// In ar, this message translates to:
+  /// **'حرف كبير وحرف صغير'**
+  String get pwRuleCase;
+
+  /// No description provided for @pwRuleNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم واحد على الأقل'**
+  String get pwRuleNumber;
+
+  /// No description provided for @pwRuleSymbol.
+  ///
+  /// In ar, this message translates to:
+  /// **'رمز خاص (!@#\$)'**
+  String get pwRuleSymbol;
+
+  /// No description provided for @otpHeading.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رمز التحقق.'**
+  String get otpHeading;
+
+  /// No description provided for @otpResendCountdown.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكنك طلب رمز جديد خلال {time}'**
+  String otpResendCountdown(String time);
+
+  /// No description provided for @otpNotReceived.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يصلك؟'**
+  String get otpNotReceived;
+
+  /// No description provided for @otpTryWhatsapp.
+  ///
+  /// In ar, this message translates to:
+  /// **'جرّب عبر واتساب'**
+  String get otpTryWhatsapp;
+
+  /// No description provided for @otpVerify.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحقق ومتابعة'**
+  String get otpVerify;
+
+  /// No description provided for @otpSecureNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'رمز آمن · سينتهي خلال ٥ دقائق'**
+  String get otpSecureNote;
+
+  /// No description provided for @forgotEyebrow.
+  ///
+  /// In ar, this message translates to:
+  /// **'استعادة الحساب'**
+  String get forgotEyebrow;
+
+  /// No description provided for @forgotTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسيت كلمة المرور؟'**
+  String get forgotTitle;
+
+  /// No description provided for @forgotBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رقم هاتفك، وسنرسل رمزاً لإعادة تعيين كلمة المرور.'**
+  String get forgotBody;
+
+  /// No description provided for @forgotChooseMethod.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر طريقة الاستلام'**
+  String get forgotChooseMethod;
+
+  /// No description provided for @channelWhatsapp.
+  ///
+  /// In ar, this message translates to:
+  /// **'واتساب'**
+  String get channelWhatsapp;
+
+  /// No description provided for @channelSms.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسالة SMS'**
+  String get channelSms;
+
+  /// No description provided for @forgotSendCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرسل رمز التحقق'**
+  String get forgotSendCode;
+
+  /// No description provided for @forgotRemembered.
+  ///
+  /// In ar, this message translates to:
+  /// **'تذكّرت كلمة المرور؟ '**
+  String get forgotRemembered;
+
+  /// No description provided for @forgotBackToSignIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'عد لتسجيل الدخول'**
+  String get forgotBackToSignIn;
+
+  /// No description provided for @resetTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنشئ كلمة مرور جديدة'**
+  String get resetTitle;
+
+  /// No description provided for @resetBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يجب أن تختلف عن كلمات المرور السابقة المستخدمة في حسابك.'**
+  String get resetBody;
+
+  /// No description provided for @resetSave.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ كلمة المرور والدخول'**
+  String get resetSave;
+
+  /// No description provided for @resetSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديث كلمة المرور. سجّل دخولك الآن.'**
+  String get resetSuccess;
 }
 
 class _L10nDelegate extends LocalizationsDelegate<L10n> {
