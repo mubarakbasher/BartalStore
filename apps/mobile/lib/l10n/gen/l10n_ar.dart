@@ -1193,4 +1193,351 @@ class L10nAr extends L10n {
 
   @override
   String get commonContact => 'تواصل';
+
+  @override
+  String get profileVerified => 'موثّق';
+
+  @override
+  String profileMemberSince(String year) {
+    return 'عضو منذ $year';
+  }
+
+  @override
+  String get profileStatOrders => 'طلب';
+
+  @override
+  String get profileStatWishlist => 'مفضلة';
+
+  @override
+  String get profileStatPoints => 'نقاط';
+
+  @override
+  String get profileSectionOrders => 'طلباتي ومدفوعاتي';
+
+  @override
+  String get profileSectionAccount => 'الحساب';
+
+  @override
+  String get profileSectionPreferences => 'التفضيلات';
+
+  @override
+  String get profileSectionSupport => 'الدعم';
+
+  @override
+  String get profileMyOrders => 'طلباتي';
+
+  @override
+  String get profileMyAddresses => 'عناويني';
+
+  @override
+  String profileAddressesCount(String count) {
+    return '$count محفوظة';
+  }
+
+  @override
+  String get profilePersonalInfo => 'المعلومات الشخصية';
+
+  @override
+  String get profilePersonalInfoSub => 'الاسم، الهاتف، البريد';
+
+  @override
+  String get profileSecurity => 'الأمان';
+
+  @override
+  String get profileSecuritySub => 'كلمة المرور';
+
+  @override
+  String get profileSettingsSub => 'اللغة، الإشعارات، المظهر';
+
+  @override
+  String get profileWishlist => 'المفضلة';
+
+  @override
+  String profileWishlistSub(String count) {
+    return '$count منتجات';
+  }
+
+  @override
+  String get profileHelpCenter => 'مركز المساعدة';
+
+  @override
+  String get profileWhatsappSupport => 'تواصل عبر واتساب';
+
+  @override
+  String get profileAbout => 'عن برتال';
+
+  @override
+  String get profileFooter => 'صنع في السودان ❤';
+
+  @override
+  String profileVersionLine(String version) {
+    return 'برتال $version';
+  }
+
+  @override
+  String get editProfileName => 'الاسم الكامل';
+
+  @override
+  String get editProfilePhoneVerified => 'تم التحقق ✓';
+
+  @override
+  String get editProfileEmail => 'البريد الإلكتروني';
+
+  @override
+  String get editProfileDob => 'تاريخ الميلاد';
+
+  @override
+  String get editProfileDobHint => 'اختر التاريخ';
+
+  @override
+  String get editProfileGender => 'الجنس';
+
+  @override
+  String get genderMale => 'ذكر';
+
+  @override
+  String get genderFemale => 'أنثى';
+
+  @override
+  String get genderOther => 'آخر';
+
+  @override
+  String get editProfileSave => 'حفظ التغييرات';
+
+  @override
+  String get editProfileSaved => 'تم حفظ التغييرات';
+
+  @override
+  String get editProfileEmailInvalid => 'بريد إلكتروني غير صالح';
+
+  @override
+  String get changePwTitle => 'تغيير كلمة المرور';
+
+  @override
+  String get changePwIntro =>
+      'يجب أن تكون كلمة المرور ٨ أحرف على الأقل وتحتوي على رقم.';
+
+  @override
+  String get changePwCurrent => 'كلمة المرور الحالية';
+
+  @override
+  String get changePwNew => 'كلمة المرور الجديدة';
+
+  @override
+  String get changePwConfirm => 'تأكيد كلمة المرور الجديدة';
+
+  @override
+  String get changePwForgot => 'نسيت كلمة المرور الحالية؟';
+
+  @override
+  String get changePwSubmit => 'تحديث كلمة المرور';
+
+  @override
+  String get changePwMismatch => 'كلمتا المرور غير متطابقتين';
+
+  @override
+  String get changePwSuccessTitle => 'تم تغيير كلمة المرور';
+
+  @override
+  String get changePwSuccessBody =>
+      'يرجى تسجيل الدخول مرة أخرى بكلمة المرور الجديدة.';
+
+  @override
+  String get addressesTitle => 'عناويني';
+
+  @override
+  String get addressesIntro => 'عيّن عنواناً افتراضياً للتسليم السريع.';
+
+  @override
+  String get addressDefault => 'افتراضي';
+
+  @override
+  String get addressSetDefaultAction => 'تعيين كافتراضي';
+
+  @override
+  String get addressDeleteConfirmTitle => 'حذف العنوان؟';
+
+  @override
+  String get addressDeleteConfirmBody => 'لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get addressDeleted => 'تم حذف العنوان';
+
+  @override
+  String get addressEditTitle => 'تعديل العنوان';
+
+  @override
+  String get addressSaveChanges => 'حفظ التغييرات';
+
+  @override
+  String get settingsSectionLanguage => 'اللغة والمنطقة';
+
+  @override
+  String get settingsLanguage => 'اللغة';
+
+  @override
+  String get settingsLanguageArabic => 'العربية';
+
+  @override
+  String get settingsLanguageEnglish => 'English';
+
+  @override
+  String get settingsCurrency => 'العملة';
+
+  @override
+  String get settingsCurrencyValue => 'الجنيه السوداني (ج.س)';
+
+  @override
+  String get settingsNumerals => 'الأرقام';
+
+  @override
+  String get settingsNumeralsArabic => 'عربية (٠-٩)';
+
+  @override
+  String get settingsNumeralsWestern => 'غربية (123)';
+
+  @override
+  String get settingsSectionAppearance => 'المظهر';
+
+  @override
+  String get settingsDarkMode => 'الوضع الداكن';
+
+  @override
+  String get settingsOn => 'مفعّل';
+
+  @override
+  String get settingsOff => 'مطفأ';
+
+  @override
+  String get settingsTextSize => 'حجم الخط';
+
+  @override
+  String get settingsTextSizeValue => 'متوسط';
+
+  @override
+  String get settingsSectionNotifications => 'الإشعارات';
+
+  @override
+  String get settingsNotifOrders => 'تحديثات الطلبات';
+
+  @override
+  String get settingsNotifOrdersSub => 'SMS + إشعارات التطبيق';
+
+  @override
+  String get settingsNotifWhatsapp => 'تنبيهات واتساب';
+
+  @override
+  String get settingsNotifWhatsappSub => 'تأكيد الإيصال والتوصيل';
+
+  @override
+  String get settingsNotifOffers => 'العروض والتخفيضات';
+
+  @override
+  String get settingsNotifOffersSub => 'بريد إلكتروني فقط';
+
+  @override
+  String get settingsNotifRecommendations => 'توصيات المنتجات';
+
+  @override
+  String get settingsSectionPrivacy => 'الخصوصية';
+
+  @override
+  String get settingsMyData => 'بياناتي';
+
+  @override
+  String get settingsMyDataSub => 'تنزيل أو حذف';
+
+  @override
+  String get settingsActiveSessions => 'الجلسات النشطة';
+
+  @override
+  String get settingsSignOutAll => 'تسجيل الخروج من كل الأجهزة';
+
+  @override
+  String get settingsSectionAbout => 'عن التطبيق';
+
+  @override
+  String get settingsVersion => 'الإصدار';
+
+  @override
+  String get settingsTerms => 'شروط الاستخدام';
+
+  @override
+  String get settingsPrivacyPolicy => 'سياسة الخصوصية';
+
+  @override
+  String get settingsComingSoon => 'قريباً';
+
+  @override
+  String notificationsUnread(String count) {
+    return '$count غير مقروءة';
+  }
+
+  @override
+  String get notificationsMarkAllRead => 'تحديد الكل كمقروء';
+
+  @override
+  String get notificationsAllRead => 'تم تحديد الكل كمقروء';
+
+  @override
+  String get helpTitle => 'مركز المساعدة';
+
+  @override
+  String get helpSearchHint => 'ابحث في الأسئلة الشائعة';
+
+  @override
+  String get helpWhatsappTitle => 'تواصل عبر واتساب';
+
+  @override
+  String get helpWhatsappSub => 'الرد خلال ١٥ دقيقة · ٨ص-١٠م';
+
+  @override
+  String get helpBrowseTopics => 'تصفح حسب الموضوع';
+
+  @override
+  String get helpTopicOrders => 'الطلبات والتوصيل';
+
+  @override
+  String get helpTopicPayment => 'الدفع والإيصالات';
+
+  @override
+  String get helpTopicReturns => 'الإرجاع والاستبدال';
+
+  @override
+  String get helpTopicAccount => 'الحساب والأمان';
+
+  @override
+  String helpTopicArticles(String count) {
+    return '$count مقالات';
+  }
+
+  @override
+  String get helpMostAsked => 'الأكثر شيوعاً';
+
+  @override
+  String get helpQ1 => 'كيف أرفع إيصال التحويل البنكي؟';
+
+  @override
+  String get helpA1 =>
+      'بعد إتمام التحويل، افتح «طلباتي» ← اختر الطلب ← اضغط «رفع الإيصال». يقبل التطبيق صور JPG و PNG حتى ١٠ ميجا.';
+
+  @override
+  String get helpQ2 => 'متى يتم اعتماد الإيصال؟';
+
+  @override
+  String get helpA2 =>
+      'عادةً خلال ٥–١٥ دقيقة في ساعات العمل. ستصلك رسالة عند التأكيد.';
+
+  @override
+  String get helpQ3 => 'ما هي رسوم التوصيل؟';
+
+  @override
+  String get helpA3 =>
+      'تعتمد على منطقتك في الخرطوم، وتظهر عند الدفع. التوصيل مجاني فوق حد معيّن.';
+
+  @override
+  String get helpQ4 => 'هل يمكنني الإرجاع بعد التسليم؟';
+
+  @override
+  String get helpA4 => 'نعم، تواصل معنا عبر واتساب خلال ٤٨ ساعة من الاستلام.';
 }

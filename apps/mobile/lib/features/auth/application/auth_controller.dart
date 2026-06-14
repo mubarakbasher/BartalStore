@@ -120,6 +120,34 @@ class AuthController extends AsyncNotifier<AuthState> {
     }
   }
 
+  /// Update the profile (`PUT /users/me`) and reflect it in the session.
+  /// Throws [ApiException] (e.g. EMAIL_EXISTS) for the caller to surface.
+  Future<void> updateProfile({
+    String? name,
+    String? email,
+    String? language,
+    DateTime? dateOfBirth,
+    bool clearDateOfBirth = false,
+    String? gender,
+  }) async {
+    final updated = await _api.updateProfile(
+      name: name,
+      email: email,
+      language: language,
+      dateOfBirth: dateOfBirth,
+      clearDateOfBirth: clearDateOfBirth,
+      gender: gender,
+    );
+    state = AsyncData(Authenticated(updated));
+  }
+
+  /// Change the password. The server revokes all refresh tokens, so the caller
+  /// must follow a success with [logout] + a re-login prompt. Throws
+  /// [ApiException] (e.g. INVALID_CURRENT_PASSWORD) on failure.
+  Future<void> changePassword({required String currentPassword, required String newPassword}) {
+    return _api.changePassword(currentPassword: currentPassword, newPassword: newPassword);
+  }
+
   Future<void> _storeSession(AuthSession session) async {
     await ref.read(tokenStorageProvider).save(
           accessToken: session.tokens.accessToken,

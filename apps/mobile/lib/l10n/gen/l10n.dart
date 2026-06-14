@@ -2340,6 +2340,666 @@ abstract class L10n {
   /// In ar, this message translates to:
   /// **'تواصل'**
   String get commonContact;
+
+  /// No description provided for @profileVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'موثّق'**
+  String get profileVerified;
+
+  /// No description provided for @profileMemberSince.
+  ///
+  /// In ar, this message translates to:
+  /// **'عضو منذ {year}'**
+  String profileMemberSince(String year);
+
+  /// No description provided for @profileStatOrders.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب'**
+  String get profileStatOrders;
+
+  /// No description provided for @profileStatWishlist.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفضلة'**
+  String get profileStatWishlist;
+
+  /// No description provided for @profileStatPoints.
+  ///
+  /// In ar, this message translates to:
+  /// **'نقاط'**
+  String get profileStatPoints;
+
+  /// No description provided for @profileSectionOrders.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلباتي ومدفوعاتي'**
+  String get profileSectionOrders;
+
+  /// No description provided for @profileSectionAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب'**
+  String get profileSectionAccount;
+
+  /// No description provided for @profileSectionPreferences.
+  ///
+  /// In ar, this message translates to:
+  /// **'التفضيلات'**
+  String get profileSectionPreferences;
+
+  /// No description provided for @profileSectionSupport.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدعم'**
+  String get profileSectionSupport;
+
+  /// No description provided for @profileMyOrders.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلباتي'**
+  String get profileMyOrders;
+
+  /// No description provided for @profileMyAddresses.
+  ///
+  /// In ar, this message translates to:
+  /// **'عناويني'**
+  String get profileMyAddresses;
+
+  /// No description provided for @profileAddressesCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} محفوظة'**
+  String profileAddressesCount(String count);
+
+  /// No description provided for @profilePersonalInfo.
+  ///
+  /// In ar, this message translates to:
+  /// **'المعلومات الشخصية'**
+  String get profilePersonalInfo;
+
+  /// No description provided for @profilePersonalInfoSub.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم، الهاتف، البريد'**
+  String get profilePersonalInfoSub;
+
+  /// No description provided for @profileSecurity.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأمان'**
+  String get profileSecurity;
+
+  /// No description provided for @profileSecuritySub.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور'**
+  String get profileSecuritySub;
+
+  /// No description provided for @profileSettingsSub.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللغة، الإشعارات، المظهر'**
+  String get profileSettingsSub;
+
+  /// No description provided for @profileWishlist.
+  ///
+  /// In ar, this message translates to:
+  /// **'المفضلة'**
+  String get profileWishlist;
+
+  /// No description provided for @profileWishlistSub.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} منتجات'**
+  String profileWishlistSub(String count);
+
+  /// No description provided for @profileHelpCenter.
+  ///
+  /// In ar, this message translates to:
+  /// **'مركز المساعدة'**
+  String get profileHelpCenter;
+
+  /// No description provided for @profileWhatsappSupport.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل عبر واتساب'**
+  String get profileWhatsappSupport;
+
+  /// No description provided for @profileAbout.
+  ///
+  /// In ar, this message translates to:
+  /// **'عن برتال'**
+  String get profileAbout;
+
+  /// No description provided for @profileFooter.
+  ///
+  /// In ar, this message translates to:
+  /// **'صنع في السودان ❤'**
+  String get profileFooter;
+
+  /// No description provided for @profileVersionLine.
+  ///
+  /// In ar, this message translates to:
+  /// **'برتال {version}'**
+  String profileVersionLine(String version);
+
+  /// No description provided for @editProfileName.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم الكامل'**
+  String get editProfileName;
+
+  /// No description provided for @editProfilePhoneVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التحقق ✓'**
+  String get editProfilePhoneVerified;
+
+  /// No description provided for @editProfileEmail.
+  ///
+  /// In ar, this message translates to:
+  /// **'البريد الإلكتروني'**
+  String get editProfileEmail;
+
+  /// No description provided for @editProfileDob.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ الميلاد'**
+  String get editProfileDob;
+
+  /// No description provided for @editProfileDobHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر التاريخ'**
+  String get editProfileDobHint;
+
+  /// No description provided for @editProfileGender.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجنس'**
+  String get editProfileGender;
+
+  /// No description provided for @genderMale.
+  ///
+  /// In ar, this message translates to:
+  /// **'ذكر'**
+  String get genderMale;
+
+  /// No description provided for @genderFemale.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنثى'**
+  String get genderFemale;
+
+  /// No description provided for @genderOther.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر'**
+  String get genderOther;
+
+  /// No description provided for @editProfileSave.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ التغييرات'**
+  String get editProfileSave;
+
+  /// No description provided for @editProfileSaved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حفظ التغييرات'**
+  String get editProfileSaved;
+
+  /// No description provided for @editProfileEmailInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'بريد إلكتروني غير صالح'**
+  String get editProfileEmailInvalid;
+
+  /// No description provided for @changePwTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير كلمة المرور'**
+  String get changePwTitle;
+
+  /// No description provided for @changePwIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'يجب أن تكون كلمة المرور ٨ أحرف على الأقل وتحتوي على رقم.'**
+  String get changePwIntro;
+
+  /// No description provided for @changePwCurrent.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الحالية'**
+  String get changePwCurrent;
+
+  /// No description provided for @changePwNew.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الجديدة'**
+  String get changePwNew;
+
+  /// No description provided for @changePwConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد كلمة المرور الجديدة'**
+  String get changePwConfirm;
+
+  /// No description provided for @changePwForgot.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسيت كلمة المرور الحالية؟'**
+  String get changePwForgot;
+
+  /// No description provided for @changePwSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث كلمة المرور'**
+  String get changePwSubmit;
+
+  /// No description provided for @changePwMismatch.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمتا المرور غير متطابقتين'**
+  String get changePwMismatch;
+
+  /// No description provided for @changePwSuccessTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تغيير كلمة المرور'**
+  String get changePwSuccessTitle;
+
+  /// No description provided for @changePwSuccessBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى تسجيل الدخول مرة أخرى بكلمة المرور الجديدة.'**
+  String get changePwSuccessBody;
+
+  /// No description provided for @addressesTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'عناويني'**
+  String get addressesTitle;
+
+  /// No description provided for @addressesIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'عيّن عنواناً افتراضياً للتسليم السريع.'**
+  String get addressesIntro;
+
+  /// No description provided for @addressDefault.
+  ///
+  /// In ar, this message translates to:
+  /// **'افتراضي'**
+  String get addressDefault;
+
+  /// No description provided for @addressSetDefaultAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعيين كافتراضي'**
+  String get addressSetDefaultAction;
+
+  /// No description provided for @addressDeleteConfirmTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف العنوان؟'**
+  String get addressDeleteConfirmTitle;
+
+  /// No description provided for @addressDeleteConfirmBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يمكن التراجع عن هذا الإجراء.'**
+  String get addressDeleteConfirmBody;
+
+  /// No description provided for @addressDeleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حذف العنوان'**
+  String get addressDeleted;
+
+  /// No description provided for @addressEditTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل العنوان'**
+  String get addressEditTitle;
+
+  /// No description provided for @addressSaveChanges.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ التغييرات'**
+  String get addressSaveChanges;
+
+  /// No description provided for @settingsSectionLanguage.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللغة والمنطقة'**
+  String get settingsSectionLanguage;
+
+  /// No description provided for @settingsLanguage.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللغة'**
+  String get settingsLanguage;
+
+  /// No description provided for @settingsLanguageArabic.
+  ///
+  /// In ar, this message translates to:
+  /// **'العربية'**
+  String get settingsLanguageArabic;
+
+  /// No description provided for @settingsLanguageEnglish.
+  ///
+  /// In ar, this message translates to:
+  /// **'English'**
+  String get settingsLanguageEnglish;
+
+  /// No description provided for @settingsCurrency.
+  ///
+  /// In ar, this message translates to:
+  /// **'العملة'**
+  String get settingsCurrency;
+
+  /// No description provided for @settingsCurrencyValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجنيه السوداني (ج.س)'**
+  String get settingsCurrencyValue;
+
+  /// No description provided for @settingsNumerals.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأرقام'**
+  String get settingsNumerals;
+
+  /// No description provided for @settingsNumeralsArabic.
+  ///
+  /// In ar, this message translates to:
+  /// **'عربية (٠-٩)'**
+  String get settingsNumeralsArabic;
+
+  /// No description provided for @settingsNumeralsWestern.
+  ///
+  /// In ar, this message translates to:
+  /// **'غربية (123)'**
+  String get settingsNumeralsWestern;
+
+  /// No description provided for @settingsSectionAppearance.
+  ///
+  /// In ar, this message translates to:
+  /// **'المظهر'**
+  String get settingsSectionAppearance;
+
+  /// No description provided for @settingsDarkMode.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوضع الداكن'**
+  String get settingsDarkMode;
+
+  /// No description provided for @settingsOn.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفعّل'**
+  String get settingsOn;
+
+  /// No description provided for @settingsOff.
+  ///
+  /// In ar, this message translates to:
+  /// **'مطفأ'**
+  String get settingsOff;
+
+  /// No description provided for @settingsTextSize.
+  ///
+  /// In ar, this message translates to:
+  /// **'حجم الخط'**
+  String get settingsTextSize;
+
+  /// No description provided for @settingsTextSizeValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'متوسط'**
+  String get settingsTextSizeValue;
+
+  /// No description provided for @settingsSectionNotifications.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإشعارات'**
+  String get settingsSectionNotifications;
+
+  /// No description provided for @settingsNotifOrders.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديثات الطلبات'**
+  String get settingsNotifOrders;
+
+  /// No description provided for @settingsNotifOrdersSub.
+  ///
+  /// In ar, this message translates to:
+  /// **'SMS + إشعارات التطبيق'**
+  String get settingsNotifOrdersSub;
+
+  /// No description provided for @settingsNotifWhatsapp.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيهات واتساب'**
+  String get settingsNotifWhatsapp;
+
+  /// No description provided for @settingsNotifWhatsappSub.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الإيصال والتوصيل'**
+  String get settingsNotifWhatsappSub;
+
+  /// No description provided for @settingsNotifOffers.
+  ///
+  /// In ar, this message translates to:
+  /// **'العروض والتخفيضات'**
+  String get settingsNotifOffers;
+
+  /// No description provided for @settingsNotifOffersSub.
+  ///
+  /// In ar, this message translates to:
+  /// **'بريد إلكتروني فقط'**
+  String get settingsNotifOffersSub;
+
+  /// No description provided for @settingsNotifRecommendations.
+  ///
+  /// In ar, this message translates to:
+  /// **'توصيات المنتجات'**
+  String get settingsNotifRecommendations;
+
+  /// No description provided for @settingsSectionPrivacy.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخصوصية'**
+  String get settingsSectionPrivacy;
+
+  /// No description provided for @settingsMyData.
+  ///
+  /// In ar, this message translates to:
+  /// **'بياناتي'**
+  String get settingsMyData;
+
+  /// No description provided for @settingsMyDataSub.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنزيل أو حذف'**
+  String get settingsMyDataSub;
+
+  /// No description provided for @settingsActiveSessions.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجلسات النشطة'**
+  String get settingsActiveSessions;
+
+  /// No description provided for @settingsSignOutAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الخروج من كل الأجهزة'**
+  String get settingsSignOutAll;
+
+  /// No description provided for @settingsSectionAbout.
+  ///
+  /// In ar, this message translates to:
+  /// **'عن التطبيق'**
+  String get settingsSectionAbout;
+
+  /// No description provided for @settingsVersion.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإصدار'**
+  String get settingsVersion;
+
+  /// No description provided for @settingsTerms.
+  ///
+  /// In ar, this message translates to:
+  /// **'شروط الاستخدام'**
+  String get settingsTerms;
+
+  /// No description provided for @settingsPrivacyPolicy.
+  ///
+  /// In ar, this message translates to:
+  /// **'سياسة الخصوصية'**
+  String get settingsPrivacyPolicy;
+
+  /// No description provided for @settingsComingSoon.
+  ///
+  /// In ar, this message translates to:
+  /// **'قريباً'**
+  String get settingsComingSoon;
+
+  /// No description provided for @notificationsUnread.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} غير مقروءة'**
+  String notificationsUnread(String count);
+
+  /// No description provided for @notificationsMarkAllRead.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديد الكل كمقروء'**
+  String get notificationsMarkAllRead;
+
+  /// No description provided for @notificationsAllRead.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديد الكل كمقروء'**
+  String get notificationsAllRead;
+
+  /// No description provided for @helpTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مركز المساعدة'**
+  String get helpTitle;
+
+  /// No description provided for @helpSearchHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابحث في الأسئلة الشائعة'**
+  String get helpSearchHint;
+
+  /// No description provided for @helpWhatsappTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل عبر واتساب'**
+  String get helpWhatsappTitle;
+
+  /// No description provided for @helpWhatsappSub.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرد خلال ١٥ دقيقة · ٨ص-١٠م'**
+  String get helpWhatsappSub;
+
+  /// No description provided for @helpBrowseTopics.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصفح حسب الموضوع'**
+  String get helpBrowseTopics;
+
+  /// No description provided for @helpTopicOrders.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطلبات والتوصيل'**
+  String get helpTopicOrders;
+
+  /// No description provided for @helpTopicPayment.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدفع والإيصالات'**
+  String get helpTopicPayment;
+
+  /// No description provided for @helpTopicReturns.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإرجاع والاستبدال'**
+  String get helpTopicReturns;
+
+  /// No description provided for @helpTopicAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب والأمان'**
+  String get helpTopicAccount;
+
+  /// No description provided for @helpTopicArticles.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} مقالات'**
+  String helpTopicArticles(String count);
+
+  /// No description provided for @helpMostAsked.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأكثر شيوعاً'**
+  String get helpMostAsked;
+
+  /// No description provided for @helpQ1.
+  ///
+  /// In ar, this message translates to:
+  /// **'كيف أرفع إيصال التحويل البنكي؟'**
+  String get helpQ1;
+
+  /// No description provided for @helpA1.
+  ///
+  /// In ar, this message translates to:
+  /// **'بعد إتمام التحويل، افتح «طلباتي» ← اختر الطلب ← اضغط «رفع الإيصال». يقبل التطبيق صور JPG و PNG حتى ١٠ ميجا.'**
+  String get helpA1;
+
+  /// No description provided for @helpQ2.
+  ///
+  /// In ar, this message translates to:
+  /// **'متى يتم اعتماد الإيصال؟'**
+  String get helpQ2;
+
+  /// No description provided for @helpA2.
+  ///
+  /// In ar, this message translates to:
+  /// **'عادةً خلال ٥–١٥ دقيقة في ساعات العمل. ستصلك رسالة عند التأكيد.'**
+  String get helpA2;
+
+  /// No description provided for @helpQ3.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما هي رسوم التوصيل؟'**
+  String get helpQ3;
+
+  /// No description provided for @helpA3.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعتمد على منطقتك في الخرطوم، وتظهر عند الدفع. التوصيل مجاني فوق حد معيّن.'**
+  String get helpA3;
+
+  /// No description provided for @helpQ4.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل يمكنني الإرجاع بعد التسليم؟'**
+  String get helpQ4;
+
+  /// No description provided for @helpA4.
+  ///
+  /// In ar, this message translates to:
+  /// **'نعم، تواصل معنا عبر واتساب خلال ٤٨ ساعة من الاستلام.'**
+  String get helpA4;
 }
 
 class _L10nDelegate extends LocalizationsDelegate<L10n> {

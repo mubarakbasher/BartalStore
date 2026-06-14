@@ -22,6 +22,13 @@ class AddressApi {
     return parseEnvelope(response, (data) => Address.fromJson(data as Map<String, dynamic>));
   }
 
+  /// `PUT /users/me/addresses/:id` — partial update (all fields optional, but we
+  /// send the full form). `is_default:true` demotes the others server-side.
+  Future<Address> update(String id, AddressInput input) async {
+    final response = await _dio.put<dynamic>('${Endpoints.addresses}/$id', data: input.toJson());
+    return parseEnvelope(response, (data) => Address.fromJson(data as Map<String, dynamic>));
+  }
+
   Future<Address> setDefault(String id) async {
     final response = await _dio.put<dynamic>('${Endpoints.addresses}/$id/default');
     return parseEnvelope(response, (data) => Address.fromJson(data as Map<String, dynamic>));

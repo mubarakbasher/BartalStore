@@ -30,6 +30,8 @@ class AppPrefs {
 
   String? getString(String key) => _prefs.getString(key);
   Future<void> setString(String key, String value) => _prefs.setString(key, value);
+  bool getBool(String key, {required bool defaultValue}) => _prefs.getBool(key) ?? defaultValue;
+  Future<void> setBool(String key, bool value) => _prefs.setBool(key, value);
   Future<void> remove(String key) async {
     await _prefs.remove(key);
   }

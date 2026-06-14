@@ -108,6 +108,44 @@ class AuthApi {
     return parseEnvelope(response, (data) => User.fromJson(data as Map<String, dynamic>));
   }
 
+  /// `PUT /users/me` — partial update (phone is not updatable). Pass only the
+  /// changed fields; `clearDateOfBirth` sends `date_of_birth: null`.
+  /// Errors: `EMAIL_EXISTS` (409).
+  Future<User> updateProfile({
+    String? name,
+    String? email,
+    String? language,
+    DateTime? dateOfBirth,
+    bool clearDateOfBirth = false,
+    String? gender,
+  }) async {
+    final data = <String, dynamic>{};
+    if (name != null) data['name'] = name;
+    if (email != null) data['email'] = email;
+    if (language != null) data['language'] = language;
+    if (clearDateOfBirth) {
+      data['date_of_birth'] = null;
+    } else if (dateOfBirth != null) {
+      data['date_of_birth'] = dateOfBirth.toIso8601String();
+    }
+    if (gender != null) data['gender'] = gender;
+    final response = await _dio.put<dynamic>(Endpoints.me, data: data);
+    return parseEnvelope(response, (data) => User.fromJson(data as Map<String, dynamic>));
+  }
+
+  /// `POST /users/me/change-password`. Revokes all refresh tokens server-side
+  /// (the caller must re-login). Errors: `INVALID_CURRENT_PASSWORD` (401).
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final response = await _dio.post<dynamic>(
+      Endpoints.changePassword,
+      data: {'currentPassword': currentPassword, 'newPassword': newPassword},
+    );
+    parseEnvelope(response, (_) => null);
+  }
+
   static AuthSession _session(dynamic data) {
     final map = data as Map<String, dynamic>;
     return (

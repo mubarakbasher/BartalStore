@@ -1203,4 +1203,352 @@ class L10nEn extends L10n {
 
   @override
   String get commonContact => 'Contact';
+
+  @override
+  String get profileVerified => 'Verified';
+
+  @override
+  String profileMemberSince(String year) {
+    return 'Member since $year';
+  }
+
+  @override
+  String get profileStatOrders => 'Orders';
+
+  @override
+  String get profileStatWishlist => 'Wishlist';
+
+  @override
+  String get profileStatPoints => 'Points';
+
+  @override
+  String get profileSectionOrders => 'Orders & payments';
+
+  @override
+  String get profileSectionAccount => 'Account';
+
+  @override
+  String get profileSectionPreferences => 'Preferences';
+
+  @override
+  String get profileSectionSupport => 'Support';
+
+  @override
+  String get profileMyOrders => 'My orders';
+
+  @override
+  String get profileMyAddresses => 'My addresses';
+
+  @override
+  String profileAddressesCount(String count) {
+    return '$count saved';
+  }
+
+  @override
+  String get profilePersonalInfo => 'Personal info';
+
+  @override
+  String get profilePersonalInfoSub => 'Name, phone, email';
+
+  @override
+  String get profileSecurity => 'Security';
+
+  @override
+  String get profileSecuritySub => 'Password';
+
+  @override
+  String get profileSettingsSub => 'Language, notifications, theme';
+
+  @override
+  String get profileWishlist => 'Wishlist';
+
+  @override
+  String profileWishlistSub(String count) {
+    return '$count items';
+  }
+
+  @override
+  String get profileHelpCenter => 'Help center';
+
+  @override
+  String get profileWhatsappSupport => 'WhatsApp support';
+
+  @override
+  String get profileAbout => 'About Bartal';
+
+  @override
+  String get profileFooter => 'Made in Sudan ❤';
+
+  @override
+  String profileVersionLine(String version) {
+    return 'Bartal $version';
+  }
+
+  @override
+  String get editProfileName => 'Full name';
+
+  @override
+  String get editProfilePhoneVerified => 'Verified ✓';
+
+  @override
+  String get editProfileEmail => 'Email';
+
+  @override
+  String get editProfileDob => 'Date of birth';
+
+  @override
+  String get editProfileDobHint => 'Select date';
+
+  @override
+  String get editProfileGender => 'Gender';
+
+  @override
+  String get genderMale => 'Male';
+
+  @override
+  String get genderFemale => 'Female';
+
+  @override
+  String get genderOther => 'Other';
+
+  @override
+  String get editProfileSave => 'Save changes';
+
+  @override
+  String get editProfileSaved => 'Profile updated';
+
+  @override
+  String get editProfileEmailInvalid => 'Enter a valid email';
+
+  @override
+  String get changePwTitle => 'Change password';
+
+  @override
+  String get changePwIntro =>
+      'Password must be at least 8 characters and contain a number.';
+
+  @override
+  String get changePwCurrent => 'Current password';
+
+  @override
+  String get changePwNew => 'New password';
+
+  @override
+  String get changePwConfirm => 'Confirm new password';
+
+  @override
+  String get changePwForgot => 'Forgot current password?';
+
+  @override
+  String get changePwSubmit => 'Update password';
+
+  @override
+  String get changePwMismatch => 'Passwords don\'t match';
+
+  @override
+  String get changePwSuccessTitle => 'Password changed';
+
+  @override
+  String get changePwSuccessBody =>
+      'Please sign in again with your new password.';
+
+  @override
+  String get addressesTitle => 'My addresses';
+
+  @override
+  String get addressesIntro => 'Set a default for faster checkout.';
+
+  @override
+  String get addressDefault => 'Default';
+
+  @override
+  String get addressSetDefaultAction => 'Set default';
+
+  @override
+  String get addressDeleteConfirmTitle => 'Delete address?';
+
+  @override
+  String get addressDeleteConfirmBody => 'This can\'t be undone.';
+
+  @override
+  String get addressDeleted => 'Address deleted';
+
+  @override
+  String get addressEditTitle => 'Edit address';
+
+  @override
+  String get addressSaveChanges => 'Save changes';
+
+  @override
+  String get settingsSectionLanguage => 'Language & region';
+
+  @override
+  String get settingsLanguage => 'Language';
+
+  @override
+  String get settingsLanguageArabic => 'العربية';
+
+  @override
+  String get settingsLanguageEnglish => 'English';
+
+  @override
+  String get settingsCurrency => 'Currency';
+
+  @override
+  String get settingsCurrencyValue => 'Sudanese Pound (SDG)';
+
+  @override
+  String get settingsNumerals => 'Numerals';
+
+  @override
+  String get settingsNumeralsArabic => 'Arabic (٠-٩)';
+
+  @override
+  String get settingsNumeralsWestern => 'Western (123)';
+
+  @override
+  String get settingsSectionAppearance => 'Appearance';
+
+  @override
+  String get settingsDarkMode => 'Dark mode';
+
+  @override
+  String get settingsOn => 'On';
+
+  @override
+  String get settingsOff => 'Off';
+
+  @override
+  String get settingsTextSize => 'Text size';
+
+  @override
+  String get settingsTextSizeValue => 'Medium';
+
+  @override
+  String get settingsSectionNotifications => 'Notifications';
+
+  @override
+  String get settingsNotifOrders => 'Order updates';
+
+  @override
+  String get settingsNotifOrdersSub => 'SMS + push notifications';
+
+  @override
+  String get settingsNotifWhatsapp => 'WhatsApp alerts';
+
+  @override
+  String get settingsNotifWhatsappSub => 'Receipt & delivery confirmations';
+
+  @override
+  String get settingsNotifOffers => 'Offers & promotions';
+
+  @override
+  String get settingsNotifOffersSub => 'Email only';
+
+  @override
+  String get settingsNotifRecommendations => 'Product recommendations';
+
+  @override
+  String get settingsSectionPrivacy => 'Privacy';
+
+  @override
+  String get settingsMyData => 'My data';
+
+  @override
+  String get settingsMyDataSub => 'Download or delete';
+
+  @override
+  String get settingsActiveSessions => 'Active sessions';
+
+  @override
+  String get settingsSignOutAll => 'Sign out all devices';
+
+  @override
+  String get settingsSectionAbout => 'About';
+
+  @override
+  String get settingsVersion => 'Version';
+
+  @override
+  String get settingsTerms => 'Terms of service';
+
+  @override
+  String get settingsPrivacyPolicy => 'Privacy policy';
+
+  @override
+  String get settingsComingSoon => 'Soon';
+
+  @override
+  String notificationsUnread(String count) {
+    return '$count unread';
+  }
+
+  @override
+  String get notificationsMarkAllRead => 'Mark all read';
+
+  @override
+  String get notificationsAllRead => 'All marked as read';
+
+  @override
+  String get helpTitle => 'Help center';
+
+  @override
+  String get helpSearchHint => 'Search help articles';
+
+  @override
+  String get helpWhatsappTitle => 'Chat on WhatsApp';
+
+  @override
+  String get helpWhatsappSub => 'Reply within 15 min · 8am–10pm';
+
+  @override
+  String get helpBrowseTopics => 'Browse by topic';
+
+  @override
+  String get helpTopicOrders => 'Orders & delivery';
+
+  @override
+  String get helpTopicPayment => 'Payment & receipts';
+
+  @override
+  String get helpTopicReturns => 'Returns & refunds';
+
+  @override
+  String get helpTopicAccount => 'Account & security';
+
+  @override
+  String helpTopicArticles(String count) {
+    return '$count articles';
+  }
+
+  @override
+  String get helpMostAsked => 'Most asked';
+
+  @override
+  String get helpQ1 => 'How do I upload my bank transfer receipt?';
+
+  @override
+  String get helpA1 =>
+      'After the transfer, go to My orders → select the order → tap Upload receipt. JPG and PNG up to 10MB.';
+
+  @override
+  String get helpQ2 => 'When will my receipt be approved?';
+
+  @override
+  String get helpA2 =>
+      'Usually within 5–15 minutes during business hours. You\'ll get a message when it\'s confirmed.';
+
+  @override
+  String get helpQ3 => 'What are the delivery fees?';
+
+  @override
+  String get helpA3 =>
+      'They depend on your Khartoum zone and appear at checkout. Free delivery above a threshold.';
+
+  @override
+  String get helpQ4 => 'Can I return items after delivery?';
+
+  @override
+  String get helpA4 =>
+      'Yes — contact us on WhatsApp within 48 hours of delivery.';
 }

@@ -27,6 +27,14 @@ class AddressesController extends AsyncNotifier<List<Address>> {
     return created;
   }
 
+  /// Updates an address and returns it (the list refreshes). Named `editAddress`
+  /// to avoid clashing with [AsyncNotifier.update].
+  Future<Address> editAddress(String id, AddressInput input) async {
+    final updated = await _api.update(id, input);
+    state = AsyncData(await _api.list());
+    return updated;
+  }
+
   Future<void> setDefault(String id) async {
     await _api.setDefault(id);
     state = AsyncData(await _api.list());

@@ -2,7 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/models/address.dart';
 import '../features/address/presentation/add_address_screen.dart';
+import '../features/address/presentation/addresses_screen.dart';
 import '../features/auth/application/auth_controller.dart';
 import '../features/auth/data/auth_api.dart';
 import '../features/auth/presentation/forgot_password_screen.dart';
@@ -22,7 +24,9 @@ import '../features/checkout/presentation/checkout_bank_screen.dart';
 import '../features/checkout/presentation/checkout_payment_screen.dart';
 import '../features/checkout/presentation/checkout_review_screen.dart';
 import '../features/checkout/presentation/confirm_screen.dart';
+import '../features/help/presentation/help_screen.dart';
 import '../features/home/presentation/home_screen.dart';
+import '../features/notifications/presentation/notifications_screen.dart';
 import '../features/orders/presentation/order_detail_screen.dart';
 import '../features/orders/presentation/orders_screen.dart';
 import '../features/orders/presentation/receipt_submitted_screen.dart';
@@ -30,9 +34,12 @@ import '../features/orders/presentation/tracking_screen.dart';
 import '../features/orders/presentation/upload_receipt_screen.dart';
 import '../features/product/presentation/product_detail_screen.dart';
 import '../features/product/presentation/product_reviews_screen.dart';
+import '../features/profile/presentation/change_password_screen.dart';
+import '../features/profile/presentation/edit_profile_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
 import '../features/reviews/presentation/write_review_screen.dart';
 import '../features/settings/application/settings_controller.dart';
+import '../features/settings/presentation/settings_screen.dart';
 import '../features/wishlist/presentation/wishlist_screen.dart';
 import 'tab_shell.dart';
 
@@ -46,6 +53,9 @@ const _protectedPrefixes = [
   '/order-confirm',
   '/addresses',
   '/review',
+  '/settings',
+  '/notifications',
+  '/help',
 ];
 
 /// Routes an authenticated user shouldn't see.
@@ -202,6 +212,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(path: '/addresses/new', builder: (_, _) => const AddAddressScreen()),
+
+      // Account surface (Slice 5) — full-screen secondary routes.
+      GoRoute(path: '/addresses', builder: (_, _) => const AddressesScreen()),
+      GoRoute(
+        path: '/addresses/:id/edit',
+        builder: (_, state) =>
+            AddAddressScreen(initial: state.extra is Address ? state.extra as Address : null),
+      ),
+      GoRoute(path: '/profile/edit', builder: (_, _) => const EditProfileScreen()),
+      GoRoute(path: '/profile/change-password', builder: (_, _) => const ChangePasswordScreen()),
+      GoRoute(path: '/settings', builder: (_, _) => const SettingsScreen()),
+      GoRoute(path: '/notifications', builder: (_, _) => const NotificationsScreen()),
+      GoRoute(path: '/help', builder: (_, _) => const HelpFaqScreen()),
 
       // Order detail + the receipt / tracking flow (Slice 4).
       GoRoute(

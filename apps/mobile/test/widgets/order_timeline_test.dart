@@ -40,7 +40,7 @@ void main() {
   });
 
   test('orderEventTimeLabel localizes digits and drops same-day date', () {
-    final now = DateTime(2026, 6, 13, 18, 0);
+    final now = DateTime(2026, 6, 13, 18);
     final sameDay = DateTime(2026, 6, 13, 9, 5);
     expect(orderEventTimeLabel(sameDay, arabic: false, now: now), '09:05');
     expect(orderEventTimeLabel(sameDay, arabic: true, now: now), '٠٩:٠٥');

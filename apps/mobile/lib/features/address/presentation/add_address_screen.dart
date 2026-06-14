@@ -17,12 +17,16 @@ import '../../delivery/application/delivery_providers.dart';
 import '../application/addresses_controller.dart';
 import '../data/address_api.dart';
 
-/// Add-address form — port of profile-flow.jsx::AddAddressScreen. Landmark is
-/// required and amber-highlighted (Sudan has no postal codes). On save it
-/// creates the address and pops it back to the caller (the checkout address
-/// step selects it). Pulled forward from Slice 5 because checkout needs it.
+/// Add/edit-address form — port of profile-flow.jsx::AddAddressScreen. Landmark
+/// is required and amber-highlighted (Sudan has no postal codes). On save it
+/// creates (or, when [initial] is given, updates) the address and pops it back
+/// to the caller. Pulled forward from Slice 5 because checkout needs it; the
+/// edit-mode arrives in Slice 5.
 class AddAddressScreen extends ConsumerStatefulWidget {
-  const AddAddressScreen({super.key});
+  const AddAddressScreen({super.key, this.initial});
+
+  /// When non-null the form is in edit-mode (pre-filled; saves via update).
+  final Address? initial;
 
   @override
   ConsumerState<AddAddressScreen> createState() => _AddAddressScreenState();
@@ -43,6 +47,24 @@ class _AddAddressScreenState extends ConsumerState<AddAddressScreen> {
   String? _phoneError;
   String? _districtError;
   String? _landmarkError;
+
+  bool get _editing => widget.initial != null;
+
+  @override
+  void initState() {
+    super.initState();
+    final a = widget.initial;
+    if (a != null) {
+      _name.text = a.fullName;
+      _phone.text = a.phone;
+      _district.text = a.district;
+      _landmark.text = a.landmark;
+      _notes.text = a.deliveryNotes ?? '';
+      _label = a.label;
+      _zone = a.zone;
+      _isDefault = a.isDefault;
+    }
+  }
 
   @override
   void dispose() {
@@ -69,20 +91,22 @@ class _AddAddressScreenState extends ConsumerState<AddAddressScreen> {
     }
 
     setState(() => _submitting = true);
+    final input = AddressInput(
+      label: _label,
+      fullName: _name.text.trim(),
+      phone: normalized,
+      district: _district.text.trim(),
+      landmark: _landmark.text.trim(),
+      deliveryNotes: _notes.text.trim().isEmpty ? null : _notes.text.trim(),
+      zone: _zone,
+      isDefault: _isDefault,
+    );
     try {
-      final created = await ref.read(addressesControllerProvider.notifier).create(
-            AddressInput(
-              label: _label,
-              fullName: _name.text.trim(),
-              phone: normalized,
-              district: _district.text.trim(),
-              landmark: _landmark.text.trim(),
-              deliveryNotes: _notes.text.trim().isEmpty ? null : _notes.text.trim(),
-              zone: _zone,
-              isDefault: _isDefault,
-            ),
-          );
-      if (mounted) context.pop(created);
+      final notifier = ref.read(addressesControllerProvider.notifier);
+      final saved = _editing
+          ? await notifier.editAddress(widget.initial!.id, input)
+          : await notifier.create(input);
+      if (mounted) context.pop(saved);
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -103,7 +127,7 @@ class _AddAddressScreenState extends ConsumerState<AddAddressScreen> {
       backgroundColor: bartal.bg,
       body: Column(
         children: [
-          ScreenHeader(title: l10n.addressNewTitle),
+          ScreenHeader(title: _editing ? l10n.addressEditTitle : l10n.addressNewTitle),
           Expanded(
             child: ListView(
               padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 24),
@@ -259,7 +283,7 @@ class _AddAddressScreenState extends ConsumerState<AddAddressScreen> {
                 ),
                 const SizedBox(height: 20),
                 AppButton(
-                  label: l10n.addressSave,
+                  label: _editing ? l10n.addressSaveChanges : l10n.addressSave,
                   variant: AppButtonVariant.navy,
                   size: AppButtonSize.large,
                   expand: true,
