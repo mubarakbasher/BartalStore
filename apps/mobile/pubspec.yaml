@@ -37,6 +37,12 @@ dependencies:
   image_picker: ^1.1.2
   flutter_image_compress: ^2.3.0
 
+  # Push notifications (Slice 6b). Needs a Firebase project + a gitignored
+  # android/app/google-services.json (and iOS GoogleService-Info.plist) to
+  # build the Android/iOS app; init degrades to no-op if absent.
+  firebase_core: ^3.8.0
+  firebase_messaging: ^15.1.5
+
   # Utils
   intl: any # pinned by flutter_localizations
   decimal: ^3.0.2

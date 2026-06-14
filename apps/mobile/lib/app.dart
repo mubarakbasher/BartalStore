@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/notifications/push_controller.dart';
 import 'design/theme.dart';
 import 'features/auth/application/auth_controller.dart';
+import 'features/notifications/application/notifications_controller.dart';
 import 'features/settings/application/settings_controller.dart';
 import 'l10n/gen/l10n.dart';
 import 'router/app_router.dart';
@@ -18,15 +19,31 @@ class BartalApp extends ConsumerStatefulWidget {
   ConsumerState<BartalApp> createState() => _BartalAppState();
 }
 
-class _BartalAppState extends ConsumerState<BartalApp> {
+class _BartalAppState extends ConsumerState<BartalApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // Start FCM after the first frame so the tree (and router) exist.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(pushControllerProvider).init();
       _consumePendingDeepLink();
     });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState lifecycle) {
+    // Surface notifications the FCM background isolate persisted while we were
+    // backgrounded (they don't reach this isolate's prefs cache otherwise).
+    if (lifecycle == AppLifecycleState.resumed) {
+      ref.read(notificationsControllerProvider.notifier).reloadFromStore();
+    }
   }
 
   /// Navigate to a deep link captured before the tree was ready, but only once

@@ -6,6 +6,7 @@ import 'package:bartal_mobile/core/providers.dart';
 import 'package:bartal_mobile/core/storage/app_prefs.dart';
 import 'package:bartal_mobile/features/auth/data/auth_api.dart';
 import 'package:bartal_mobile/features/notifications/application/notifications_controller.dart';
+import 'package:bartal_mobile/features/notifications/data/notifications_store.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -121,6 +122,28 @@ void main() {
       // Persisted exactly once.
       final raw = prefs.getString('bartal_notifications');
       expect((jsonDecode(raw!) as List).length, 1);
+    });
+
+    test('reloadFromStore surfaces items written outside the controller', () async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await AppPrefs.load();
+      final container = ProviderContainer(
+        overrides: [appPrefsProvider.overrideWithValue(prefs)],
+      );
+      addTearDown(container.dispose);
+
+      final notifier = container.read(notificationsControllerProvider.notifier);
+      expect(container.read(notificationsControllerProvider), isEmpty);
+
+      // Simulate the FCM background isolate persisting a notification directly
+      // to the store, bypassing the in-memory controller state.
+      await NotificationsStore(prefs).save([
+        notificationItemFrom({'message_id': 'bg', 'title': 'Shipped'}, now: DateTime(2026, 6, 15)),
+      ]);
+      expect(container.read(notificationsControllerProvider), isEmpty); // still stale
+
+      await notifier.reloadFromStore();
+      expect(container.read(notificationsControllerProvider).map((n) => n.id).toList(), ['bg']);
     });
   });
 }

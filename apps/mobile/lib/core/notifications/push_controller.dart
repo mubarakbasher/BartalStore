@@ -16,8 +16,13 @@ final pendingDeepLinkProvider = StateProvider<String?>((ref) => null);
 
 /// Owns the live push wiring: foreground messages → the local inbox, taps →
 /// navigation, and FCM-token sync on refresh. Bound to the app lifetime
-/// ([BartalApp] reads it once and calls [init]).
-final pushControllerProvider = Provider<PushController>(PushController.new);
+/// ([BartalApp] reads it once and calls [init]); its stream subscriptions are
+/// cancelled when the container is disposed.
+final pushControllerProvider = Provider<PushController>((ref) {
+  final controller = PushController(ref);
+  ref.onDispose(controller.dispose);
+  return controller;
+});
 
 class PushController {
   PushController(this._ref);
@@ -71,7 +76,12 @@ class PushController {
   }
 
   void _onTokenRefresh(String token) {
-    _ref.read(authControllerProvider.notifier).syncFcmToken(token);
+    // Only register against a live session — the endpoint is auth-only, so a
+    // refresh while logged out would just fire a guaranteed-401 round-trip
+    // (the next login re-registers the current token anyway).
+    final auth = _ref.read(authControllerProvider.notifier);
+    if (!auth.isAuthenticated) return;
+    auth.syncFcmToken(token);
   }
 
   void dispose() {

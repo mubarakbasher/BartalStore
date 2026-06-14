@@ -5,6 +5,13 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// FCM (Slice 6b): apply Google Services only when the config is present, so the
+// app still builds without it (FcmPushService then degrades to a no-op at
+// runtime). Drop android/app/google-services.json in to activate FCM.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+}
+
 android {
     namespace = "sd.bartal.bartal_mobile"
     compileSdk = flutter.compileSdkVersion

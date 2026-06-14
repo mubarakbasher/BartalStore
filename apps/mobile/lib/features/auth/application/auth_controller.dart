@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -31,6 +29,14 @@ final authApiProvider = Provider<AuthApi>(
 
 class AuthController extends AsyncNotifier<AuthState> {
   AuthApi get _api => ref.read(authApiProvider);
+
+  /// Bumped on logout to invalidate an in-flight token registration that
+  /// resumes after the session ends (see [registerCurrentToken]).
+  int _authEpoch = 0;
+
+  /// The most recent in-flight [registerCurrentToken]; [logout] awaits it so
+  /// the unregister PUT is the backend's last fcm-token write.
+  Future<void>? _tokenRegistration;
 
   @override
   Future<AuthState> build() async {
@@ -100,8 +106,12 @@ class AuthController extends AsyncNotifier<AuthState> {
   }
 
   Future<void> logout() async {
-    // Unregister the FCM token while the session is still valid, so the backend
-    // stops pushing to this device.
+    // Invalidate any in-flight token registration and let it settle, then
+    // unregister while the session is still valid — so the null write is the
+    // backend's last fcm-token update and a logged-out device can't be left
+    // subscribed to the previous user's pushes.
+    _authEpoch++;
+    await _tokenRegistration;
     await syncFcmToken(null);
     try {
       await _api.logout();
@@ -130,9 +140,13 @@ class AuthController extends AsyncNotifier<AuthState> {
   /// app start once the session is known.
   Future<void> registerCurrentToken() async {
     if (!isAuthenticated) return;
+    final epoch = _authEpoch;
     try {
       final token = await ref.read(pushServiceProvider).getToken();
-      if (token != null) await syncFcmToken(token);
+      // A logout during the (possibly slow, 2G) token fetch invalidates this —
+      // don't re-register a token the logout just removed.
+      if (token == null || epoch != _authEpoch || !isAuthenticated) return;
+      await syncFcmToken(token);
     } catch (error) {
       debugPrint('fcm token read failed: $error');
     }
@@ -184,8 +198,9 @@ class AuthController extends AsyncNotifier<AuthState> {
     state = AsyncData(Authenticated(session.user));
     // The cart controller watches auth and merges any guest cart into the
     // server cart on this transition (see CartController.build).
-    // Push the FCM token for this device (best-effort, non-blocking).
-    unawaited(registerCurrentToken());
+    // Push the FCM token for this device (best-effort, non-blocking); logout
+    // awaits this handle so register/unregister can't race out of order.
+    _tokenRegistration = registerCurrentToken();
   }
 }
 

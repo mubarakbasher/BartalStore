@@ -14,6 +14,11 @@ class AppPrefs {
 
   static Future<AppPrefs> load() async => AppPrefs(await SharedPreferences.getInstance());
 
+  /// Re-read values from disk into the in-memory cache. Needed to pick up
+  /// writes made by another isolate (e.g. the FCM background handler writing
+  /// the notifications inbox while the app is backgrounded).
+  Future<void> reload() => _prefs.reload();
+
   /// AR is the default locale (CLAUDE.md §4 i18n).
   Locale get locale => Locale(_prefs.getString(_localeKey) ?? 'ar');
   Future<void> setLocale(Locale value) => _prefs.setString(_localeKey, value.languageCode);
