@@ -78,6 +78,9 @@ class _ShimmerState extends State<_Shimmer> with SingleTickerProviderStateMixin 
       animation: _controller,
       builder: (context, child) {
         final t = _controller.value;
+        // AlignmentDirectional gradients need the ambient TextDirection to
+        // resolve start/end; without it createShader throws during paint.
+        final textDirection = Directionality.of(context);
         return ShaderMask(
           blendMode: BlendMode.srcATop,
           shaderCallback: (bounds) {
@@ -87,7 +90,7 @@ class _ShimmerState extends State<_Shimmer> with SingleTickerProviderStateMixin 
               colors: [widget.base, widget.highlight, widget.base],
               stops: const [0.25, 0.5, 0.75],
               transform: _SlideGradientTransform(percent: (t * 4) - 2),
-            ).createShader(bounds);
+            ).createShader(bounds, textDirection: textDirection);
           },
           child: child,
         );

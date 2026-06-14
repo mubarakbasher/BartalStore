@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -98,6 +100,9 @@ class AuthController extends AsyncNotifier<AuthState> {
   }
 
   Future<void> logout() async {
+    // Unregister the FCM token while the session is still valid, so the backend
+    // stops pushing to this device.
+    await syncFcmToken(null);
     try {
       await _api.logout();
     } catch (error) {
@@ -108,6 +113,29 @@ class AuthController extends AsyncNotifier<AuthState> {
     state = const AsyncData(AuthGuest());
     // Drop the previous user's cart so a logged-out device starts clean.
     await ref.read(cartControllerProvider.notifier).clear();
+  }
+
+  /// Register (`token`) or unregister (`null`) the device's FCM token with the
+  /// backend. Best-effort: token sync must never block or fail auth.
+  Future<void> syncFcmToken(String? token) async {
+    try {
+      await _api.updateFcmToken(token);
+    } catch (error) {
+      debugPrint('fcm token sync failed: $error');
+    }
+  }
+
+  /// Read the current device token from the push service and register it.
+  /// No-op when push is unavailable (token null). Called after login and on
+  /// app start once the session is known.
+  Future<void> registerCurrentToken() async {
+    if (!isAuthenticated) return;
+    try {
+      final token = await ref.read(pushServiceProvider).getToken();
+      if (token != null) await syncFcmToken(token);
+    } catch (error) {
+      debugPrint('fcm token read failed: $error');
+    }
   }
 
   /// Re-fetch the profile (e.g. after the offline-boot null-user state).
@@ -156,6 +184,8 @@ class AuthController extends AsyncNotifier<AuthState> {
     state = AsyncData(Authenticated(session.user));
     // The cart controller watches auth and merges any guest cart into the
     // server cart on this transition (see CartController.build).
+    // Push the FCM token for this device (best-effort, non-blocking).
+    unawaited(registerCurrentToken());
   }
 }
 

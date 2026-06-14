@@ -12,6 +12,9 @@ class NotificationsController extends Notifier<List<NotificationItem>> {
   List<NotificationItem> build() => _store.load();
 
   Future<void> add(NotificationItem item) async {
+    // Ignore a message we already hold (a foreground add can race the
+    // background handler for the same FCM message id).
+    if (state.any((n) => n.id == item.id)) return;
     state = [item, ...state];
     await _store.save(state);
   }

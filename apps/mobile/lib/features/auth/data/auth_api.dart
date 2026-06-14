@@ -146,6 +146,16 @@ class AuthApi {
     parseEnvelope(response, (_) => null);
   }
 
+  /// `PUT /users/me/fcm-token` — register (`token`) or unregister (`null`) the
+  /// device's FCM token (DTO: `{ fcm_token: string|null }`, max 4096).
+  Future<void> updateFcmToken(String? token) async {
+    final response = await _dio.put<dynamic>(
+      Endpoints.fcmToken,
+      data: {'fcm_token': token},
+    );
+    parseEnvelope(response, (_) => null);
+  }
+
   static AuthSession _session(dynamic data) {
     final map = data as Map<String, dynamic>;
     return (
