@@ -92,7 +92,7 @@ class _HomeHeader extends ConsumerWidget {
                     BartalLogo(arabic: isAr, color: Colors.white, accent: BartalColors.amberSoft, size: 26),
                     const Spacer(),
                     _HeaderIconButton(
-                      onTap: () {},
+                      onTap: () => context.go('/cart'),
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: [
