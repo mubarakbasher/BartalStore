@@ -3,7 +3,7 @@
 # Built from the monorepo root: `docker build -f infra/docker/web.Dockerfile .`
 
 # ---- Builder ----
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /repo
 RUN corepack enable && corepack prepare pnpm@11.1.1 --activate
 
@@ -29,7 +29,7 @@ ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
 RUN pnpm --filter @bartal/web build
 
 # ---- Runtime (standalone) ----
-FROM node:20-alpine AS runtime
+FROM node:22-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production HOSTNAME=0.0.0.0 PORT=3000
 

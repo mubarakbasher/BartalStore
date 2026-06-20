@@ -2,12 +2,12 @@
 # Multi-stage production image for the Bartal API.
 # Built from the monorepo root: `docker build -f apps/api/Dockerfile .`
 #
-# Base: node:20-slim (Debian glibc), chosen over alpine because the API has NATIVE deps
+# Base: node:22-slim (Debian glibc), chosen over alpine because the API has NATIVE deps
 # (bcrypt ^5.1.1, sharp) whose prebuilt binaries don't cover musl/alpine — on alpine bcrypt
 # compiles from source and fails without a toolchain. glibc also gives Prisma a clean openssl.
 
 # ---- Builder ----
-FROM node:20-slim AS builder
+FROM node:22-slim AS builder
 WORKDIR /repo
 
 # openssl: Prisma's query engine links libssl. ca-certificates: outbound TLS during install.
@@ -30,7 +30,7 @@ RUN pnpm --filter @bartal/api prisma:generate     # prisma CLI present here (dev
 RUN pnpm --filter @bartal/api build
 
 # ---- Runtime ----
-FROM node:20-slim AS runtime
+FROM node:22-slim AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 
