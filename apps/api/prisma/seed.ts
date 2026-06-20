@@ -218,8 +218,14 @@ async function main() {
   await seedAdmin();
   await seedDeliveryZones();
   await seedAppSettings();
-  await seedCategories();
-  await seedProducts();
+  // Demo catalogue is opt-out: SEED_DEMO_DATA=false leaves an empty storefront,
+  // while admin + delivery zones + store settings are still seeded so the store works.
+  if (process.env.SEED_DEMO_DATA === 'false') {
+    console.log('• SEED_DEMO_DATA=false → skipping demo categories + products (empty catalogue)');
+  } else {
+    await seedCategories();
+    await seedProducts();
+  }
   console.log('Done.');
 }
 
