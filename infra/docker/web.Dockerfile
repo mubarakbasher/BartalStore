@@ -19,6 +19,8 @@ RUN pnpm install --frozen-lockfile
 # Sources needed to build web (+ the shared package it imports).
 COPY packages/shared ./packages/shared
 COPY apps/web ./apps/web
+# This app ships no public/ dir; create an empty one so the runtime stage's COPY always resolves.
+RUN mkdir -p apps/web/public
 RUN pnpm --filter @bartal/shared build
 
 # Build happens ON the VPS, so VPS_IP is known — bake the absolute, browser-reachable API base.
