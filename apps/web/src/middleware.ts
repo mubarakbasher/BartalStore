@@ -61,17 +61,20 @@ export async function middleware(req: NextRequest) {
   if (!tokens) return loginRedirect(req, locale);
 
   const next = NextResponse.next({ request: { headers } });
-  const isProd = process.env.NODE_ENV === 'production';
+  // Secure cookies in production, unless explicitly opted out (e.g. plain-HTTP test deploys
+  // where the browser would otherwise discard `secure` cookies). Default behavior unchanged.
+  const cookieSecure =
+    process.env.COOKIE_SECURE !== 'false' && process.env.NODE_ENV === 'production';
   next.cookies.set(ACCESS_COOKIE, tokens.accessToken, {
     httpOnly: true,
-    secure: isProd,
+    secure: cookieSecure,
     sameSite: 'lax',
     path: '/',
     maxAge: ACCESS_MAX_AGE,
   });
   next.cookies.set(REFRESH_COOKIE, tokens.refreshToken, {
     httpOnly: true,
-    secure: isProd,
+    secure: cookieSecure,
     sameSite: 'lax',
     path: '/',
     maxAge: REFRESH_MAX_AGE,

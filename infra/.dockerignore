@@ -1,0 +1,17 @@
+# Build-context trim. Copied to the repo root at deploy time (`cp infra/.dockerignore .dockerignore`).
+# NOTE: this only affects what gets baked into images / build-context size. It does NOT influence
+# Docker Compose's runtime ${...} interpolation of the repo-root .env — that hazard is handled by
+# running all prod compose commands from infra/ (see infra/deploy/README.md).
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+.git
+**/.env
+!**/.env.example
+!**/.env.production.example
+**/coverage
+**/.dev-storage
+apps/mobile
+docs
+*.png

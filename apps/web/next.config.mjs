@@ -1,6 +1,15 @@
 /** @type {import('next').NextConfig} */
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 const nextConfig = {
   reactStrictMode: true,
+  // Self-contained server output for a slim Docker runtime.
+  output: 'standalone',
+  // Trace from the monorepo root so the @bartal/shared pnpm symlink + its dist are bundled.
+  outputFileTracingRoot: join(__dirname, '../../'),
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60 * 60 * 24,

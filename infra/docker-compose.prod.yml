@@ -1,0 +1,128 @@
+# Bartal — per-port side-by-side TEST deployment.
+# Each surface publishes its own host port; Postgres/Redis stay internal-only.
+# Run ALL commands from infra/ so the repo-root dev .env is not picked up:
+#   C="docker compose -p bartal-test -f docker-compose.prod.yml --env-file ./.env.production"
+name: bartal-test
+
+networks:
+  bartal-test-net:
+    driver: bridge
+
+volumes:
+  bartal-test-pg: {}
+  bartal-test-redis: {}
+  bartal-test-storage: {}   # persists stub receipt/product uploads across rebuilds
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: bartal-postgres-test
+    restart: unless-stopped
+    networks: [bartal-test-net]
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - bartal-test-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    mem_limit: 512m
+    # ports: ["${PG_PORT:-55432}:5432"]   # uncomment ONLY for a direct DB GUI (non-default host port)
+
+  redis:
+    image: redis:7-alpine
+    container_name: bartal-redis-test
+    restart: unless-stopped
+    networks: [bartal-test-net]
+    volumes:
+      - bartal-test-redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    mem_limit: 256m
+
+  migrate:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+      target: builder            # builder stage has the prisma CLI + ts-node (for seeding)
+    container_name: bartal-migrate-test
+    networks: [bartal-test-net]
+    working_dir: /repo/apps/api
+    env_file: [./.env.production]   # DATABASE_URL + SEED_* present for migrate AND seed runs
+    command: ["pnpm", "--filter", "@bartal/api", "prisma:deploy"]   # = prisma migrate deploy (non-destructive)
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    mem_limit: 768m
+
+  api:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+      target: runtime
+    container_name: bartal-api-test
+    restart: unless-stopped
+    networks: [bartal-test-net]
+    env_file: [./.env.production]
+    ports:
+      - "${API_HTTP_PORT:-8081}:3001"
+    volumes:
+      - bartal-test-storage:/app/apps/api/.dev-storage   # stub uploads survive rebuilds
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3001/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 45s          # cold Nest + Prisma boot on a slow VPS
+    mem_limit: 768m
+
+  web:
+    build:
+      context: ..
+      dockerfile: infra/docker/web.Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+    container_name: bartal-web-test
+    restart: unless-stopped
+    networks: [bartal-test-net]
+    ports:
+      - "${WEB_HTTP_PORT:-8080}:3000"
+    # Uncomment if SSR fetches can't reach the host's published API port (Residual Risks #1):
+    # extra_hosts:
+    #   - "${VPS_IP}:host-gateway"
+    depends_on:
+      api:
+        condition: service_healthy
+    mem_limit: 768m
+
+  admin:
+    build:
+      context: ..
+      dockerfile: infra/docker/admin.Dockerfile
+      args:
+        VITE_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}   # same absolute API URL the web uses
+    container_name: bartal-admin-test
+    restart: unless-stopped
+    networks: [bartal-test-net]
+    ports:
+      - "${ADMIN_HTTP_PORT:-8082}:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    mem_limit: 128m
