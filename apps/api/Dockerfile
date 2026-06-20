@@ -47,12 +47,11 @@ COPY --from=builder /repo/apps/api/package.json apps/api/package.json
 COPY --from=builder /repo/apps/api/dist apps/api/dist
 COPY --from=builder /repo/apps/api/prisma apps/api/prisma
 
-# `--prod` drops the prisma devDep CLI, so DON'T run `prisma generate` here. Install prod deps
-# (bcrypt/sharp resolve from glibc prebuilts), then copy the already-generated Prisma client
-# forward from the builder so the runtime has the engine + generated client.
+# prisma is a prod dependency, so the CLI survives --prod. Install prod deps (bcrypt/sharp
+# resolve from glibc prebuilts), then generate the Prisma client in-place under the runtime's
+# own @prisma/client — robust across pnpm peer-hash dirs, unlike a cross-stage COPY.
 RUN pnpm install --prod --frozen-lockfile
-COPY --from=builder /repo/node_modules/.pnpm/@prisma+client* /app/node_modules/.pnpm/
-COPY --from=builder /repo/node_modules/.prisma /app/node_modules/.prisma
+RUN pnpm --filter @bartal/api prisma:generate
 
 EXPOSE 3001
 WORKDIR /app/apps/api
