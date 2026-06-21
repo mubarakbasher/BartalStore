@@ -25,6 +25,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build:shared
+      - run: pnpm --filter @bartal/api prisma:generate   # generate the Prisma client (types) before tsc/test
       - run: pnpm --filter @bartal/api exec tsc --noEmit
       - run: pnpm --filter @bartal/api lint
       - run: pnpm --filter @bartal/api test
@@ -110,5 +111,6 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build:shared
+      - run: pnpm --filter @bartal/api prisma:generate   # generate the Prisma client (types) before deploy/e2e
       - run: pnpm --filter @bartal/api prisma:deploy
       - run: pnpm --filter @bartal/api test:e2e
