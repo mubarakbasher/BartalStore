@@ -6,7 +6,8 @@
     <application
         android:label="bartal_mobile"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true"><!-- HTTP test deploy (API on http://IP:8081). Remove/scope to a domain once the API is HTTPS. -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
