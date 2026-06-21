@@ -108,6 +108,11 @@ jobs:
       OTP_TTL_SECONDS: '600'
       OTP_MAX_PER_WINDOW: '5'
       OTP_WINDOW_SECONDS: '900'
+      # admin.e2e logs in as the seeded admin (reads these same vars) and operates on seeded
+      # delivery zones + app settings, so the e2e DB must be seeded. DEMO_DATA off keeps it lean.
+      SEED_ADMIN_PHONE: '+249912000001'
+      SEED_ADMIN_PASSWORD: CiAdminPassword123
+      SEED_DEMO_DATA: 'false'
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable
@@ -119,4 +124,5 @@ jobs:
       - run: pnpm build:shared
       - run: pnpm --filter @bartal/api prisma:generate   # generate the Prisma client (types) before deploy/e2e
       - run: pnpm --filter @bartal/api prisma:deploy
+      - run: pnpm --filter @bartal/api prisma:seed   # admin + delivery zones + settings the admin e2e needs
       - run: pnpm --filter @bartal/api test:e2e
