@@ -101,13 +101,14 @@ services:
     container_name: bartal-web-test
     restart: unless-stopped
     networks: [bartal-test-net]
+    # SSR fetches the API server-side from INSIDE this container. Reach the api container
+    # directly over the Docker network (container→container) instead of hairpinning through
+    # the host's published port (which a host firewall can block). The browser still uses the
+    # public NEXT_PUBLIC_API_BASE_URL baked at build time.
+    environment:
+      API_INTERNAL_BASE_URL: ${API_INTERNAL_BASE_URL:-http://api:3001/api}
     ports:
       - "${WEB_HTTP_PORT:-8080}:3000"
-    # SSR runs inside this container and fetches the baked NEXT_PUBLIC_API_BASE_URL
-    # (http://VPS_IP:8081/api), which isn't routable from in-container — so map VPS_IP to the
-    # host gateway and the SSR calls hairpin out to the host's published API port.
-    extra_hosts:
-      - "${VPS_IP}:host-gateway"
     depends_on:
       api:
         condition: service_healthy

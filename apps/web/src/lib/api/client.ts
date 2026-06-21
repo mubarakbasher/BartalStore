@@ -1,7 +1,8 @@
 import axios, { AxiosError, type AxiosInstance } from 'axios';
 import type { ApiResponse, ApiSuccess } from '@bartal/shared';
+import { apiBaseUrl } from './base-url';
 
-const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:3001/api';
+const baseURL = apiBaseUrl();
 
 export const apiClient: AxiosInstance = axios.create({
   baseURL,

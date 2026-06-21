@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary, tt } from '@/lib/i18n/dictionary';
 import { apiGet } from '@/lib/api/client';
+import { apiBaseUrl } from '@/lib/api/base-url';
 import type { CategoryNode, Product } from '@/lib/api/types';
 import type { PaginationMeta } from '@bartal/shared';
 import { ProductCard } from '@/components/ProductCard';
@@ -44,10 +45,7 @@ export async function generateMetadata(props: ProductsPageProps): Promise<Metada
 
 async function fetchPage(locale: Locale, params: ProductsSearchParams) {
   const page = Number(params.page ?? '1') || 1;
-  const url = new URL(
-    'products',
-    (process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:3001/api') + '/',
-  );
+  const url = new URL('products', apiBaseUrl() + '/');
   const query: Record<string, string> = { limit: '24', page: String(page) };
   if (params.category) query.category = params.category;
   if (params.sort) query.sort = params.sort;

@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionary';
+import { apiBaseUrl } from '@/lib/api/base-url';
 import type { Product } from '@/lib/api/types';
 import type { PaginationMeta } from '@bartal/shared';
 import { ProductCard } from '@/components/ProductCard';
@@ -16,10 +17,7 @@ export const dynamic = 'force-dynamic';
 
 async function search(locale: Locale, q: string) {
   if (!q.trim()) return { products: [], meta: null };
-  const url = new URL(
-    'products/search',
-    (process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:3001/api') + '/',
-  );
+  const url = new URL('products/search', apiBaseUrl() + '/');
   url.searchParams.set('q', q);
   url.searchParams.set('limit', '24');
   try {

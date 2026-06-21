@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { apiBaseUrl } from '@/lib/api/base-url';
 
 const PROTECTED = /^\/(ar|en)\/(account|orders|wishlist|checkout)(\/.*)?$/;
 const ACCESS_COOKIE = 'bartal_access';
@@ -8,7 +9,7 @@ const ACCESS_MAX_AGE = 15 * 60;
 const REFRESH_MAX_AGE = 30 * 24 * 60 * 60;
 
 function apiBase(): string {
-  return process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:3001/api';
+  return apiBaseUrl();
 }
 
 function loginRedirect(req: NextRequest, locale: string): NextResponse {

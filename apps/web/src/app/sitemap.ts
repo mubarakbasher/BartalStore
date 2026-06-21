@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { apiGet } from '@/lib/api/client';
+import { apiBaseUrl } from '@/lib/api/base-url';
 import type { CategoryNode, Product } from '@/lib/api/types';
 import { SITE_URL, localizedHref } from '@/lib/seo/site';
 
@@ -39,7 +40,7 @@ function entry(path: string, lastModified?: Date | string): Page {
 
 async function fetchProducts(): Promise<Product[]> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:3001/api'}/products?limit=200`, {
+    const res = await fetch(`${apiBaseUrl()}/products?limit=200`, {
       next: { revalidate: 86_400 },
     });
     if (!res.ok) return [];

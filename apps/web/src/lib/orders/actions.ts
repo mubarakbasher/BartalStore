@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { apiPost, apiDelete } from '../api/client';
+import { apiBaseUrl } from '../api/base-url';
 import { readAccessToken } from '../auth/cookies';
 import { actionFail, type ActionResult } from '../api/action-result';
 import type { CreateOrderDto, OrderView } from '../api/types';
@@ -36,7 +37,7 @@ export async function placeOrderAction(
   }
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:3001/api';
+const API_BASE = apiBaseUrl();
 
 /**
  * Upload a receipt image (multipart → R2) then attach the returned key to the
