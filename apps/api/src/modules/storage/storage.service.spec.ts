@@ -70,7 +70,7 @@ describe('StorageService (stub mode)', () => {
           provide: ConfigService,
           useValue: {
             get: jest.fn((key: string) =>
-              key === 'port' ? 3001 : key === 'r2' ? STUB_R2 : STUB_R2,
+              key === 'port' ? 3001 : key === 'publicUrl' ? '' : STUB_R2,
             ),
           },
         },
