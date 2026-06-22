@@ -18,6 +18,7 @@ export const envSchema = z.object({
   BCRYPT_ROUNDS: z.coerce.number().int().min(8).max(15).default(12),
 
   // Optional in dev — features fail-soft if absent.
+  API_PUBLIC_URL: z.string().optional(),
   AT_USERNAME: z.string().optional(),
   AT_API_KEY: z.string().optional(),
   AT_SENDER_ID: z.string().optional(),

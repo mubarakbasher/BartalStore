@@ -57,7 +57,13 @@ export class StorageService implements OnModuleInit {
     this.stubMode = !this.r2Config.accessKeyId || !this.r2Config.accountId;
     const port = this.config.get<number>('port') ?? 3001;
     this.devDir = join(process.cwd(), '.dev-storage');
-    this.devBaseUrl = `http://localhost:${port}/api/storage/dev`;
+    // Stub images are stored as absolute URLs, so the base must be reachable from the BROWSER,
+    // not the API container. Use the configured public origin (e.g. http://VPS_IP:8081/api);
+    // fall back to localhost for local dev where the browser and API share a host.
+    const publicBase = (
+      this.config.get<string>('publicUrl') || `http://localhost:${port}/api`
+    ).replace(/\/$/, '');
+    this.devBaseUrl = `${publicBase}/storage/dev`;
     if (this.stubMode) {
       this.logger.warn(
         '[R2:STUB] Storage running in stub mode — uploads return fake keys (no R2 credentials).',

@@ -1,6 +1,9 @@
 export interface AppConfig {
   port: number;
   host: string;
+  /** Externally-reachable API origin incl. /api (e.g. http://VPS_IP:8081/api). Used to build
+   *  reachable URLs for locally-served (stub) images. Empty → falls back to localhost in dev. */
+  publicUrl: string;
   nodeEnv: 'development' | 'test' | 'production';
   corsOrigins: string[];
   database: { url: string };
@@ -42,6 +45,7 @@ const num = (value: string | undefined, fallback: number): number => {
 export default (): AppConfig => ({
   port: num(process.env.API_PORT, 3001),
   host: process.env.API_HOST ?? '0.0.0.0',
+  publicUrl: process.env.API_PUBLIC_URL ?? '',
   nodeEnv: (process.env.NODE_ENV as AppConfig['nodeEnv']) ?? 'development',
   corsOrigins: (process.env.CORS_ORIGINS ?? 'http://localhost:3000,http://localhost:5173')
     .split(',')

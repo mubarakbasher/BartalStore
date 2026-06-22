@@ -4,6 +4,20 @@ import { dirname, join } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// Let next/image load images served by the API host itself (local/stub storage mode), e.g.
+// http://VPS_IP:8081/api/storage/dev/... — derived from the build-time API URL so it tracks
+// whatever IP/port the deploy uses. No-op when the env var is unset/invalid (e.g. real R2/CDN).
+function apiImagePattern() {
+  const raw = process.env.NEXT_PUBLIC_API_BASE_URL;
+  if (!raw) return [];
+  try {
+    const u = new URL(raw);
+    return [{ protocol: u.protocol.replace(':', ''), hostname: u.hostname, ...(u.port ? { port: u.port } : {}) }];
+  } catch {
+    return [];
+  }
+}
+
 const nextConfig = {
   reactStrictMode: true,
   // Type-check + lint run in CI / local `next build`, NOT in the production image — the same
@@ -20,6 +34,7 @@ const nextConfig = {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60 * 60 * 24,
     remotePatterns: [
+      ...apiImagePattern(),
       { protocol: 'https', hostname: 'assets.bartal.sd' },
       { protocol: 'https', hostname: '*.r2.dev' },
       { protocol: 'http', hostname: 'localhost' },
