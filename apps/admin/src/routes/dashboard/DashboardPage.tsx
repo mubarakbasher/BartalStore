@@ -8,6 +8,7 @@ import { AdmCard } from '@/components/primitives/AdmCard';
 import { AdmStatCard } from '@/components/primitives/AdmStatCard';
 import { AdmStatusPill } from '@/components/primitives/AdmStatusPill';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
+import { AdmThumb } from '@/components/primitives/AdmThumb';
 import { PriceTag } from '@/components/primitives/PriceTag';
 import { fmtSDG } from '@/design/tokens';
 
@@ -132,10 +133,12 @@ export function DashboardPage() {
             <ul className="divide-y divide-line dark:divide-d-line">
               {data.top_products.slice(0, 6).map((p) => (
                 <li key={p.product_id} className="px-5 py-3 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-bartal bg-sand dark:bg-d-raised shrink-0 overflow-hidden">
-                    {p.image_url && (
-                      <img src={p.image_url} alt="" className="w-full h-full object-cover" />
-                    )}
+                  <div className="w-10 h-10 rounded-bartal shrink-0 overflow-hidden">
+                    <AdmThumb
+                      url={p.image_url}
+                      alt={locale === 'ar' ? p.name_ar : p.name_en}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-small font-semibold text-ink dark:text-d-text truncate">

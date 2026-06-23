@@ -9,6 +9,7 @@ import { AdmTextarea } from '@/components/primitives/AdmTextarea';
 import { AdmSelect } from '@/components/primitives/AdmSelect';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
+import { AdmConfirmDialog } from '@/components/primitives/AdmConfirmDialog';
 import { pushToast } from '@/components/primitives/toast-bus';
 import { ImageManager } from './ImageManager';
 import { useAdminCategories, useAdminProduct } from '@/lib/api/queries';
@@ -107,6 +108,7 @@ export function ProductFormPage() {
   const update = useUpdateProduct(id ?? '');
   const softDelete = useDeleteProduct(id ?? '');
   const [slugAuto, setSlugAuto] = useState(!isEdit);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const nameEn = watch('name_en');
   useEffect(() => {
@@ -155,10 +157,10 @@ export function ProductFormPage() {
 
   const onSoftDelete = async () => {
     if (!id || !product) return;
-    if (!window.confirm(dict.productForm.softDeleteConfirm)) return;
     try {
       await softDelete.mutateAsync();
       pushToast('success', dict.productForm.softDeleted);
+      setConfirmDelete(false);
       navigate('/products');
     } catch (err) {
       if (err instanceof ApiClientError) {
@@ -222,7 +224,7 @@ export function ProductFormPage() {
             <AdmButton
               type="button"
               variant="danger"
-              onClick={onSoftDelete}
+              onClick={() => setConfirmDelete(true)}
               disabled={softDelete.isPending}
             >
               {dict.productForm.softDelete}
@@ -249,7 +251,7 @@ export function ProductFormPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
                 <label htmlFor="name_ar" className="block text-small font-semibold text-ink dark:text-d-text mb-1.5">
-                  {dict.productForm.fields.nameAr}
+                  {dict.productForm.fields.nameAr} <span className="text-danger">*</span>
                 </label>
                 <AdmInput id="name_ar" dir="rtl" {...register('name_ar')} invalid={Boolean(errors.name_ar)} />
                 {errors.name_ar && (
@@ -258,7 +260,7 @@ export function ProductFormPage() {
               </div>
               <div>
                 <label htmlFor="name_en" className="block text-small font-semibold text-ink dark:text-d-text mb-1.5">
-                  {dict.productForm.fields.nameEn}
+                  {dict.productForm.fields.nameEn} <span className="text-danger">*</span>
                 </label>
                 <AdmInput id="name_en" dir="ltr" {...register('name_en')} invalid={Boolean(errors.name_en)} />
                 {errors.name_en && (
@@ -270,7 +272,7 @@ export function ProductFormPage() {
             <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
                 <label htmlFor="slug" className="block text-small font-semibold text-ink dark:text-d-text mb-1.5">
-                  {dict.productForm.fields.slug}
+                  {dict.productForm.fields.slug} <span className="text-danger">*</span>
                 </label>
                 <div className="flex items-center gap-2">
                   <AdmInput
@@ -299,13 +301,13 @@ export function ProductFormPage() {
             <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
                 <label htmlFor="description_ar" className="block text-small font-semibold text-ink dark:text-d-text mb-1.5">
-                  {dict.productForm.fields.descriptionAr}
+                  {dict.productForm.fields.descriptionAr} <span className="text-danger">*</span>
                 </label>
                 <AdmTextarea id="description_ar" dir="rtl" {...register('description_ar')} invalid={Boolean(errors.description_ar)} />
               </div>
               <div>
                 <label htmlFor="description_en" className="block text-small font-semibold text-ink dark:text-d-text mb-1.5">
-                  {dict.productForm.fields.descriptionEn}
+                  {dict.productForm.fields.descriptionEn} <span className="text-danger">*</span>
                 </label>
                 <AdmTextarea id="description_en" dir="ltr" {...register('description_en')} invalid={Boolean(errors.description_en)} />
               </div>
@@ -344,7 +346,7 @@ export function ProductFormPage() {
             <div className="space-y-3">
               <div>
                 <label htmlFor="price" className="block text-small font-semibold text-ink dark:text-d-text mb-1.5">
-                  {dict.productForm.fields.price}
+                  {dict.productForm.fields.price} <span className="text-danger">*</span>
                 </label>
                 <AdmInput id="price" type="number" min={0} step="0.01" {...register('price')} invalid={Boolean(errors.price)} />
                 {errors.price && (
@@ -359,7 +361,7 @@ export function ProductFormPage() {
               </div>
               <div>
                 <label htmlFor="stock" className="block text-small font-semibold text-ink dark:text-d-text mb-1.5">
-                  {locale === 'ar' ? 'المخزون' : 'Stock'}
+                  {locale === 'ar' ? 'المخزون' : 'Stock'} <span className="text-danger">*</span>
                 </label>
                 <AdmInput id="stock" type="number" min={0} step="1" {...register('stock')} invalid={Boolean(errors.stock)} />
                 {errors.stock && (
@@ -380,7 +382,7 @@ export function ProductFormPage() {
               {dict.productForm.sections.organization}
             </div>
             <label htmlFor="category_id" className="block text-small font-semibold text-ink dark:text-d-text mb-1.5">
-              {dict.productForm.fields.category}
+              {dict.productForm.fields.category} <span className="text-danger">*</span>
             </label>
             <AdmSelect id="category_id" {...register('category_id')} invalid={Boolean(errors.category_id)}>
               <option value="">{dict.common.none}</option>
@@ -396,6 +398,18 @@ export function ProductFormPage() {
           </AdmCard>
         </div>
       </div>
+
+      <AdmConfirmDialog
+        open={confirmDelete}
+        title={dict.productForm.softDelete}
+        message={dict.productForm.softDeleteConfirm}
+        confirmLabel={dict.productForm.softDelete}
+        cancelLabel={locale === 'ar' ? 'إلغاء' : 'Cancel'}
+        variant="danger"
+        loading={softDelete.isPending}
+        onCancel={() => setConfirmDelete(false)}
+        onConfirm={() => void onSoftDelete()}
+      />
     </form>
   );
 }

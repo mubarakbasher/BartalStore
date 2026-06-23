@@ -126,6 +126,7 @@ export function CustomersPage() {
           <div className="px-4 py-3 flex items-center justify-end gap-2 border-t border-line dark:border-d-line">
             <button
               type="button"
+              aria-label="Previous page"
               disabled={page <= 1}
               onClick={() => {
                 const next = new URLSearchParams(search);
@@ -141,6 +142,7 @@ export function CustomersPage() {
             </span>
             <button
               type="button"
+              aria-label="Next page"
               disabled={page >= totalPages}
               onClick={() => {
                 const next = new URLSearchParams(search);

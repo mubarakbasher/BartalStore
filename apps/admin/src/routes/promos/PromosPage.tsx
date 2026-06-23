@@ -11,6 +11,7 @@ import { AdmCard } from '@/components/primitives/AdmCard';
 import { AdmStatCard } from '@/components/primitives/AdmStatCard';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
+import { AdmConfirmDialog } from '@/components/primitives/AdmConfirmDialog';
 import { pushToast } from '@/components/primitives/toast-bus';
 import { PromoFormDialog } from './PromoFormDialog';
 
@@ -59,6 +60,7 @@ export function PromosPage() {
   const tab = (TABS.find((t) => t.key === (params.get('tab') ?? 'all'))?.key ?? 'all') as PromoFilter;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<AdminPromoRow | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<AdminPromoRow | null>(null);
 
   const { data, isLoading, error } = useAdminPromos({ status: tab, limit: 100 });
   const del = useDeletePromo();
@@ -72,10 +74,11 @@ export function PromosPage() {
     setDialogOpen(true);
   };
   const handleDelete = (p: AdminPromoRow) => {
-    if (!confirm(locale === 'ar' ? `إلغاء الرمز ${p.code}؟` : `Deactivate code ${p.code}?`)) return;
     del.mutate(p.id, {
-      onSuccess: () =>
-        pushToast('success', locale === 'ar' ? `تم إلغاء ${p.code}` : `${p.code} deactivated`),
+      onSuccess: () => {
+        pushToast('success', locale === 'ar' ? `تم إلغاء ${p.code}` : `${p.code} deactivated`);
+        setConfirmDelete(null);
+      },
       onError: (err) => pushToast('error', (err as Error).message),
     });
   };
@@ -204,7 +207,7 @@ export function PromosPage() {
                     {p.expires_at ? p.expires_at.slice(0, 10) : '—'}
                   </td>
                   <td className={clsx('px-4 py-3 font-semibold', STATUS_STYLE[p.status])}>
-                    ● {statusLabel(p.status, locale)}
+                    <span aria-hidden="true">●</span> {statusLabel(p.status, locale)}
                   </td>
                   <td className="px-4 py-3 text-end">
                     <div className="inline-flex gap-1.5">
@@ -212,7 +215,7 @@ export function PromosPage() {
                         {locale === 'ar' ? 'تعديل' : 'Edit'}
                       </AdmButton>
                       {p.is_active && (
-                        <AdmButton size="sm" variant="danger" onClick={() => handleDelete(p)}>
+                        <AdmButton size="sm" variant="danger" onClick={() => setConfirmDelete(p)}>
                           {locale === 'ar' ? 'إلغاء' : 'Delete'}
                         </AdmButton>
                       )}
@@ -230,6 +233,26 @@ export function PromosPage() {
         onClose={() => setDialogOpen(false)}
         locale={locale}
         editing={editing}
+      />
+
+      <AdmConfirmDialog
+        open={confirmDelete !== null}
+        title={locale === 'ar' ? 'إلغاء الرمز' : 'Deactivate code'}
+        message={
+          confirmDelete
+            ? locale === 'ar'
+              ? `إلغاء الرمز ${confirmDelete.code}؟`
+              : `Deactivate code ${confirmDelete.code}?`
+            : ''
+        }
+        confirmLabel={locale === 'ar' ? 'إلغاء الرمز' : 'Deactivate'}
+        cancelLabel={locale === 'ar' ? 'تراجع' : 'Cancel'}
+        variant="danger"
+        loading={del.isPending}
+        onCancel={() => setConfirmDelete(null)}
+        onConfirm={() => {
+          if (confirmDelete) handleDelete(confirmDelete);
+        }}
       />
     </div>
   );

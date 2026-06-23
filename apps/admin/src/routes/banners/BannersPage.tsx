@@ -10,6 +10,7 @@ import { getDictionary } from '@/lib/i18n/dictionary';
 import { AdmCard } from '@/components/primitives/AdmCard';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
+import { AdmConfirmDialog } from '@/components/primitives/AdmConfirmDialog';
 import { pushToast } from '@/components/primitives/toast-bus';
 import { BannerFormDialog } from './BannerFormDialog';
 
@@ -27,6 +28,7 @@ export function BannersPage() {
   const status = (TABS.find((t) => t.key === params.get('status'))?.key ?? 'all') as BannerFilter;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<AdminBannerRow | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<AdminBannerRow | null>(null);
 
   const { data, isLoading, error } = useAdminBanners({ status });
   const move = useMoveBanner();
@@ -54,9 +56,11 @@ export function BannersPage() {
     );
   };
   const handleDelete = (b: AdminBannerRow) => {
-    if (!confirm(locale === 'ar' ? 'حذف هذا البانر؟' : 'Delete this banner?')) return;
     del.mutate(b.id, {
-      onSuccess: () => pushToast('success', locale === 'ar' ? 'تم الحذف' : 'Deleted'),
+      onSuccess: () => {
+        pushToast('success', locale === 'ar' ? 'تم الحذف' : 'Deleted');
+        setConfirmDelete(null);
+      },
       onError: (err) => pushToast('error', (err as Error).message),
     });
   };
@@ -200,7 +204,7 @@ export function BannersPage() {
                   <AdmButton size="sm" variant="ghost" onClick={() => openEdit(b)}>
                     {locale === 'ar' ? 'تعديل' : 'Edit'}
                   </AdmButton>
-                  <AdmButton size="sm" variant="danger" onClick={() => handleDelete(b)}>
+                  <AdmButton size="sm" variant="danger" onClick={() => setConfirmDelete(b)}>
                     ×
                   </AdmButton>
                 </div>
@@ -215,6 +219,20 @@ export function BannersPage() {
         onClose={() => setDialogOpen(false)}
         locale={locale}
         editing={editing}
+      />
+
+      <AdmConfirmDialog
+        open={confirmDelete !== null}
+        title={locale === 'ar' ? 'حذف البانر' : 'Delete banner'}
+        message={locale === 'ar' ? 'حذف هذا البانر؟' : 'Delete this banner?'}
+        confirmLabel={locale === 'ar' ? 'حذف' : 'Delete'}
+        cancelLabel={locale === 'ar' ? 'إلغاء' : 'Cancel'}
+        variant="danger"
+        loading={del.isPending}
+        onCancel={() => setConfirmDelete(null)}
+        onConfirm={() => {
+          if (confirmDelete) handleDelete(confirmDelete);
+        }}
       />
     </div>
   );

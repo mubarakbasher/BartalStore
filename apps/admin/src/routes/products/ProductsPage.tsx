@@ -12,6 +12,7 @@ import { AdmSelect } from '@/components/primitives/AdmSelect';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { AdmTabs, type AdmTabItem } from '@/components/primitives/AdmTabs';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
+import { AdmThumb } from '@/components/primitives/AdmThumb';
 import { PriceTag } from '@/components/primitives/PriceTag';
 import { useAdminCategories, useAdminProducts, type AdminProductsParams } from '@/lib/api/queries';
 import { useTopbarTitle } from '@/lib/state/topbar-store';
@@ -82,14 +83,12 @@ export function ProductsPage() {
         header: dict.products.columns.product,
         cell: ({ row }) => (
           <Link to={`/products/${row.original.id}/edit`} className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-bartal bg-sand dark:bg-d-raised shrink-0 overflow-hidden">
-              {row.original.primary_image_url && (
-                <img
-                  src={row.original.primary_image_url}
-                  alt=""
-                  className="w-full h-full object-cover"
-                />
-              )}
+            <div className="w-10 h-10 rounded-bartal shrink-0 overflow-hidden">
+              <AdmThumb
+                url={row.original.primary_image_url}
+                alt={locale === 'ar' ? row.original.name_ar : row.original.name_en}
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="min-w-0">
               <div className="text-small font-semibold text-ink dark:text-d-text truncate">
@@ -274,6 +273,7 @@ export function ProductsPage() {
           <div className="px-4 py-3 flex items-center justify-end gap-2 border-t border-line dark:border-d-line">
             <button
               type="button"
+              aria-label="Previous page"
               disabled={page <= 1}
               onClick={() => {
                 const next = new URLSearchParams(search);
@@ -289,6 +289,7 @@ export function ProductsPage() {
             </span>
             <button
               type="button"
+              aria-label="Next page"
               disabled={page >= totalPages}
               onClick={() => {
                 const next = new URLSearchParams(search);

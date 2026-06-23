@@ -10,6 +10,7 @@ import type { DeliveryZone, OrderStatus } from '@bartal/shared';
 import { AdmCard } from '@/components/primitives/AdmCard';
 import { AdmInput } from '@/components/primitives/AdmInput';
 import { AdmSelect } from '@/components/primitives/AdmSelect';
+import { AdmButton } from '@/components/primitives/AdmButton';
 import { AdmStatusPill } from '@/components/primitives/AdmStatusPill';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
 import { AdmTabs, type AdmTabItem } from '@/components/primitives/AdmTabs';
@@ -87,7 +88,7 @@ export function OrdersPage() {
     }),
     [page, tab, zone, q],
   );
-  const { data, isLoading } = useAdminOrders(params);
+  const { data, isLoading, isError, refetch } = useAdminOrders(params);
 
   const tabs: AdmTabItem<TabKey>[] = [
     { id: 'all', label: dict.orders.tabs.all },
@@ -253,6 +254,20 @@ export function OrdersPage() {
                     {dict.common.loading}
                   </td>
                 </tr>
+              ) : isError ? (
+                <tr>
+                  <td colSpan={columns.length}>
+                    <AdmEmptyState
+                      title={locale === 'ar' ? 'تعذّر تحميل الطلبات' : "Couldn't load orders"}
+                      body={locale === 'ar' ? 'يرجى المحاولة مرة أخرى.' : 'Please try again.'}
+                      action={
+                        <AdmButton size="sm" variant="ghost" onClick={() => refetch()}>
+                          {dict.common.retry}
+                        </AdmButton>
+                      }
+                    />
+                  </td>
+                </tr>
               ) : table.getRowModel().rows.length === 0 ? (
                 <tr>
                   <td colSpan={columns.length}>
@@ -277,6 +292,7 @@ export function OrdersPage() {
           <div className="px-4 py-3 flex items-center justify-end gap-2 border-t border-line dark:border-d-line">
             <button
               type="button"
+              aria-label="Previous page"
               disabled={page <= 1}
               onClick={() => {
                 const next = new URLSearchParams(search);
@@ -292,6 +308,7 @@ export function OrdersPage() {
             </span>
             <button
               type="button"
+              aria-label="Next page"
               disabled={page >= totalPages}
               onClick={() => {
                 const next = new URLSearchParams(search);

@@ -7,6 +7,7 @@ import { AdmTextarea } from '@/components/primitives/AdmTextarea';
 import { AdmStatusPill } from '@/components/primitives/AdmStatusPill';
 import { AdmEmptyState } from '@/components/primitives/AdmEmptyState';
 import { AdmDialog } from '@/components/primitives/AdmDialog';
+import { AdmThumb } from '@/components/primitives/AdmThumb';
 import { PriceTag } from '@/components/primitives/PriceTag';
 import { pushToast } from '@/components/primitives/toast-bus';
 import { AdmStatusTimeline } from '@/components/orders/AdmStatusTimeline';
@@ -45,7 +46,7 @@ export function OrderDetailPage() {
   const locale = usePrefsStore((s) => s.locale);
   const dict = getDictionary(locale);
   useTopbarTitle(dict.nav.orders, id);
-  const { data: order, isLoading, error } = useAdminOrder(id);
+  const { data: order, isLoading, error, refetch } = useAdminOrder(id);
 
   const updateStatus = useUpdateOrderStatus(id ?? '');
   const updatePayment = useUpdateOrderPayment(id ?? '');
@@ -58,7 +59,17 @@ export function OrderDetailPage() {
 
   if (isLoading || !order) {
     if (error) {
-      return <AdmEmptyState title={dict.common.error} body={String(error)} />;
+      return (
+        <AdmEmptyState
+          title={dict.common.error}
+          body={String(error)}
+          action={
+            <AdmButton size="sm" variant="ghost" onClick={() => refetch()}>
+              {dict.common.retry}
+            </AdmButton>
+          }
+        />
+      );
     }
     return <div className="text-small text-ink-mute dark:text-d-textMute">{dict.common.loading}</div>;
   }
@@ -198,10 +209,12 @@ export function OrderDetailPage() {
             <ul className="divide-y divide-line dark:divide-d-line">
               {order.items.map((it) => (
                 <li key={it.id} className="px-5 py-3 flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-bartal bg-sand dark:bg-d-raised shrink-0 overflow-hidden">
-                    {it.image_url && (
-                      <img src={it.image_url} alt="" className="w-full h-full object-cover" />
-                    )}
+                  <div className="w-12 h-12 rounded-bartal shrink-0 overflow-hidden">
+                    <AdmThumb
+                      url={it.image_url}
+                      alt={locale === 'ar' ? it.name_ar : it.name_en}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-small font-semibold text-ink dark:text-d-text truncate">

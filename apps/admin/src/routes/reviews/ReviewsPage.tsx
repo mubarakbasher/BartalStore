@@ -43,7 +43,7 @@ export function ReviewsPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [rejectingFor, setRejectingFor] = useState<string | null>(null);
 
-  const { data, isLoading } = useAdminReviews({ status: filter, limit: 50 });
+  const { data, isLoading, isError, refetch } = useAdminReviews({ status: filter, limit: 50 });
   const { data: kpis } = useAdminReviewKpis();
   const approve = useApproveReview();
   const reject = useRejectReview();
@@ -144,6 +144,16 @@ export function ReviewsPage() {
               <div className="p-6 text-center text-small text-ink-mute dark:text-d-textMute">
                 {dict.common.loading}
               </div>
+            ) : isError ? (
+              <AdmEmptyState
+                title={locale === 'ar' ? 'تعذّر تحميل المراجعات' : "Couldn't load reviews"}
+                body={locale === 'ar' ? 'يرجى المحاولة مرة أخرى.' : 'Please try again.'}
+                action={
+                  <AdmButton size="sm" variant="ghost" onClick={() => refetch()}>
+                    {dict.common.retry}
+                  </AdmButton>
+                }
+              />
             ) : items.length === 0 ? (
               <AdmEmptyState title={dict.reviews.listEmpty} />
             ) : (

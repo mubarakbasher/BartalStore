@@ -47,12 +47,14 @@ export function RefundsPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
+  const [pendingId, setPendingId] = useState<string | null>(null);
 
-  const { data, isLoading, error } = useAdminRefunds({ status: tab, page, limit: 50 });
+  const { data, isLoading, error, refetch } = useAdminRefunds({ status: tab, page, limit: 50 });
   const approve = useApproveRefund();
   const reject = useRejectRefund();
 
   const onApprove = (r: AdminRefundRow) => {
+    setPendingId(r.id);
     approve.mutate(r.id, {
       onSuccess: () =>
         pushToast(
@@ -62,6 +64,7 @@ export function RefundsPage() {
             : `Refund ${r.refund_number} approved`,
         ),
       onError: (err) => pushToast('error', (err as Error).message),
+      onSettled: () => setPendingId(null),
     });
   };
 
@@ -75,6 +78,7 @@ export function RefundsPage() {
       pushToast('error', locale === 'ar' ? 'اكتب سبباً (٣ أحرف على الأقل)' : 'Reason ≥ 3 chars');
       return;
     }
+    setPendingId(r.id);
     reject.mutate(
       { id: r.id, body: { reason: rejectReason.trim() } },
       {
@@ -89,11 +93,23 @@ export function RefundsPage() {
           setRejectReason('');
         },
         onError: (err) => pushToast('error', (err as Error).message),
+        onSettled: () => setPendingId(null),
       },
     );
   };
 
-  if (error) return <AdmEmptyState title="Error" body={String(error)} />;
+  if (error)
+    return (
+      <AdmEmptyState
+        title={locale === 'ar' ? 'تعذّر تحميل الاستردادات' : "Couldn't load refunds"}
+        body={locale === 'ar' ? 'يرجى المحاولة مرة أخرى.' : 'Please try again.'}
+        action={
+          <AdmButton size="sm" variant="ghost" onClick={() => refetch()}>
+            {dict.common.retry}
+          </AdmButton>
+        }
+      />
+    );
 
   return (
     <div className="space-y-6">
@@ -276,9 +292,13 @@ export function RefundsPage() {
                                 size="sm"
                                 variant="danger"
                                 onClick={() => onReject(r)}
-                                disabled={reject.isPending}
+                                disabled={pendingId === r.id}
                               >
-                                OK
+                                {pendingId === r.id
+                                  ? locale === 'ar'
+                                    ? 'جارٍ الرفض…'
+                                    : 'Rejecting…'
+                                  : 'OK'}
                               </AdmButton>
                               <button
                                 type="button"
@@ -294,14 +314,21 @@ export function RefundsPage() {
                                 size="sm"
                                 variant="primary"
                                 onClick={() => onApprove(r)}
-                                disabled={approve.isPending}
+                                disabled={pendingId === r.id}
                               >
-                                {locale === 'ar' ? 'موافقة' : 'Approve'}
+                                {pendingId === r.id
+                                  ? locale === 'ar'
+                                    ? 'جارٍ الموافقة…'
+                                    : 'Approving…'
+                                  : locale === 'ar'
+                                    ? 'موافقة'
+                                    : 'Approve'}
                               </AdmButton>
                               <AdmButton
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => onReject(r)}
+                                disabled={pendingId === r.id}
                               >
                                 {locale === 'ar' ? 'رفض' : 'Deny'}
                               </AdmButton>

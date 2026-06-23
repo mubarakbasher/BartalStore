@@ -28,6 +28,7 @@ export function LoginPage() {
   const [serverError, setServerError] = useState<string | null>(
     search.get('error') === 'NOT_ADMIN' ? dict.login.notAdmin : null,
   );
+  const [showPw, setShowPw] = useState(false);
 
   const {
     register,
@@ -115,7 +116,7 @@ export function LoginPage() {
           <div className="space-y-4">
             <div>
               <label htmlFor="phone" className="block text-small font-semibold text-ink dark:text-d-text mb-1.5">
-                {dict.login.phone}
+                {dict.login.phone} <span className="text-danger">*</span>
               </label>
               <AdmInput
                 id="phone"
@@ -133,15 +134,34 @@ export function LoginPage() {
 
             <div>
               <label htmlFor="password" className="block text-small font-semibold text-ink dark:text-d-text mb-1.5">
-                {dict.login.password}
+                {dict.login.password} <span className="text-danger">*</span>
               </label>
-              <AdmInput
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                invalid={Boolean(passErr)}
-                {...register('password')}
-              />
+              <div className="relative">
+                <AdmInput
+                  id="password"
+                  type={showPw ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  invalid={Boolean(passErr)}
+                  className="pe-12"
+                  {...register('password')}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPw((v) => !v)}
+                  aria-label={
+                    showPw
+                      ? locale === 'ar'
+                        ? 'إخفاء كلمة المرور'
+                        : 'Hide password'
+                      : locale === 'ar'
+                        ? 'إظهار كلمة المرور'
+                        : 'Show password'
+                  }
+                  className="absolute inset-y-0 end-3 flex items-center text-small font-semibold text-ink-mute dark:text-d-textMute hover:text-ink dark:hover:text-d-text"
+                >
+                  {showPw ? (locale === 'ar' ? 'إخفاء' : 'Hide') : locale === 'ar' ? 'إظهار' : 'Show'}
+                </button>
+              </div>
               {passErr && (
                 <div className="text-small text-danger mt-1.5">{dict.login.shortPassword}</div>
               )}

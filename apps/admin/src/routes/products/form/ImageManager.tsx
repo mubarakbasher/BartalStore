@@ -2,6 +2,8 @@
 import { useRef, useState } from 'react';
 import { AdmButton } from '@/components/primitives/AdmButton';
 import { AdmInput } from '@/components/primitives/AdmInput';
+import { AdmThumb } from '@/components/primitives/AdmThumb';
+import { AdmConfirmDialog } from '@/components/primitives/AdmConfirmDialog';
 import { pushToast } from '@/components/primitives/toast-bus';
 import {
   useDeleteProductImage,
@@ -26,6 +28,7 @@ export function ImageManager({ productId, images }: ImageManagerProps) {
   const remove = useDeleteProductImage(productId ?? '');
   const fileInput = useRef<HTMLInputElement>(null);
   const [sortDrafts, setSortDrafts] = useState<Record<string, string>>({});
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   const onUpload = async (file: File) => {
     if (!productId) return;
@@ -81,10 +84,10 @@ export function ImageManager({ productId, images }: ImageManagerProps) {
   };
 
   const onDelete = async (imageId: string) => {
-    if (!window.confirm(dict.deleteConfirm)) return;
     try {
       await remove.mutateAsync(imageId);
       pushToast('success', locale === 'ar' ? 'تم حذف الصورة' : 'Image deleted');
+      setConfirmDelete(null);
     } catch (err) {
       const msg =
         err instanceof ApiClientError
@@ -116,8 +119,12 @@ export function ImageManager({ productId, images }: ImageManagerProps) {
                 key={img.id}
                 className="border border-line dark:border-d-line rounded-bartal overflow-hidden bg-white dark:bg-d-surface"
               >
-                <div className="aspect-square bg-sand dark:bg-d-raised overflow-hidden">
-                  <img src={img.url} alt={img.alt_en ?? ''} className="w-full h-full object-cover" />
+                <div className="aspect-square overflow-hidden">
+                  <AdmThumb
+                    url={img.url}
+                    alt={(locale === 'ar' ? img.alt_ar : img.alt_en) ?? dict.add}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="p-2 space-y-2">
                   <div className="flex items-center justify-between gap-2">
@@ -138,7 +145,7 @@ export function ImageManager({ productId, images }: ImageManagerProps) {
                     <button
                       type="button"
                       className="text-micro font-semibold text-danger hover:underline"
-                      onClick={() => onDelete(img.id)}
+                      onClick={() => setConfirmDelete(img.id)}
                       disabled={remove.isPending}
                     >
                       {dict.delete}
@@ -187,6 +194,20 @@ export function ImageManager({ productId, images }: ImageManagerProps) {
           {upload.isPending ? dict.uploading : dict.add}
         </AdmButton>
       </div>
+
+      <AdmConfirmDialog
+        open={confirmDelete !== null}
+        title={dict.delete}
+        message={dict.deleteConfirm}
+        confirmLabel={dict.delete}
+        cancelLabel={locale === 'ar' ? 'إلغاء' : 'Cancel'}
+        variant="danger"
+        loading={remove.isPending}
+        onCancel={() => setConfirmDelete(null)}
+        onConfirm={() => {
+          if (confirmDelete) void onDelete(confirmDelete);
+        }}
+      />
     </div>
   );
 }
