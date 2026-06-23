@@ -26,6 +26,7 @@ class ConfirmScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = L10n.of(context);
     final bartal = context.bartal;
     final order = ref.watch(orderDetailProvider(orderId));
 
@@ -33,7 +34,16 @@ class ConfirmScreen extends ConsumerWidget {
       backgroundColor: bartal.bg,
       body: SafeArea(
         child: order.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(height: 12),
+                Text(l10n.commonLoading, style: context.bartalType.small),
+              ],
+            ),
+          ),
           error: (error, _) => Center(child: Text('$error')),
           data: (data) => _ConfirmBody(order: data, bankId: bankId),
         ),

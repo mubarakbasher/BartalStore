@@ -60,13 +60,34 @@ class _CheckoutReviewScreenState extends ConsumerState<CheckoutReviewScreen> {
     final addresses = ref.watch(addressesControllerProvider).valueOrNull ?? const [];
     final address = addresses.where((a) => a.id == checkout.addressId).firstOrNull;
 
-    final feeAsync = address == null
+    final feeArg = address == null
         ? null
-        : ref.watch(deliveryFeeProvider(
-            (zone: address.zone, total: cart.subtotal.value.toDouble().round())));
+        : (zone: address.zone, total: cart.subtotal.value.toDouble().round());
+    final feeAsync = feeArg == null ? null : ref.watch(deliveryFeeProvider(feeArg));
     final fee = feeAsync?.valueOrNull?.fee ?? Money.zero;
-    final freeDelivery = feeAsync?.valueOrNull?.freeDelivery ?? false;
     final total = cart.subtotal + fee;
+
+    // On 2G the fee can be slow — surface loading/error instead of a silent 0.
+    final Widget deliveryValue = feeAsync == null
+        ? PriceTag(amount: fee, size: 14, strong: false)
+        : feeAsync.when(
+            loading: () => const SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            error: (_, _) => GestureDetector(
+              onTap: () => ref.invalidate(deliveryFeeProvider(feeArg!)),
+              child: Text(
+                '—',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: bartal.danger),
+              ),
+            ),
+            data: (data) => data.freeDelivery
+                ? Text(l10n.deliveryFreeDelivery,
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: bartal.success))
+                : PriceTag(amount: data.fee, size: 14, strong: false),
+          );
 
     return CheckoutScaffold(
       title: l10n.cartCheckout,
@@ -108,10 +129,7 @@ class _CheckoutReviewScreenState extends ConsumerState<CheckoutReviewScreen> {
                 const SizedBox(height: 8),
                 _TotalRow(
                   label: l10n.cartDeliveryFee,
-                  value: freeDelivery
-                      ? Text(l10n.deliveryFreeDelivery,
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: bartal.success))
-                      : PriceTag(amount: fee, size: 14, strong: false),
+                  value: deliveryValue,
                 ),
                 Container(height: 1, margin: const EdgeInsetsDirectional.symmetric(vertical: 10), color: bartal.line),
                 _TotalRow(

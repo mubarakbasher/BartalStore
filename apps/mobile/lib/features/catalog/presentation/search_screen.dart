@@ -116,31 +116,37 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   onRetry: () => ref.invalidate(productsListProvider(_query)),
                 ),
                 data: (state) {
+                  final meta = _MetaRow(
+                    total: state.total,
+                    activeFilters: _activeFilterCount,
+                    categorySlug: _query.category,
+                    onFilters: _openFilters,
+                    onRemoveCategory: _removeCategory,
+                  );
+                  // Zero results: keep the meta row (so filters stay
+                  // adjustable) and replace the grid with the empty state.
+                  if (state.items.isEmpty) {
+                    return Column(
+                      children: [
+                        meta,
+                        Expanded(
+                          child: EmptyState(
+                            kind: EmptyStateKind.search,
+                            onCta: () => context.go('/categories'),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
                   return ProductGridView(
                     state: state,
                     onLoadMore: () =>
                         ref.read(productsListProvider(_query).notifier).fetchNextPage(),
-                    header: SliverToBoxAdapter(
-                      child: _MetaRow(
-                        total: state.total,
-                        activeFilters: _activeFilterCount,
-                        categorySlug: _query.category,
-                        onFilters: _openFilters,
-                        onRemoveCategory: _removeCategory,
-                      ),
-                    ),
+                    header: SliverToBoxAdapter(child: meta),
                   );
                 },
               ),
             ),
-            // Empty state lives below the meta row when there are zero results.
-            if (products.valueOrNull?.items.isEmpty ?? false)
-              Expanded(
-                child: EmptyState(
-                  kind: EmptyStateKind.search,
-                  onCta: () => context.go('/categories'),
-                ),
-              ),
           ],
         ),
       ),
@@ -194,12 +200,16 @@ class _SearchBar extends StatelessWidget {
                     ),
                   ),
                   if (controller.text.isNotEmpty)
-                    GestureDetector(
-                      onTap: () {
-                        controller.clear();
-                        onChanged('');
-                      },
-                      child: Icon(Icons.close, size: 18, color: bartal.textMute),
+                    Semantics(
+                      button: true,
+                      label: 'Clear search',
+                      child: GestureDetector(
+                        onTap: () {
+                          controller.clear();
+                          onChanged('');
+                        },
+                        child: Icon(Icons.close, size: 18, color: bartal.textMute),
+                      ),
                     ),
                 ],
               ),
@@ -256,26 +266,30 @@ class _MetaRow extends ConsumerWidget {
                 l10n.searchResultsCount(localizedDigits('$total', arabic: isAr)),
                 style: context.bartalType.small,
               ),
-              GestureDetector(
-                onTap: onFilters,
-                child: Container(
-                  padding: const EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: BartalColors.navy,
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.tune, size: 13, color: Colors.white),
-                      const SizedBox(width: 6),
-                      Text(
-                        activeFilters > 0
-                            ? '${l10n.searchFilters} · ${localizedDigits('$activeFilters', arabic: isAr)}'
-                            : l10n.searchFilters,
-                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white),
-                      ),
-                    ],
+              Semantics(
+                button: true,
+                child: GestureDetector(
+                  onTap: onFilters,
+                  child: Container(
+                    constraints: const BoxConstraints(minHeight: 44),
+                    padding: const EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: BartalColors.navy,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.tune, size: 13, color: Colors.white),
+                        const SizedBox(width: 6),
+                        Text(
+                          activeFilters > 0
+                              ? '${l10n.searchFilters} · ${localizedDigits('$activeFilters', arabic: isAr)}'
+                              : l10n.searchFilters,
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

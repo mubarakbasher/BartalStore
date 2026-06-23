@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/api/api_exception.dart';
 import '../../../core/api/envelope.dart';
+import '../../../core/connectivity/connectivity_provider.dart';
 import '../../../core/models/order.dart';
 import '../../../core/utils/money.dart';
 import '../../../core/utils/whatsapp.dart';
 import '../../../design/icons.dart';
 import '../../../design/theme.dart';
 import '../../../l10n/gen/l10n.dart';
+import '../../../widgets/error_screen.dart';
 import '../../../widgets/price_tag.dart';
 import '../../../widgets/product_image.dart';
 import '../../../widgets/screen_header.dart';
@@ -35,46 +36,23 @@ class OrderDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: bartal.bg,
-      body: Column(
-        children: [
-          ScreenHeader(title: l10n.orderDetailTitle),
-          Expanded(
-            child: async.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) => _DetailError(error: error, onRetry: () {
-                ref.read(orderDetailProvider(orderId).notifier).reload();
-              }),
-              data: (order) => _OrderDetailBody(order: order),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DetailError extends StatelessWidget {
-  const _DetailError({required this.error, required this.onRetry});
-
-  final Object error;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = L10n.of(context);
-    final arabic = Localizations.localeOf(context).languageCode == 'ar';
-    final message = error is ApiException
-        ? (error as ApiException).localized(arabic: arabic)
-        : l10n.errorsGeneric;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsetsDirectional.all(24),
+      body: SafeArea(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(message, textAlign: TextAlign.center, style: context.bartalType.body),
-            const SizedBox(height: 12),
-            OutlinedButton(onPressed: onRetry, child: Text(l10n.errorTryAgain)),
+            ScreenHeader(title: l10n.orderDetailTitle),
+            Expanded(
+              child: async.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, _) {
+                  final online = ref.read(isOnlineProvider);
+                  return ErrorState(
+                    kind: online ? ErrorScreenKind.error : ErrorScreenKind.offline,
+                    onRetry: () => ref.read(orderDetailProvider(orderId).notifier).reload(),
+                  );
+                },
+                data: (order) => _OrderDetailBody(order: order),
+              ),
+            ),
           ],
         ),
       ),

@@ -141,6 +141,7 @@ class _QtyAdjuster extends StatelessWidget {
       children: [
         _QtyButton(
           icon: '−',
+          semanticLabel: 'Decrease quantity',
           onTap: () => onChanged(quantity - 1),
           background: bartal.isDark ? bartal.raised : BartalColors.sand,
         ),
@@ -154,6 +155,7 @@ class _QtyAdjuster extends StatelessWidget {
         ),
         _QtyButton(
           icon: '+',
+          semanticLabel: 'Increase quantity',
           onTap: canIncrement ? () => onChanged(quantity + 1) : null,
           background: bartal.isDark ? bartal.raised : BartalColors.sand,
         ),
@@ -163,9 +165,15 @@ class _QtyAdjuster extends StatelessWidget {
 }
 
 class _QtyButton extends StatelessWidget {
-  const _QtyButton({required this.icon, required this.onTap, required this.background});
+  const _QtyButton({
+    required this.icon,
+    required this.semanticLabel,
+    required this.onTap,
+    required this.background,
+  });
 
   final String icon;
+  final String semanticLabel;
   final VoidCallback? onTap;
   final Color background;
 
@@ -174,19 +182,31 @@ class _QtyButton extends StatelessWidget {
     final bartal = context.bartal;
     return Opacity(
       opacity: onTap == null ? 0.4 : 1,
-      child: Material(
-        color: background,
-        borderRadius: BorderRadius.circular(8),
-        child: InkWell(
-          onTap: onTap,
+      child: Semantics(
+        button: true,
+        enabled: onTap != null,
+        label: semanticLabel,
+        child: Material(
+          color: background,
           borderRadius: BorderRadius.circular(8),
-          child: SizedBox(
-            width: 30,
-            height: 30,
-            child: Center(
-              child: Text(
-                icon,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: bartal.text, height: 1),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(8),
+            // Hit area ≥44×44 for touch a11y; the 30×30 swatch stays the visual.
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+              child: Center(
+                child: SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: Center(
+                    child: Text(
+                      icon,
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.w700, color: bartal.text, height: 1),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

@@ -313,14 +313,21 @@ class _PasswordAuthFieldState extends State<PasswordAuthField> {
       textInputAction: widget.textInputAction,
       trailing: Semantics(
         button: true,
+        label: 'Toggle password visibility',
         child: GestureDetector(
           onTap: () => setState(() => _obscure = !_obscure),
-          child: Text(
-            _obscure ? l10n.commonShow : l10n.commonHide,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: context.bartal.amber,
+          // Expand the hit area to ≥44×44 without changing the label's look.
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+            child: Center(
+              child: Text(
+                _obscure ? l10n.commonShow : l10n.commonHide,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: context.bartal.amber,
+                ),
+              ),
             ),
           ),
         ),

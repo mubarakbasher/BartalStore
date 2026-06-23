@@ -114,7 +114,10 @@ class _TabItem extends StatelessWidget {
                       PositionedDirectional(
                         top: -4,
                         end: -6,
-                        child: CountBadge(count: badge),
+                        child: Semantics(
+                          label: '$label items: $badge',
+                          child: CountBadge(count: badge),
+                        ),
                       ),
                   ],
                 ),
