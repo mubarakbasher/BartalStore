@@ -112,7 +112,11 @@ export default async function ProductDetailPage(props: PageProps) {
                   className="aspect-square bg-sand rounded-bartal overflow-hidden border border-line"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={img.url} alt="" className="w-full h-full object-cover" />
+                  <img
+                    src={img.url}
+                    alt={locale === 'ar' ? product.name_ar : product.name_en}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               ))}
             </div>

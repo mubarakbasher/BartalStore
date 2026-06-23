@@ -49,7 +49,7 @@ export default async function SearchPage(props: PageProps) {
 
       <form
         action={`/${locale}/search`}
-        className="bg-white border border-line rounded-bartal-lg p-2 flex items-center gap-2 max-w-xl mb-8"
+        className="bg-white border border-line rounded-bartal-lg p-2 flex items-center gap-2 max-w-xl mb-8 focus-within:ring-2 focus-within:ring-amber/60 focus-within:border-amber"
       >
         <SearchIcon size={18} color={BARTAL.textMute} />
         <input

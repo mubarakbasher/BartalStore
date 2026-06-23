@@ -18,7 +18,7 @@ export function EmptyState({ title, hint, icon, action }: EmptyStateProps) {
           </svg>
         )}
       </div>
-      <div className="text-h2 text-ink">{title}</div>
+      <h2 className="text-h2 text-ink">{title}</h2>
       {hint && <div className="text-body text-ink-mute max-w-md">{hint}</div>}
       {action && <div className="mt-3">{action}</div>}
     </div>
@@ -41,7 +41,7 @@ export function ErrorState({ title, hint, onRetry, retryLabel = 'Retry' }: Error
           <path d="M12 7v6M12 17h.01" />
         </svg>
       </div>
-      <div className="text-h2 text-ink">{title}</div>
+      <h2 className="text-h2 text-ink">{title}</h2>
       {hint && <div className="text-body text-ink-mute max-w-md">{hint}</div>}
       {onRetry && (
         <button
